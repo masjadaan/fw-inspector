@@ -35,6 +35,10 @@ More details here: https://curl.se/docs/sslcerts.html
 @http://
 https://
 
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
+
 --- usr/bin/wscd ---
 http://%s:%d/description.xml
 http://
@@ -54,10 +58,6 @@ s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
 CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
-
---- usr/bin/openssl ---
-<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
-http://
 
 --- usr/bin/upnpd ---
 http://%s:%d/%s

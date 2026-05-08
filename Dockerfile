@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV VIRTUAL_ENV="/opt/venv"
 ENV PATH="/opt/venv/bin:$PATH"
+ENV PYTHONPATH="/opt"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # General utilities
@@ -44,8 +45,9 @@ RUN uv venv /opt/venv && \
     jefferson \
     ubi_reader
 
-COPY carve.py   /opt/carve.py
-COPY analyze.py /opt/analyze.py
+COPY carve.py    /opt/carve.py
+COPY analyze.py  /opt/analyze.py
+COPY analyzers/  /opt/analyzers/
 
 WORKDIR /workspace
 

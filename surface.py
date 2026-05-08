@@ -12,6 +12,38 @@ import argparse
 import json
 import re
 from pathlib import Path
+from typing import Optional, TypedDict
+
+
+# ── Type Definitions ──────────────────────────────────────────────────────────
+
+class User(TypedDict):
+    name: str
+    uid: int | str
+    gid: int | str
+    home: str
+    shell: str
+    has_password: bool
+    password_hash: Optional[str]
+
+
+class EntryPoint(TypedDict):
+    type: str
+    port: int
+    protocol: str
+    binary: Optional[str]
+    interface: str
+    source: str
+
+
+class AttackPath(TypedDict):
+    id: str
+    title: str
+    severity: str
+    description: str
+    entry_point: str
+    steps: list[str]
+    evidence: list[str]
 
 
 # ── File I/O ──────────────────────────────────────────────────────────────────
@@ -33,13 +65,17 @@ def parse_sections(content: str) -> dict:
     return sections
 
 
-def non_empty_lines(text: str) -> list:
-    return [l.strip() for l in text.splitlines() if l.strip()]
+def non_empty_lines(text: str) -> list[str]:
+    return [line.strip() for line in text.splitlines() if line.strip()]
+
+
+def _section_lines(sections: dict, title: str) -> list[str]:
+    return non_empty_lines(sections.get(title, ""))
 
 
 # ── Parsers ───────────────────────────────────────────────────────────────────
 
-def parse_users(analysis_dir: Path) -> list:
+def parse_users(analysis_dir: Path) -> list[User]:
     sections = parse_sections(read_file(analysis_dir / "users_groups.txt"))
     passwd = sections.get("etc/passwd", "")
     shadow = sections.get("etc/shadow", "")
@@ -51,7 +87,7 @@ def parse_users(analysis_dir: Path) -> list:
             shadow_hashes[parts[0]] = parts[1]
 
     EMPTY_HASH = {"*", "!", "x", ""}
-    users = []
+    users: list[User] = []
     for line in passwd.splitlines():
         parts = line.split(":")
         if len(parts) < 7:
@@ -70,7 +106,7 @@ def parse_users(analysis_dir: Path) -> list:
     return users
 
 
-def parse_setuid(analysis_dir: Path) -> list:
+def parse_setuid(analysis_dir: Path) -> list[str]:
     return non_empty_lines(read_file(analysis_dir / "setuid_binaries.txt"))
 
 
@@ -86,49 +122,47 @@ def parse_capabilities(analysis_dir: Path) -> list:
 def parse_world_writable(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "world_writable.txt"))
     return {
-        "files": non_empty_lines(sections.get("World-Writable Files", "")),
-        "dirs": non_empty_lines(sections.get("World-Writable Directories", "")),
-        "setgid": non_empty_lines(sections.get("SetGID Binaries", "")),
+        "files":  _section_lines(sections, "World-Writable Files"),
+        "dirs":   _section_lines(sections, "World-Writable Directories"),
+        "setgid": _section_lines(sections, "SetGID Binaries"),
     }
 
 
 def parse_init_services(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "init_scripts.txt"))
 
-    services_raw = sections.get("Network-Exposed Services", "")
-    port_raw = sections.get("Explicit Port Bindings", "")
+    services_raw  = sections.get("Network-Exposed Services", "")
+    port_raw      = sections.get("Explicit Port Bindings", "")
     injection_raw = sections.get("Command Injection Vectors", "")
-    creds_raw = sections.get("Hardcoded Credentials", "")
-    telnet_raw = sections.get("Telnet and Debug Interfaces", "")
-    vendor_raw = sections.get("Vendor-Specific Backdoor Services (TP-Link)", "")
-    outbound_raw = sections.get("Outbound Connections", "")
-    firewall_raw = sections.get("Firewall Rules", "")
+    creds_raw     = sections.get("Hardcoded Credentials", "")
+    telnet_raw    = sections.get("Telnet and Debug Interfaces", "")
+    vendor_raw    = sections.get("Vendor-Specific Backdoor Services (TP-Link)", "")
+    outbound_raw  = sections.get("Outbound Connections", "")
+    firewall_raw  = sections.get("Firewall Rules", "")
 
-    KNOWN = ["telnetd", "ftpd", "dropbear", "sshd", "httpd", "dnsd",
-             "dhcpd", "tftpd", "snmpd", "upnpd", "tr069"]
     combined = services_raw + " " + telnet_raw + " " + vendor_raw
-    detected = [svc for svc in KNOWN if svc in combined]
+    detected = [svc for svc in _SERVICE_PORT_MAP if svc in combined]
 
     return {
-        "detected_services": detected,
-        "explicit_ports": list({int(p) for p in re.findall(r"-p\s+(\d+)", port_raw)}),
+        "detected_services":    detected,
+        "explicit_ports":       list({int(p) for p in re.findall(r"-p\s+(\d+)", port_raw)}),
         "has_command_injection": bool(injection_raw),
-        "injection_evidence": non_empty_lines(injection_raw)[:5],
-        "has_hardcoded_creds": bool(creds_raw),
-        "vendor_services": non_empty_lines(vendor_raw)[:10],
+        "injection_evidence":   non_empty_lines(injection_raw)[:5],
+        "has_hardcoded_creds":  bool(creds_raw),
+        "vendor_services":      non_empty_lines(vendor_raw)[:10],
         "outbound_connections": non_empty_lines(outbound_raw)[:10],
-        "has_firewall_rules": bool(firewall_raw),
+        "has_firewall_rules":   bool(firewall_raw),
     }
 
 
 def parse_web(analysis_dir: Path) -> dict:
     web_sections = parse_sections(read_file(analysis_dir / "web_interface.txt"))
-    ws_sections = parse_sections(read_file(analysis_dir / "web_server_configs.txt"))
-    httpd_bins = non_empty_lines(read_file(analysis_dir / "httpd_binaries.txt"))
+    ws_sections  = parse_sections(read_file(analysis_dir / "web_server_configs.txt"))
+    httpd_bins   = non_empty_lines(read_file(analysis_dir / "httpd_binaries.txt"))
 
-    cgi_files = non_empty_lines(web_sections.get("CGI Scripts", ""))
-    lua_handlers = non_empty_lines(web_sections.get("Lua Handlers", ""))
-    api_endpoints = non_empty_lines(web_sections.get("API Endpoints in Web Root", ""))
+    cgi_files    = _section_lines(web_sections, "CGI Scripts")
+    lua_handlers = _section_lines(web_sections, "Lua Handlers")
+    api_endpoints = _section_lines(web_sections, "API Endpoints in Web Root")
 
     ports = []
     for body in ws_sections.values():
@@ -139,10 +173,10 @@ def parse_web(analysis_dir: Path) -> dict:
 
     return {
         "httpd_binaries": httpd_bins,
-        "cgi_scripts": cgi_files,
-        "lua_handlers": lua_handlers,
-        "api_endpoints": api_endpoints[:20],
-        "config_files": [k for k in ws_sections if k != "Web Server Config Files Found"],
+        "cgi_scripts":    cgi_files,
+        "lua_handlers":   lua_handlers,
+        "api_endpoints":  api_endpoints[:20],
+        "config_files":   [k for k in ws_sections if k != "Web Server Config Files Found"],
         "inferred_ports": list(set(ports)) or [80],
     }
 
@@ -157,33 +191,32 @@ def parse_protocols(analysis_dir: Path) -> dict:
     }
     result = {}
     for proto, title in proto_map.items():
-        body = sections.get(title, "")
-        evidence = non_empty_lines(body)
+        evidence = _section_lines(sections, title)
         result[proto] = {"present": bool(evidence), "evidence": evidence[:5]}
     return result
 
 
 def parse_credentials(analysis_dir: Path) -> dict:
     cred_sections = parse_sections(read_file(analysis_dir / "credentials.txt"))
-    def_sections = parse_sections(read_file(analysis_dir / "default_credentials.txt"))
-    ssh_sections = parse_sections(read_file(analysis_dir / "ssh_keys.txt"))
+    def_sections  = parse_sections(read_file(analysis_dir / "default_credentials.txt"))
+    ssh_sections  = parse_sections(read_file(analysis_dir / "ssh_keys.txt"))
 
-    ssh_keys = non_empty_lines(ssh_sections.get("SSH Key Files Found", ""))
+    ssh_keys  = _section_lines(ssh_sections, "SSH Key Files Found")
     hardcoded = [
-        l for l in non_empty_lines(cred_sections.get("Passwords and Secrets (all config files)", ""))
-        if not l.startswith("Binary file")
+        line for line in _section_lines(cred_sections, "Passwords and Secrets (all config files)")
+        if not line.startswith("Binary file")
     ][:20]
-    cloud_urls = non_empty_lines(cred_sections.get("Cloud and Update Endpoints (all config files)", ""))[:20]
-    defaults = non_empty_lines(
-        def_sections.get("Default Passwords / SSIDs in Configs", "") + "\n" +
-        def_sections.get("Default Credentials in Scripts", "")
+    cloud_urls = _section_lines(cred_sections, "Cloud and Update Endpoints (all config files)")[:20]
+    defaults = (
+        _section_lines(def_sections, "Default Passwords / SSIDs in Configs") +
+        _section_lines(def_sections, "Default Credentials in Scripts")
     )[:20]
 
     return {
         "hardcoded_in_configs": hardcoded,
-        "default_credentials": defaults,
-        "ssh_key_files": ssh_keys,
-        "cloud_endpoints": cloud_urls,
+        "default_credentials":  defaults,
+        "ssh_key_files":        ssh_keys,
+        "cloud_endpoints":      cloud_urls,
     }
 
 
@@ -208,16 +241,16 @@ def parse_debug(analysis_dir: Path) -> list:
 def parse_ipc(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "unix_sockets.txt"))
     return {
-        "socket_files": non_empty_lines(sections.get("Unix Socket Files", "")),
-        "references": non_empty_lines(sections.get("Unix Socket References", ""))[:10],
+        "socket_files": _section_lines(sections, "Unix Socket Files"),
+        "references":   _section_lines(sections, "Unix Socket References")[:10],
     }
 
 
 def parse_certs(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "certificates_keys.txt"))
     return {
-        "files": non_empty_lines(sections.get("Certificate and Key Files", "")),
-        "embedded_in_binaries": non_empty_lines(sections.get("Embedded Keys / Certs in Files", ""))[:10],
+        "files":               _section_lines(sections, "Certificate and Key Files"),
+        "embedded_in_binaries": _section_lines(sections, "Embedded Keys / Certs in Files")[:10],
     }
 
 
@@ -255,20 +288,20 @@ def parse_architecture(analysis_dir: Path) -> dict:
         m = _PAT.search(line[len("type :"):])
         if not m:
             continue
-        bits        = int(m.group(1))
+        bits         = int(m.group(1))
         endian_short = m.group(2)
-        arch_word   = m.group(3).strip().split()[0]
-        arch        = _NAME.get(arch_word, arch_word)
-        key         = (arch, bits, endian_short)
-        votes[key]  = votes.get(key, 0) + 1
+        arch_word    = m.group(3).strip().split()[0]
+        arch         = _NAME.get(arch_word, arch_word)
+        key          = (arch, bits, endian_short)
+        votes[key]   = votes.get(key, 0) + 1
 
     if not votes:
         return _EMPTY
 
-    dominant    = max(votes, key=votes.__getitem__)
+    dominant             = max(votes, key=votes.__getitem__)
     arch, bits, endian_short = dominant
-    agreeing    = votes[dominant]
-    total       = sum(votes.values())
+    agreeing             = votes[dominant]
+    total                = sum(votes.values())
     return {
         "arch":             arch,
         "bits":             bits,
@@ -304,15 +337,17 @@ def parse_shellcheck(analysis_dir: Path) -> dict:
     for f in findings:
         lvl = f.get("level", "")
         by_level[lvl] = by_level.get(lvl, 0) + 1
-        key = (f["file"], f["code"])
+        file_path = f.get("file", "")
+        code = f.get("code", "")
+        key = (file_path, code)
         if key in seen:
             continue
         seen.add(key)
-        by_file.setdefault(f["file"], []).append({
-            "code": f["code"],
-            "level": lvl,
+        by_file.setdefault(file_path, []).append({
+            "code":    code,
+            "level":   lvl,
             "message": f.get("message", ""),
-            "line": f.get("line", 0),
+            "line":    f.get("line", 0),
         })
 
     return {"total": len(findings), "by_level": by_level, "by_file": by_file}
@@ -348,8 +383,8 @@ _PROTO_PORT_MAP = {
 }
 
 
-def build_entry_points(init: dict, web: dict, protocols: dict) -> list:
-    eps = []
+def build_entry_points(init: dict, web: dict, protocols: dict) -> list[EntryPoint]:
+    eps: list[EntryPoint] = []
     seen = set()
 
     for svc in init["detected_services"]:
@@ -358,12 +393,12 @@ def build_entry_points(init: dict, web: dict, protocols: dict) -> list:
             if (port, proto) not in seen:
                 seen.add((port, proto))
                 eps.append({
-                    "type": svc_type,
-                    "port": port,
-                    "protocol": proto,
-                    "binary": svc,
+                    "type":      svc_type,
+                    "port":      port,
+                    "protocol":  proto,
+                    "binary":    svc,
                     "interface": "unknown",
-                    "source": "init_scripts",
+                    "source":    "init_scripts",
                 })
 
     for port in web["inferred_ports"]:
@@ -372,12 +407,12 @@ def build_entry_points(init: dict, web: dict, protocols: dict) -> list:
             seen.add(key)
             svc_type = "https" if port == 443 else "http"
             eps.append({
-                "type": svc_type,
-                "port": port,
-                "protocol": "tcp",
-                "binary": web["httpd_binaries"][0] if web["httpd_binaries"] else "httpd",
+                "type":      svc_type,
+                "port":      port,
+                "protocol":  "tcp",
+                "binary":    web["httpd_binaries"][0] if web["httpd_binaries"] else "httpd",
                 "interface": "unknown",
-                "source": "web_server_config",
+                "source":    "web_server_config",
             })
 
     for proto, info in protocols.items():
@@ -386,27 +421,389 @@ def build_entry_points(init: dict, web: dict, protocols: dict) -> list:
             if (port, net_proto) not in seen:
                 seen.add((port, net_proto))
                 eps.append({
-                    "type": ep_type,
-                    "port": port,
-                    "protocol": net_proto,
-                    "binary": None,
+                    "type":      ep_type,
+                    "port":      port,
+                    "protocol":  net_proto,
+                    "binary":    None,
                     "interface": "unknown",
-                    "source": "protocols_config",
+                    "source":    "protocols_config",
                 })
 
     for port in init["explicit_ports"]:
         if not any(p == port for p, _ in seen):
             seen.add((port, "tcp"))
             eps.append({
-                "type": "unknown",
-                "port": port,
-                "protocol": "tcp",
-                "binary": None,
+                "type":      "unknown",
+                "port":      port,
+                "protocol":  "tcp",
+                "binary":    None,
                 "interface": "unknown",
-                "source": "init_script_port_binding",
+                "source":    "init_script_port_binding",
             })
 
     return eps
+
+
+# ── Attack Path Inferrers ─────────────────────────────────────────────────────
+
+def _ap_telnet(entry_points: list, **_) -> AttackPath | None:
+    if not any(ep["type"] == "telnet" for ep in entry_points):
+        return None
+    return {
+        "id":          "ap-telnet",
+        "title":       "Unencrypted Telnet Remote Shell",
+        "severity":    "critical",
+        "description": (
+            "Telnet daemon exposes an unencrypted remote shell. "
+            "All traffic is cleartext and trivially interceptable on the LAN."
+        ),
+        "entry_point": "telnet:23",
+        "steps": [
+            "Connect to port 23 (telnet) on the LAN interface",
+            "Attempt login with default or hardcoded credentials",
+            "Gain interactive shell (typically as root on embedded devices)",
+        ],
+        "evidence": ["init_scripts.txt: telnetd detected in network services"],
+    }
+
+
+def _ap_http_admin(entry_points: list, web: dict, **_) -> AttackPath | None:
+    http_eps = [ep for ep in entry_points if ep["type"] in ("http", "https")]
+    if not http_eps:
+        return None
+    evidence = [f"web_server_config: httpd binary found — {', '.join(web['httpd_binaries'][:3])}"]
+    if web["cgi_scripts"]:
+        evidence.append(f"web_interface.txt: {len(web['cgi_scripts'])} CGI scripts")
+    if web["lua_handlers"]:
+        evidence.append(f"web_interface.txt: {len(web['lua_handlers'])} Lua handlers")
+    return {
+        "id":          "ap-http-admin",
+        "title":       "HTTP Admin Interface Exposure",
+        "severity":    "high",
+        "description": (
+            "HTTP admin interface is reachable. "
+            "CGI handlers and Lua scripts may accept unauthenticated or weakly authenticated requests."
+        ),
+        "entry_point": f"http:{http_eps[0]['port']}",
+        "steps": [
+            f"Access HTTP interface on port {http_eps[0]['port']}",
+            "Enumerate endpoints: CGI scripts, Lua handlers, HTML forms",
+            "Attempt authentication bypass or default credential login",
+            "Exploit any unsanitized parameter to achieve RCE",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_cgi_injection(init: dict, web: dict, **_) -> AttackPath | None:
+    if not (init["has_command_injection"] and (web["cgi_scripts"] or web["lua_handlers"])):
+        return None
+    return {
+        "id":          "ap-cgi-injection",
+        "title":       "Remote Code Execution via CGI/Lua Command Injection",
+        "severity":    "critical",
+        "description": (
+            "Command injection patterns (eval, backtick, $()) found in init scripts "
+            "alongside CGI or Lua HTTP handlers. Unsanitized HTTP parameters likely reach shell commands."
+        ),
+        "entry_point": "http",
+        "steps": [
+            "Identify CGI or Lua endpoints that accept user-controlled parameters",
+            "Inject shell metacharacters: semicolon, backtick, $(), pipes",
+            "Achieve remote command execution, typically as root",
+        ],
+        "evidence": [
+            f"init_scripts.txt: injection patterns — {', '.join(init['injection_evidence'][:3])}",
+            f"web_interface.txt: {len(web['cgi_scripts'])} CGI, {len(web['lua_handlers'])} Lua handlers",
+        ],
+    }
+
+
+def _ap_default_creds(credentials: dict, init: dict, **_) -> AttackPath | None:
+    if not (credentials["default_credentials"] or init["has_hardcoded_creds"]):
+        return None
+    evidence = (
+        ["init_scripts.txt: hardcoded credential patterns in init scripts"] if init["has_hardcoded_creds"] else []
+    ) + (
+        [f"default_credentials.txt: {len(credentials['default_credentials'])} default credential references"]
+        if credentials["default_credentials"] else []
+    )
+    return {
+        "id":          "ap-default-creds",
+        "title":       "Authentication Bypass via Default or Hardcoded Credentials",
+        "severity":    "high",
+        "description": (
+            "Default or hardcoded credentials found in firmware. "
+            "These frequently remain unchanged on deployed devices."
+        ),
+        "entry_point": "any authenticated service",
+        "steps": [
+            "Identify login interfaces: HTTP admin, SSH, Telnet",
+            "Try common default credentials: admin/admin, admin/password, root/root",
+            "If credentials match, gain privileged access",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_static_creds(credentials: dict, **_) -> AttackPath | None:
+    if not credentials["hardcoded_in_configs"]:
+        return None
+    return {
+        "id":          "ap-static-creds",
+        "title":       "Credential Extraction from Firmware Image",
+        "severity":    "high",
+        "description": (
+            "Passwords, API keys, or secrets hardcoded in configuration files. "
+            "Extractable from any firmware image download without device access."
+        ),
+        "entry_point": "offline — firmware image",
+        "steps": [
+            "Obtain firmware image (vendor download page or TFTP/HTTP update URL)",
+            "Extract and mount root filesystem with unsquashfs",
+            "Read plaintext credentials from config files",
+            "Authenticate to live device or cloud API using extracted credentials",
+        ],
+        "evidence": [f"credentials.txt: {len(credentials['hardcoded_in_configs'])} credential references in config files"],
+    }
+
+
+def _ap_tr069(protocols: dict, **_) -> AttackPath | None:
+    if not protocols.get("tr069", {}).get("present"):
+        return None
+    return {
+        "id":          "ap-tr069",
+        "title":       "TR-069/CWMP Remote Management Exploitation",
+        "severity":    "high",
+        "description": (
+            "TR-069 (CWMP) allows ISP remote management of the device. "
+            "ACS impersonation or CWMP authentication weaknesses grant full remote control."
+        ),
+        "entry_point": "tr069:7547",
+        "steps": [
+            "Reach port 7547 from WAN (or perform ACS impersonation via DNS/MITM)",
+            "Exploit weak CWMP authentication or unauthenticated endpoints",
+            "Use SetParameterValues or Download RPC to push arbitrary config or firmware",
+        ],
+        "evidence": ["protocols.txt: TR-069/CWMP references found"],
+    }
+
+
+def _ap_upnp(protocols: dict, **_) -> AttackPath | None:
+    if not protocols.get("upnp", {}).get("present"):
+        return None
+    return {
+        "id":          "ap-upnp",
+        "title":       "UPnP/SSDP Port Forwarding Abuse",
+        "severity":    "medium",
+        "description": (
+            "UPnP on LAN allows unauthorized port forwarding rules to be added, "
+            "potentially exposing internal services to the WAN."
+        ),
+        "entry_point": "upnp:1900/udp",
+        "steps": [
+            "Discover device via SSDP (port 1900 UDP multicast)",
+            "Query IGD profile via SOAP",
+            "Add port forwarding rules or exploit known UPnP implementation CVEs",
+        ],
+        "evidence": ["protocols.txt: UPnP/SSDP references found"],
+    }
+
+
+def _ap_snmp(protocols: dict, **_) -> AttackPath | None:
+    if not protocols.get("snmp", {}).get("present"):
+        return None
+    return {
+        "id":          "ap-snmp",
+        "title":       "SNMP Community String Enumeration and Write Access",
+        "severity":    "medium",
+        "description": (
+            "SNMP with predictable community strings allows full device enumeration. "
+            "SNMPv2c write access enables configuration modification."
+        ),
+        "entry_point": "snmp:161/udp",
+        "steps": [
+            "Send SNMP GET to port 161 with community 'public' or 'private'",
+            "Walk MIB tree to enumerate device configuration",
+            "Use SNMP SET (if write community known) to modify running config",
+        ],
+        "evidence": [
+            "protocols.txt: SNMP community string references",
+        ] + protocols["snmp"]["evidence"][:2],
+    }
+
+
+def _ap_setuid(privesc: dict, **_) -> AttackPath | None:
+    if not privesc["setuid_binaries"]:
+        return None
+    return {
+        "id":          "ap-setuid",
+        "title":       "Local Privilege Escalation via SetUID Binary",
+        "severity":    "medium",
+        "description": (
+            "SetUID binaries execute as root regardless of the calling user. "
+            "A vulnerability in any of these binaries allows escalation from web/daemon user to root."
+        ),
+        "entry_point": "local — requires initial code execution",
+        "steps": [
+            "Gain low-privilege code execution (e.g., RCE as www-data via web handler)",
+            f"Target SetUID binary: {privesc['setuid_binaries'][0]}",
+            "Exploit buffer overflow, path traversal, or argument injection",
+            "Obtain root shell",
+        ],
+        "evidence": [f"setuid_binaries.txt: {len(privesc['setuid_binaries'])} SetUID binaries found"],
+    }
+
+
+def _ap_world_writable(privesc: dict, **_) -> AttackPath | None:
+    ww = privesc.get("world_writable", {})
+    ww_total = len(ww.get("files", [])) + len(ww.get("dirs", []))
+    if not ww_total:
+        return None
+    return {
+        "id":          "ap-world-writable",
+        "title":       "Privilege Escalation via World-Writable Path",
+        "severity":    "medium",
+        "description": (
+            "World-writable files or directories allow a low-privilege process to "
+            "inject content that a privileged process later reads or executes."
+        ),
+        "entry_point": "local — requires initial code execution",
+        "steps": [
+            "Gain low-privilege code execution",
+            "Write malicious payload to world-writable file or directory",
+            "Wait for privileged daemon to execute or read the modified path",
+        ],
+        "evidence": [f"world_writable.txt: {ww_total} world-writable files/directories"],
+    }
+
+
+def _ap_cert_extraction(certs: dict, **_) -> AttackPath | None:
+    if not (certs["files"] or certs["embedded_in_binaries"]):
+        return None
+    return {
+        "id":          "ap-cert-extraction",
+        "title":       "TLS Private Key Extraction for MITM",
+        "severity":    "high",
+        "description": (
+            "SSL/TLS private keys or certificates found in firmware. "
+            "Extracted keys enable man-in-the-middle attacks against the device or its cloud connections."
+        ),
+        "entry_point": "offline — firmware image",
+        "steps": [
+            "Extract private key from firmware filesystem (.pem, .key files)",
+            "Set up MITM proxy presenting the extracted certificate",
+            "Decrypt captured TLS traffic or impersonate the device to its cloud backend",
+        ],
+        "evidence": [
+            f"certificates_keys.txt: {len(certs['files'])} cert/key files found",
+        ] + (["certificates_keys.txt: private key material embedded in binary"] if certs["embedded_in_binaries"] else []),
+    }
+
+
+def _ap_weak_crypto(weak_crypto: list, **_) -> AttackPath | None:
+    if not weak_crypto:
+        return None
+    return {
+        "id":          "ap-weak-crypto",
+        "title":       "Cryptographic Weakness (MD5/DES/RC4/ECB)",
+        "severity":    "medium",
+        "description": (
+            "Broken cryptographic algorithms found in firmware. "
+            "MD5 is collision-prone, DES/RC4 are broken, ECB mode leaks patterns."
+        ),
+        "entry_point": "offline or network",
+        "steps": [
+            "Capture ciphertext or hash from device (via SNMP, config backup, or MITM)",
+            "Apply known attack: MD5 collision, RC4 BEAST/RC4 biases, ECB plaintext recovery",
+            "Recover plaintext, forge authentication token, or bypass integrity check",
+        ],
+        "evidence": [f"weak_crypto.txt: {len(weak_crypto)} weak crypto contexts found"],
+    }
+
+
+def _ap_debug(debug: list, **_) -> AttackPath | None:
+    debug_items = [item for f in debug for item in f.get("items", [])]
+    if not debug_items:
+        return None
+    return {
+        "id":          "ap-debug",
+        "title":       "Debug/Factory Interface Access",
+        "severity":    "medium",
+        "description": (
+            "Debug, factory, or diagnostic artifacts found in firmware. "
+            "These may expose undocumented commands, reduced authentication, or UART shell access."
+        ),
+        "entry_point": "local (UART) or network (undocumented endpoint)",
+        "steps": [
+            "Connect to UART console (physical access) or find debug HTTP parameter",
+            "Trigger factory/diagnostic mode to bypass authentication",
+            "Access privileged shell or extract runtime secrets via debug output",
+        ],
+        "evidence": [f"debug_artifacts.txt: {len(debug_items)} debug/factory/test artifacts"],
+    }
+
+
+def _ap_update_mitm(credentials: dict, **_) -> AttackPath | None:
+    if not credentials["cloud_endpoints"]:
+        return None
+    return {
+        "id":          "ap-update-mitm",
+        "title":       "Malicious Firmware Delivery via Update MITM",
+        "severity":    "medium",
+        "description": (
+            "Hardcoded firmware update URLs found. "
+            "If update integrity verification is absent or uses a weak hash, "
+            "a MITM attacker can serve malicious firmware."
+        ),
+        "entry_point": "network — update channel",
+        "steps": [
+            "Intercept firmware update request via DNS spoofing or MITM on update URL",
+            "Serve crafted firmware that passes signature/hash check (or bypasses it)",
+            "Device installs attacker-controlled firmware on next update cycle",
+        ],
+        "evidence": [f"credentials.txt: {len(credentials['cloud_endpoints'])} cloud/update URLs hardcoded"],
+    }
+
+
+def _ap_vendor_backdoor(init: dict, **_) -> AttackPath | None:
+    if not init["vendor_services"]:
+        return None
+    return {
+        "id":          "ap-vendor-backdoor",
+        "title":       "Vendor-Specific Service Attack Surface (TP-Link)",
+        "severity":    "high",
+        "description": (
+            "TP-Link proprietary services (tdpServer, tddp, omcid, cwmp) found in init scripts. "
+            "These vendor daemons have historically contained undocumented commands and authentication bypasses."
+        ),
+        "entry_point": "network — vendor daemon port",
+        "steps": [
+            "Identify vendor daemon port via protocol fingerprinting",
+            "Send crafted vendor protocol packets (TDDP, TDP, OMCI)",
+            "Exploit known CVEs or undocumented command execution paths",
+        ],
+        "evidence": [f"init_scripts.txt: vendor services — {', '.join(init['vendor_services'][:5])}"],
+    }
+
+
+_ATTACK_PATH_INFERRERS = [
+    _ap_telnet,
+    _ap_http_admin,
+    _ap_cgi_injection,
+    _ap_default_creds,
+    _ap_static_creds,
+    _ap_tr069,
+    _ap_upnp,
+    _ap_snmp,
+    _ap_setuid,
+    _ap_world_writable,
+    _ap_cert_extraction,
+    _ap_weak_crypto,
+    _ap_debug,
+    _ap_update_mitm,
+    _ap_vendor_backdoor,
+]
 
 
 def infer_attack_paths(
@@ -420,332 +817,39 @@ def infer_attack_paths(
     weak_crypto: list,
     debug: list,
     certs: dict,
-) -> list:
-    paths = []
-
-    telnet_eps = [ep for ep in entry_points if ep["type"] == "telnet"]
-    if telnet_eps:
-        paths.append({
-            "id": "ap-telnet",
-            "title": "Unencrypted Telnet Remote Shell",
-            "severity": "critical",
-            "description": (
-                "Telnet daemon exposes an unencrypted remote shell. "
-                "All traffic is cleartext and trivially interceptable on the LAN."
-            ),
-            "entry_point": "telnet:23",
-            "steps": [
-                "Connect to port 23 (telnet) on the LAN interface",
-                "Attempt login with default or hardcoded credentials",
-                "Gain interactive shell (typically as root on embedded devices)",
-            ],
-            "evidence": ["init_scripts.txt: telnetd detected in network services"],
-        })
-
-    http_eps = [ep for ep in entry_points if ep["type"] in ("http", "https")]
-    if http_eps:
-        evidence = [f"web_server_config: httpd binary found — {', '.join(web['httpd_binaries'][:3])}"]
-        if web["cgi_scripts"]:
-            evidence.append(f"web_interface.txt: {len(web['cgi_scripts'])} CGI scripts")
-        if web["lua_handlers"]:
-            evidence.append(f"web_interface.txt: {len(web['lua_handlers'])} Lua handlers")
-
-        paths.append({
-            "id": "ap-http-admin",
-            "title": "HTTP Admin Interface Exposure",
-            "severity": "high",
-            "description": (
-                "HTTP admin interface is reachable. "
-                "CGI handlers and Lua scripts may accept unauthenticated or weakly authenticated requests."
-            ),
-            "entry_point": f"http:{http_eps[0]['port']}",
-            "steps": [
-                f"Access HTTP interface on port {http_eps[0]['port']}",
-                "Enumerate endpoints: CGI scripts, Lua handlers, HTML forms",
-                "Attempt authentication bypass or default credential login",
-                "Exploit any unsanitized parameter to achieve RCE",
-            ],
-            "evidence": evidence,
-        })
-
-    if init["has_command_injection"] and (web["cgi_scripts"] or web["lua_handlers"]):
-        paths.append({
-            "id": "ap-cgi-injection",
-            "title": "Remote Code Execution via CGI/Lua Command Injection",
-            "severity": "critical",
-            "description": (
-                "Command injection patterns (eval, backtick, $()) found in init scripts "
-                "alongside CGI or Lua HTTP handlers. Unsanitized HTTP parameters likely reach shell commands."
-            ),
-            "entry_point": "http",
-            "steps": [
-                "Identify CGI or Lua endpoints that accept user-controlled parameters",
-                "Inject shell metacharacters: semicolon, backtick, $(), pipes",
-                "Achieve remote command execution, typically as root",
-            ],
-            "evidence": [
-                f"init_scripts.txt: injection patterns — {', '.join(init['injection_evidence'][:3])}",
-                f"web_interface.txt: {len(web['cgi_scripts'])} CGI, {len(web['lua_handlers'])} Lua handlers",
-            ],
-        })
-
-    if credentials["default_credentials"] or init["has_hardcoded_creds"]:
-        paths.append({
-            "id": "ap-default-creds",
-            "title": "Authentication Bypass via Default or Hardcoded Credentials",
-            "severity": "high",
-            "description": (
-                "Default or hardcoded credentials found in firmware. "
-                "These frequently remain unchanged on deployed devices."
-            ),
-            "entry_point": "any authenticated service",
-            "steps": [
-                "Identify login interfaces: HTTP admin, SSH, Telnet",
-                "Try common default credentials: admin/admin, admin/password, root/root",
-                "If credentials match, gain privileged access",
-            ],
-            "evidence": (
-                ["init_scripts.txt: hardcoded credential patterns in init scripts"] if init["has_hardcoded_creds"] else []
-            ) + (
-                [f"default_credentials.txt: {len(credentials['default_credentials'])} default credential references"] if credentials["default_credentials"] else []
-            ),
-        })
-
-    if credentials["hardcoded_in_configs"]:
-        paths.append({
-            "id": "ap-static-creds",
-            "title": "Credential Extraction from Firmware Image",
-            "severity": "high",
-            "description": (
-                "Passwords, API keys, or secrets hardcoded in configuration files. "
-                "Extractable from any firmware image download without device access."
-            ),
-            "entry_point": "offline — firmware image",
-            "steps": [
-                "Obtain firmware image (vendor download page or TFTP/HTTP update URL)",
-                "Extract and mount root filesystem with unsquashfs",
-                "Read plaintext credentials from config files",
-                "Authenticate to live device or cloud API using extracted credentials",
-            ],
-            "evidence": [f"credentials.txt: {len(credentials['hardcoded_in_configs'])} credential references in config files"],
-        })
-
-    if protocols.get("tr069", {}).get("present"):
-        paths.append({
-            "id": "ap-tr069",
-            "title": "TR-069/CWMP Remote Management Exploitation",
-            "severity": "high",
-            "description": (
-                "TR-069 (CWMP) allows ISP remote management of the device. "
-                "ACS impersonation or CWMP authentication weaknesses grant full remote control."
-            ),
-            "entry_point": "tr069:7547",
-            "steps": [
-                "Reach port 7547 from WAN (or perform ACS impersonation via DNS/MITM)",
-                "Exploit weak CWMP authentication or unauthenticated endpoints",
-                "Use SetParameterValues or Download RPC to push arbitrary config or firmware",
-            ],
-            "evidence": ["protocols.txt: TR-069/CWMP references found"],
-        })
-
-    if protocols.get("upnp", {}).get("present"):
-        paths.append({
-            "id": "ap-upnp",
-            "title": "UPnP/SSDP Port Forwarding Abuse",
-            "severity": "medium",
-            "description": (
-                "UPnP on LAN allows unauthorized port forwarding rules to be added, "
-                "potentially exposing internal services to the WAN."
-            ),
-            "entry_point": "upnp:1900/udp",
-            "steps": [
-                "Discover device via SSDP (port 1900 UDP multicast)",
-                "Query IGD profile via SOAP",
-                "Add port forwarding rules or exploit known UPnP implementation CVEs",
-            ],
-            "evidence": ["protocols.txt: UPnP/SSDP references found"],
-        })
-
-    if protocols.get("snmp", {}).get("present"):
-        paths.append({
-            "id": "ap-snmp",
-            "title": "SNMP Community String Enumeration and Write Access",
-            "severity": "medium",
-            "description": (
-                "SNMP with predictable community strings allows full device enumeration. "
-                "SNMPv2c write access enables configuration modification."
-            ),
-            "entry_point": "snmp:161/udp",
-            "steps": [
-                "Send SNMP GET to port 161 with community 'public' or 'private'",
-                "Walk MIB tree to enumerate device configuration",
-                "Use SNMP SET (if write community known) to modify running config",
-            ],
-            "evidence": [
-                "protocols.txt: SNMP community string references",
-            ] + protocols["snmp"]["evidence"][:2],
-        })
-
-    if privesc["setuid_binaries"]:
-        paths.append({
-            "id": "ap-setuid",
-            "title": "Local Privilege Escalation via SetUID Binary",
-            "severity": "medium",
-            "description": (
-                "SetUID binaries execute as root regardless of the calling user. "
-                "A vulnerability in any of these binaries allows escalation from web/daemon user to root."
-            ),
-            "entry_point": "local — requires initial code execution",
-            "steps": [
-                "Gain low-privilege code execution (e.g., RCE as www-data via web handler)",
-                f"Target SetUID binary: {privesc['setuid_binaries'][0]}",
-                "Exploit buffer overflow, path traversal, or argument injection",
-                "Obtain root shell",
-            ],
-            "evidence": [f"setuid_binaries.txt: {len(privesc['setuid_binaries'])} SetUID binaries found"],
-        })
-
-    ww = privesc.get("world_writable", {})
-    ww_total = len(ww.get("files", [])) + len(ww.get("dirs", []))
-    if ww_total:
-        paths.append({
-            "id": "ap-world-writable",
-            "title": "Privilege Escalation via World-Writable Path",
-            "severity": "medium",
-            "description": (
-                "World-writable files or directories allow a low-privilege process to "
-                "inject content that a privileged process later reads or executes."
-            ),
-            "entry_point": "local — requires initial code execution",
-            "steps": [
-                "Gain low-privilege code execution",
-                "Write malicious payload to world-writable file or directory",
-                "Wait for privileged daemon to execute or read the modified path",
-            ],
-            "evidence": [f"world_writable.txt: {ww_total} world-writable files/directories"],
-        })
-
-    if certs["files"] or certs["embedded_in_binaries"]:
-        paths.append({
-            "id": "ap-cert-extraction",
-            "title": "TLS Private Key Extraction for MITM",
-            "severity": "high",
-            "description": (
-                "SSL/TLS private keys or certificates found in firmware. "
-                "Extracted keys enable man-in-the-middle attacks against the device or its cloud connections."
-            ),
-            "entry_point": "offline — firmware image",
-            "steps": [
-                "Extract private key from firmware filesystem (.pem, .key files)",
-                "Set up MITM proxy presenting the extracted certificate",
-                "Decrypt captured TLS traffic or impersonate the device to its cloud backend",
-            ],
-            "evidence": [
-                f"certificates_keys.txt: {len(certs['files'])} cert/key files found",
-            ] + (["certificates_keys.txt: private key material embedded in binary"] if certs["embedded_in_binaries"] else []),
-        })
-
-    if weak_crypto:
-        paths.append({
-            "id": "ap-weak-crypto",
-            "title": "Cryptographic Weakness (MD5/DES/RC4/ECB)",
-            "severity": "medium",
-            "description": (
-                "Broken cryptographic algorithms found in firmware. "
-                "MD5 is collision-prone, DES/RC4 are broken, ECB mode leaks patterns."
-            ),
-            "entry_point": "offline or network",
-            "steps": [
-                "Capture ciphertext or hash from device (via SNMP, config backup, or MITM)",
-                "Apply known attack: MD5 collision, RC4 BEAST/RC4 biases, ECB plaintext recovery",
-                "Recover plaintext, forge authentication token, or bypass integrity check",
-            ],
-            "evidence": [f"weak_crypto.txt: {len(weak_crypto)} weak crypto contexts found"],
-        })
-
-    debug_items = [item for f in debug for item in f.get("items", [])]
-    if debug_items:
-        paths.append({
-            "id": "ap-debug",
-            "title": "Debug/Factory Interface Access",
-            "severity": "medium",
-            "description": (
-                "Debug, factory, or diagnostic artifacts found in firmware. "
-                "These may expose undocumented commands, reduced authentication, or UART shell access."
-            ),
-            "entry_point": "local (UART) or network (undocumented endpoint)",
-            "steps": [
-                "Connect to UART console (physical access) or find debug HTTP parameter",
-                "Trigger factory/diagnostic mode to bypass authentication",
-                "Access privileged shell or extract runtime secrets via debug output",
-            ],
-            "evidence": [f"debug_artifacts.txt: {len(debug_items)} debug/factory/test artifacts"],
-        })
-
-    if credentials["cloud_endpoints"]:
-        paths.append({
-            "id": "ap-update-mitm",
-            "title": "Malicious Firmware Delivery via Update MITM",
-            "severity": "medium",
-            "description": (
-                "Hardcoded firmware update URLs found. "
-                "If update integrity verification is absent or uses a weak hash, "
-                "a MITM attacker can serve malicious firmware."
-            ),
-            "entry_point": "network — update channel",
-            "steps": [
-                "Intercept firmware update request via DNS spoofing or MITM on update URL",
-                "Serve crafted firmware that passes signature/hash check (or bypasses it)",
-                "Device installs attacker-controlled firmware on next update cycle",
-            ],
-            "evidence": [f"credentials.txt: {len(credentials['cloud_endpoints'])} cloud/update URLs hardcoded"],
-        })
-
-    if init["vendor_services"]:
-        paths.append({
-            "id": "ap-vendor-backdoor",
-            "title": "Vendor-Specific Service Attack Surface (TP-Link)",
-            "severity": "high",
-            "description": (
-                "TP-Link proprietary services (tdpServer, tddp, omcid, cwmp) found in init scripts. "
-                "These vendor daemons have historically contained undocumented commands and authentication bypasses."
-            ),
-            "entry_point": "network — vendor daemon port",
-            "steps": [
-                "Identify vendor daemon port via protocol fingerprinting",
-                "Send crafted vendor protocol packets (TDDP, TDP, OMCI)",
-                "Exploit known CVEs or undocumented command execution paths",
-            ],
-            "evidence": [f"init_scripts.txt: vendor services — {', '.join(init['vendor_services'][:5])}"],
-        })
-
-    return paths
+) -> list[AttackPath]:
+    ctx = dict(
+        entry_points=entry_points, init=init, web=web, users=users,
+        credentials=credentials, privesc=privesc, protocols=protocols,
+        weak_crypto=weak_crypto, debug=debug, certs=certs,
+    )
+    return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]
 
 
 def build_model(analysis_dir: Path, firmware_id: str) -> dict:
     print(f"[*] Parsing analysis files from {analysis_dir}/")
 
-    users = parse_users(analysis_dir)
-    setuid = parse_setuid(analysis_dir)
-    caps = parse_capabilities(analysis_dir)
+    users        = parse_users(analysis_dir)
+    setuid       = parse_setuid(analysis_dir)
+    caps         = parse_capabilities(analysis_dir)
     world_writable = parse_world_writable(analysis_dir)
-    init = parse_init_services(analysis_dir)
-    web = parse_web(analysis_dir)
-    protocols = parse_protocols(analysis_dir)
-    credentials = parse_credentials(analysis_dir)
-    weak_crypto = parse_weak_crypto(analysis_dir)
-    debug = parse_debug(analysis_dir)
-    ipc = parse_ipc(analysis_dir)
-    certs = parse_certs(analysis_dir)
-    nvram = parse_nvram(analysis_dir)
-    shellcheck = parse_shellcheck(analysis_dir)
-    hardening = parse_hardening(analysis_dir)
-    arch = parse_architecture(analysis_dir)
+    init         = parse_init_services(analysis_dir)
+    web          = parse_web(analysis_dir)
+    protocols    = parse_protocols(analysis_dir)
+    credentials  = parse_credentials(analysis_dir)
+    weak_crypto  = parse_weak_crypto(analysis_dir)
+    debug        = parse_debug(analysis_dir)
+    ipc          = parse_ipc(analysis_dir)
+    certs        = parse_certs(analysis_dir)
+    nvram        = parse_nvram(analysis_dir)
+    shellcheck   = parse_shellcheck(analysis_dir)
+    hardening    = parse_hardening(analysis_dir)
+    arch         = parse_architecture(analysis_dir)
 
     privesc = {
         "setuid_binaries": setuid,
-        "capabilities": caps,
-        "world_writable": world_writable,
+        "capabilities":    caps,
+        "world_writable":  world_writable,
     }
 
     entry_points = build_entry_points(init, web, protocols)
@@ -756,38 +860,38 @@ def build_model(analysis_dir: Path, firmware_id: str) -> dict:
 
     return {
         "firmware": {
-            "id": firmware_id,
-            "analysis_dir": str(analysis_dir),
-            "arch": arch["arch"],
-            "bits": arch["bits"],
-            "endianness": arch["endianness"],
+            "id":               firmware_id,
+            "analysis_dir":     str(analysis_dir),
+            "arch":             arch["arch"],
+            "bits":             arch["bits"],
+            "endianness":       arch["endianness"],
             "endianness_short": arch["endianness_short"],
-            "arch_confidence": arch["confidence"],
-            "arch_elf_count": arch["elf_count"],
+            "arch_confidence":  arch["confidence"],
+            "arch_elf_count":   arch["elf_count"],
         },
         "summary": {
-            "entry_points_count": len(entry_points),
-            "attack_paths_count": len(attack_paths),
-            "critical_paths": sum(1 for p in attack_paths if p["severity"] == "critical"),
-            "high_paths": sum(1 for p in attack_paths if p["severity"] == "high"),
-            "users_with_password": sum(1 for u in users if u["has_password"]),
+            "entry_points_count":   len(entry_points),
+            "attack_paths_count":   len(attack_paths),
+            "critical_paths":       sum(1 for p in attack_paths if p["severity"] == "critical"),
+            "high_paths":           sum(1 for p in attack_paths if p["severity"] == "high"),
+            "users_with_password":  sum(1 for u in users if u["has_password"]),
             "setuid_binaries_count": len(setuid),
             "world_writable_count": len(world_writable["files"]) + len(world_writable["dirs"]),
         },
-        "entry_points": entry_points,
-        "users": users,
+        "entry_points":    entry_points,
+        "users":           users,
         "privilege_escalation": privesc,
-        "credentials": credentials,
-        "protocols": protocols,
-        "weak_crypto": weak_crypto,
+        "credentials":     credentials,
+        "protocols":       protocols,
+        "weak_crypto":     weak_crypto,
         "debug_artifacts": debug,
-        "ipc": ipc,
-        "certificates": certs,
+        "ipc":             ipc,
+        "certificates":    certs,
         "nvram_references": nvram,
-        "shellcheck": shellcheck,
-        "hardening": hardening,
-        "web": web,
-        "attack_paths": attack_paths,
+        "shellcheck":      shellcheck,
+        "hardening":       hardening,
+        "web":             web,
+        "attack_paths":    attack_paths,
     }
 
 
@@ -806,7 +910,7 @@ def main():
         "--output", "-o",
         type=Path,
         default=None,
-        help="Output JSON file (default: <analysis_dir>/attack_surface.json).",
+        help="Output JSON file (default: <firmware_id>_attack_surface.json).",
     )
     args = parser.parse_args()
 

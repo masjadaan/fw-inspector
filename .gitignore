@@ -1,0 +1,12 @@
+# Firmware binaries — download and provide your own
+input/
+
+# Claude Code local settings
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env

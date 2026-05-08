@@ -1,0 +1,606 @@
+{
+  "summary": {
+    "total": 84,
+    "nx_enabled": 1,
+    "nx_disabled": 49,
+    "nx_unknown": 34,
+    "pie_yes": 9,
+    "pie_no": 48,
+    "pie_unknown": 27,
+    "relro_full": 4,
+    "relro_partial": 0,
+    "relro_none": 80,
+    "canary_yes": 0,
+    "canary_no": 84
+  },
+  "binaries": [
+    {
+      "path": "bin/busybox",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/libcrypt-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/libdl-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "full",
+      "canary": false
+    },
+    {
+      "path": "lib/libm-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/libnsl-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/libpthread-0.9.33.2.so",
+      "nx": false,
+      "pie": "yes",
+      "relro": "full",
+      "canary": false
+    },
+    {
+      "path": "lib/libresolv-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/librt-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/libuClibc-0.9.33.2.so",
+      "nx": false,
+      "pie": "yes",
+      "relro": "full",
+      "canary": false
+    },
+    {
+      "path": "lib/libutil-0.9.33.2.so",
+      "nx": null,
+      "pie": "yes",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/afc.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/ipt_STAT.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/ipv6_pass_through.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/l2tp_ppp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/pppol2tp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/pptp.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "lib/modules/tp_domain.ko",
+      "nx": null,
+      "pie": "unknown",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "sbin/mii_mgr",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "sbin/mii_mgr_cl45",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "sbin/switch",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/afcd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/ated_tp",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/cloud_https",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/cmxdns",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/cos",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/curl",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/dhcpc",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/dhcpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/dnsProxy",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/dropbearmulti",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/dyndns",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/ebtables",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/httpd",
+      "nx": true,
+      "pie": "no",
+      "relro": "full",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/igmpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/ip",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/ipping",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/iwconfig",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/iwpriv",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/mldProxy",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/noipdns",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/ntpc",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/openssl",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/rt2860apd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/rtinicapd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/tc",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/tddp",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/tdpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/tmpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/traceroute",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/upnpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/wanType",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/wlNetlinkTool",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/wol",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/wscd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/wscd_5G",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/bin/xtables-multi",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/bpalogin",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/dhcp6c",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/dhcp6s",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/pppd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/radvd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/ripd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/xl2tpd",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    },
+    {
+      "path": "usr/sbin/zebra",
+      "nx": false,
+      "pie": "no",
+      "relro": "none",
+      "canary": false
+    }
+  ]
+}

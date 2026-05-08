@@ -1,0 +1,55 @@
+============================================================
+  Network-Exposed Services
+============================================================
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/tmp/dropbear
+
+============================================================
+  Explicit Port Bindings
+============================================================
+  (nothing found)
+
+============================================================
+  Hardcoded Credentials
+============================================================
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:cp -p /etc/passwd.bak /var/passwd
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:#support tplinklogin.net
+
+============================================================
+  Telnet and Debug Interfaces
+============================================================
+  (nothing found)
+
+============================================================
+  Command Injection Vectors
+============================================================
+  (nothing found)
+
+============================================================
+  Firewall Rules
+============================================================
+  (nothing found)
+
+============================================================
+  Outbound Connections
+============================================================
+  (nothing found)
+
+============================================================
+  Insecure File Permissions
+============================================================
+  (nothing found)
+
+============================================================
+  Sensitive Data Written to /tmp
+============================================================
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/run
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/tmp
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/tmp/wsc_upnp
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/tmp/wsc_upnp_5G
+/output/extracted/rootfs/squashfs-root/etc/init.d/rcS:/bin/mkdir -m 0777 -p /var/tmp/dropbear
+
+============================================================
+  Vendor-Specific Backdoor Services (TP-Link)
+============================================================
+  (nothing found)
+

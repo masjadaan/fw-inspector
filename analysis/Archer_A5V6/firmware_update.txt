@@ -1,0 +1,15 @@
+============================================================
+  Update / Upgrade References
+============================================================
+  (nothing found)
+
+============================================================
+  Checksum / Signature Verification
+============================================================
+/output/extracted/rootfs/squashfs-root/etc/cloud/cloud_https.cfg:    "verify":{
+
+============================================================
+  TP-Link Cloud / Update URLs
+============================================================
+/output/extracted/rootfs/squashfs-root/etc/cloud/cloud_https.cfg:        "host":"n-device-api.tplinkcloud.com",
+

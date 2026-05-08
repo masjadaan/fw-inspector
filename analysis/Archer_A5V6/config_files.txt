@@ -1,0 +1,12 @@
+/output/extracted/rootfs/squashfs-root/etc/default_config_DE.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_CA.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_KR.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_US.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_TW.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_JP.xml
+/output/extracted/rootfs/squashfs-root/etc/reduced_data_model.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_SE.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_EU.xml
+/output/extracted/rootfs/squashfs-root/etc/default_config_VN.xml
+/output/extracted/rootfs/squashfs-root/etc/cloud/cloud_https.cfg

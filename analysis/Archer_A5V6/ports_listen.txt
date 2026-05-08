@@ -1,0 +1,1 @@
+/output/extracted/rootfs/squashfs-root/etc/cloud/cloud_https.cfg:        "isSupportTCSP":"false",

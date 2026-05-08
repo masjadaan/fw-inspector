@@ -1,0 +1,78 @@
+============================================================
+  Valid Symlinks  (69)
+============================================================
+bin/ash -> busybox
+bin/cat -> busybox
+bin/chmod -> busybox
+bin/cp -> busybox
+bin/date -> busybox
+bin/df -> busybox
+bin/dmesg -> busybox
+bin/echo -> busybox
+bin/grep -> busybox
+bin/kill -> busybox
+bin/login -> busybox
+bin/ls -> busybox
+bin/mkdir -> busybox
+bin/mount -> busybox
+bin/netstat -> busybox
+bin/pidof -> busybox
+bin/ping -> busybox
+bin/ping6 -> busybox
+bin/ps -> busybox
+bin/rm -> busybox
+bin/sed -> busybox
+bin/sh -> busybox
+bin/sleep -> busybox
+bin/umount -> busybox
+etc/TZ -> /dev/null
+etc/passwd -> /dev/null
+etc/resolv.conf -> /dev/null
+lib/ld-uClibc.so.0 -> ld-uClibc-0.9.33.2.so
+lib/libc.so.0 -> libuClibc-0.9.33.2.so
+lib/libcrypt.so.0 -> libcrypt-0.9.33.2.so
+lib/libcrypto.so -> libcrypto.so.1.0.0
+lib/libcurl.so -> libcurl.so.4.7.0
+lib/libcurl.so.4 -> libcurl.so.4.7.0
+lib/libdl.so.0 -> libdl-0.9.33.2.so
+lib/libm.so.0 -> libm-0.9.33.2.so
+lib/libnsl.so.0 -> libnsl-0.9.33.2.so
+lib/libpthread.so.0 -> libpthread-0.9.33.2.so
+lib/libresolv.so.0 -> libresolv-0.9.33.2.so
+lib/librt.so.0 -> librt-0.9.33.2.so
+lib/libssl.so -> libssl.so.1.0.0
+lib/libutil.so.0 -> libutil-0.9.33.2.so
+linuxrc -> bin/busybox
+sbin/getty -> ../bin/busybox
+sbin/halt -> ../bin/busybox
+sbin/ifconfig -> ../bin/busybox
+sbin/init -> ../bin/busybox
+sbin/insmod -> ../bin/busybox
+sbin/lsmod -> ../bin/busybox
+sbin/poweroff -> ../bin/busybox
+sbin/reboot -> ../bin/busybox
+sbin/rmmod -> ../bin/busybox
+sbin/route -> ../bin/busybox
+sbin/vconfig -> ../bin/busybox
+usr/bin/arping -> ../../bin/busybox
+usr/bin/awk -> ../../bin/busybox
+usr/bin/dropbear -> dropbearmulti
+usr/bin/dropbearkey -> dropbearmulti
+usr/bin/free -> ../../bin/busybox
+usr/bin/ip6tables -> xtables-multi
+usr/bin/ipcrm -> ../../bin/busybox
+usr/bin/ipcs -> ../../bin/busybox
+usr/bin/iptables -> xtables-multi
+usr/bin/killall -> ../../bin/busybox
+usr/bin/pgrep -> ../../bin/busybox
+usr/bin/scp -> dropbearmulti
+usr/bin/taskset -> ../../bin/busybox
+usr/bin/tftp -> ../../bin/busybox
+usr/bin/top -> ../../bin/busybox
+usr/sbin/brctl -> ../../bin/busybox
+
+============================================================
+  Broken Symlinks  (0)
+============================================================
+(none)
+

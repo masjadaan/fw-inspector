@@ -1,0 +1,117 @@
+--- usr/sbin/xl2tpd ---
+%s: bearer type not appropriate for message %s.  Ignoring.
+Bearer Type
+%s: bearer capabilities not appropriate for message %s.  Ignoring.
+Bearer Capabilities
+
+--- usr/bin/cloud_https ---
+https://%s%s?deviceId=%s&user=&model=%s&hwId=%s&hwVer=%s&oemId=%s&fwVer=%s&deviceType=%s
+
+--- usr/bin/wscd_5G ---
+http://%s:%d/description.xml
+http://
+http://schemas.xmlsoap.org/soap/envelope/
+xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>
+MAN: "http://schemas.xmlsoap.org/soap/envelope/"; ns=01
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+CALLBACK: <http://
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
+
+--- usr/bin/curl ---
+ * https://curl.se/libcurl/c/curl_easy_setopt.html
+    --oauth2-bearer <token>
+OAuth 2 Bearer Token
+More details here: https://curl.se/docs/sslcerts.html
+@http://
+https://
+
+--- usr/bin/wscd ---
+http://%s:%d/description.xml
+http://
+http://schemas.xmlsoap.org/soap/envelope/
+xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>
+MAN: "http://schemas.xmlsoap.org/soap/envelope/"; ns=01
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+CALLBACK: <http://
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
+
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
+
+--- usr/bin/upnpd ---
+http://%s:%d/%s
+http://%d.%d.%d.%d:%d/
+
+--- usr/bin/dropbearmulti ---
+Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
+Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
+
+--- usr/bin/rtinicapd ---
+ secret_len = %d, secret= %s
+
+--- usr/bin/rt2860apd ---
+ secret_len = %d, secret= %s
+
+--- usr/bin/httpd ---
+Location: https://%s:%d
+Location: https://%s
+http://
+
+--- usr/bin/xtables-multi ---
+xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/
+
+--- lib/libixml.so ---
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
+
+--- lib/libcurl.so.4.7.0 ---
+# Your alt-svc cache. https://curl.se/docs/alt-svc.html
+# https://curl.se/docs/http-cookies.html
+# Your HSTS cache. https://curl.se/docs/hsts.html
+Authorization: Bearer %s
+auth=Bearer %s
+auth=Bearer %s
+auth=Bearer %s
+
+--- lib/libupnp.so ---
+http://schemas.xmlsoap.org/soap/envelope/
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>
+"http://schemas.upnp.org/upnp/1/0/"; ns=01
+http://
+
+--- lib/libcmm.so ---
+<presentationURL>http://%s:80/</presentationURL>
+<modelURL>http://%s:80/</modelURL>
+
+--- lib/libcrypto.so.1.0.0 ---
+You need to read the OpenSSL FAQ, http://www.openssl.org/support/faq.html
+
+--- lib/modules/tp_domain.ko ---
+http://
+
+--- lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko ---
+%s: DialogToken=%x, TxPwr=%d, LinkMargin=%d
+	msdu_token=%d

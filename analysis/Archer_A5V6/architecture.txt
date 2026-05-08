@@ -1,0 +1,35 @@
+============================================================
+  Detected Architecture
+============================================================
+arch             : MIPS
+  bits             : 32
+  endianness       : little-endian
+  endianness_short : LSB
+  confidence       : 0.77
+  elf_count        : 98
+  agreeing_count   : 75
+
+============================================================
+  Per-Binary Evidence (75 matching, up to 20 shown)
+============================================================
+bin/busybox  |  ELF 32-bit LSB executable, MIPS, MIPS32 rel2 version 1 (SYSV), dynamically linke
+  lib/modules/afc.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=fd
+  lib/modules/ipt_STAT.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=cd
+  lib/modules/ipv6_pass_through.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=9b
+  lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=71
+  lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=dd
+  lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=d7
+  lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=c1
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=f5
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=8f
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=cb
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=9a
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=94
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=9c
+  lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=65
+  lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=98
+  lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=05
+  lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=3d
+  lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=6b
+  lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko  |  ELF 32-bit LSB relocatable, MIPS, MIPS32 rel2 version 1 (SYSV), BuildID[sha1]=94
+

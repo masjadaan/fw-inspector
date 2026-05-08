@@ -1,0 +1,2838 @@
+--- usr/sbin/zebra ---
+socket
+bind
+listen
+accept
+connected_free
+connected_down_ipv4
+connected_up_ipv4
+connected_new
+zsend_ipv4_add_multipath
+zsend_ipv4_delete_multipath
+zsend_interface_up
+zsend_interface_down
+zsend_interface_add
+zsend_interface_delete
+zsend_interface_address_add
+zsend_interface_address_delete
+connect
+recvmsg
+connected_delete_ipv4
+connected_add_ipv4
+sendto
+sendmsg
+bind
+-A, --vty_addr     Set vty's bind address
+socket
+netlink-listen
+
+--- sbin/mii_mgr_cl45 ---
+socket
+Open socket failed
+
+--- usr/sbin/dhcp6c ---
+sendto
+recvmsg
+msg_connCliAndSend
+socket
+bind
+dhcp6_ctl_acceptcommand
+client6_send
+accept
+listen
+previous RD value is unknown (accept it)
+send %s to %s
+can't send solicit
+recvmsg: %s
+failed to create a new event to send decline!
+socket
+setsockopt(SO_BINDTODEVICE): %s
+setsockopt(IPV6_RECVPKTINFO): %s
+bind: %s
+open a routing socket: %s
+client6_recv
+client6_recvadvert
+client6_recvreply
+client6_send
+rebind
+no binding
+REBIND
+failed to make rebind data
+receive NoBinding against renew/rebind for %s-%lu
+socket(control sock): %s
+bind(control sock): %s
+listen(control sock): %s
+failed to accept control connection: %s
+accept control connection from %s
+dhcp6_ctl_acceptcommand
+	sendNS <ifName> <addr>
+
+--- sbin/switch ---
+socket
+'socket
+
+--- bin/busybox ---
+sendto
+recvfrom
+socket
+recvmsg
+bindresvport
+connect
+bind
+listen
+recvfrom
+error: no inet socket available
+socket:[
+CONNECTING
+CONNECTED
+DISCONNECTING
+LISTENING
+Active Internet connections 
+Proto Recv-Q Send-Q %-*s %-*s State       %s
+Active UNIX domain sockets 
+SYN_RECV
+LISTEN
+Listener Query
+Listener Report
+Listener Reduction
+ Queues Send/Recv/Change Times
+send
+recv
+send_time=%-26.24s
+nfs socket
+nfs bindresvport
+can't bind to interface %s
+can't connect to remote host
+bind
+listen
+sendto
+can't create raw socket
+LD_BIND_NOW
+
+--- sbin/mii_mgr ---
+socket
+Open socket failed
+
+--- usr/sbin/pppd ---
+sendPacket
+sendPADTForLastSession
+sendPADT
+msg_send
+link_connect_time
+pppoe_get_connection
+listen_time
+ppp_send_config
+ppp_recv_config
+maxconnect
+snoop_send_hook
+tty_send_config
+connect_delay
+snoop_recv_hook
+accept
+localbind
+listen
+disconnect_tty
+pptp_send_ctrl_packet
+noSendMsg
+pppol2tp_send_accm_hook
+lax_recv
+pty_socket
+tty_do_send_config
+tty_recv_config
+disconnect_script
+Cannot create raw socket -- pppoe must be run as root.
+Can't open socket for pppoe: %m
+Can't set socket options for pppoe: %m
+This may cause serious connection problems.
+Failed to bind to interface %s: %m
+Send 
+error sending pppoe packet: %m
+Recv 
+Failed to disconnect PPPoE socket: %d %m
+Failed to create PPPoE socket: %m
+Connected to %02X:%02X:%02X:%02X:%02X:%02X via interface %s
+Failed to connect PPPoE socket: %d %m
+Only connect to specified MAC address
+sending SIGTERM to process %d
+Connect time %d.%d minutes.
+Disconnected
+Connecting
+Connected
+/etc/ppp/connect-errors
+error waiting for (dis)connection process: %m
+CONNECT_TIME
+%s: timeout sending Config-Requests
+Serial link appears to be disconnected.
+Accept all received control characters
+Don't send or accept multilink endpoint discriminator
+Disable VJ connection-ID compression
+ipcp-accept-local
+Accept peer's address for us
+ipcp-accept-remote
+Accept peer's address for it
+nosendip
+Don't send our IP address to peer
+Connect time expired
+Terminating connection due to lack of activity.
+Connect: %s <--> %s
+Connection terminated.
+Set telephone number(s) which are allowed to connect
+        connect <p>     Invoke shell command <p> to set up the serial line
+Set time in seconds before retrying connection
+Set time in seconds before disconnecting idle link
+maxconnect
+Set connection time limit
+Keep on reopening connection after close
+Send log messages to this file descriptor
+Don't send log messages to any file
+Don't send log messages to any file descriptor
+Maximum number of unsuccessful connection attempts to allow
+connect-delay
+Maximum time (in ms) to wait after connect script finishes
+Set bound ifname for socket
+Set connection traffic limit
+Couldn't create IP socket: %m(%d)
+Couldn't connect to interface unit %d: %m
+IPv6 socket creation failed: %m
+socket(AF_IPX): %m (line %d)
+could not open IPv6 socket
+ipxcp-accept-network
+Accept peer IPX network number
+ipxcp-accept-local
+Accept our IPX address
+ipxcp-accept-remote
+Accept peer's IPX address
+connect script is required for demand-dialling
+socket option is incompatible with pty and notty
+disconnect script failed
+Serial link disconnected.
+Can't parse host:port for socket destination
+%s: unknown host in socket option
+Can't create socket: %m
+Can't connect to %s: %m
+Connect script failed
+Serial connection established.
+connect
+A program to set up a connection
+disconnect
+Program to disconnect serial device
+Send and receive over socket, arg is host:port
+Listen
+ipv6cp-accept-local
+Accept peer's interface identifier for us
+failed to create socket: %m
+connect(%s): %m
+set QoS for PPPoATM connection
+Given FD for PPPoL2TP socket invalid (%s)
+Socket of not a PPPoX socket
+recvseq 
+sendseq 
+setsockopt(PPPOL2TP_RECVSEQ): %m
+setsockopt(PPPOL2TP_SENDSEQ): %m
+Telling L2TP: Send ACCM = %08x; Receive ACCM = %08x
+FD for PPPoL2TP socket
+pppol2tp_send_seq
+pppol2tp_recv_seq
+PPTP: connect failed (%s)
+PPTP: failed to create PPTP socket (%s)
+PPTP: failed to bind PPTP socket (%s)
+Could not create unix domain socket: %s
+PPTP: failed to connect PPTP socket (%s)
+PPTP socket
+Closing connection (call state)
+socket: %s
+bind: %s
+connect: %s
+Could not open control connection to %s
+control connection
+Could not open unix socket for %s
+Could not open connection.
+Socket not accepted: %s
+Closing connection (unhandled)
+Closing connection (shutdown)
+Closing PPTP connection
+Received Start Control Connection Request
+server connection ESTABLISHED.
+Received Start Control Connection Reply
+Negative reply received to our Start Control Connection Request
+Client connection established.
+Received Stop Control Connection Request.
+Received Stop Control Connection Reply.
+Our outgoing call request [callid %d] has not been accepted.
+Call disconnect notification received (call id %d)
+  send_accm is %08lX, recv_accm is %08lX
+closing control connection due to missing echo reply
+call->state.pns == PNS_WAIT_DISCONNECT
+Start-Control-Connection-Request
+Start-Control-Connection-Reply
+Stop-Control-Connection-Request
+Stop-Control-Connection-Reply
+Incoming-Call-Connected
+Call-Disconnect-Notify
+Not Accepted, Call is administratively prohibited
+(Not-Connected)
+No control connection exists yet for this PAC-PNS pair
+pptp_send_ctrl_packet
+pptp_send_ctrl_packet
+
+--- usr/sbin/dhcp6s ---
+recvmsg
+socket
+bind
+dhcp6_ctl_acceptcommand
+sendto
+accept
+listen
+unexpected binding value type(%d)
+unknown binding type %d
+unexpected binding type(%d)
+remove a binding %s
+internal error: unknown binding type (%d)
+update binding %s for %s
+no binding found for %s
+failed  to copy binding info
+we have a binding already: %s
+failed to copy binding info
+failed to copy binding data
+add a new binding %s
+failed to make a binding
+previous RD value for %s is unknown (accept it)
+recvmsg: %s
+server ID option is included in a rebind message
+no useful information for a rebind
+no binding found for address %s
+unknown binding type: %ul
+no such binding
+socket(insock): %s
+setsockopt(inbound, IPV6_RECVPKTINFO): %s
+bind(insock): %s
+socket(outsock): %s
+remove_binding
+bindingstr
+free_binding
+server6_recv
+update_binding
+update_binding_duration
+add_binding
+binding_timo
+server6_send
+react_rebind
+release_binding_ia
+find_binding_ia
+decline_binding_ia
+no binding
+REBIND
+socket(control sock): %s
+bind(control sock): %s
+listen(control sock): %s
+failed to accept control connection: %s
+accept control connection from %s
+dhcp6_ctl_acceptcommand
+
+--- usr/sbin/radvd ---
+recvmsg
+send_ra_forall
+open_icmpv6_socket
+recv_rs_ra
+sendmsg
+can't create socket(AF_INET6): %s
+setsockopt(IPV6_RECVPKTINFO): %s
+setsockopt(IPV6_RECVHOPLIMIT): %s
+recv_rs_ra: malloc: %s
+recvmsg: %s
+recvmsg len=%d
+Please send bug reports or suggestions to %s.
+sending RA on %s
+sendmsg: %s
+Sending RA to %s
+AdvSendAdvert is off for %s
+create socket for IPv4 ioctl failed for %s: %s
+
+--- usr/sbin/xl2tpd ---
+send_zlb
+server_socket
+connect
+bind
+sendmsg
+recvmsg
+%d: Send payload ZLB on call %d:%d
+%s: Unable to allocate PPPoL2TP socket.
+%s: Unable to set PPPoL2TP socket nonblock.
+%s: Unable to connect PPPoL2TP socket.
+Connecting to host %s, port %d
+Disconnecting from %s, Local: %d, Remote: %d
+%s: Attempting to disconnect tunnel %d
+Listening on IP address %s, port %d
+%s: sending Hello on %d
+%s: sending control ZLB on tunnel %d
+%s: sending SCCRQ
+%s: sending ICRQ
+%s: Denied connection to unauthorized peer %s
+%s: sending SCCRP
+%s: sending SCCCN
+Connection established to %s, %d.  Local: %d, Remote: %d (ref=%u/%u).
+Connection established to %s, %d.  Local: %d, Remote: %d (ref=%u/%u).  LNS session is '%s'
+%s: Peer tried to disconnect without specifying tunnel ID
+%s: Peer [Vendor:%s] [Firmware:%d (0x%.4x)] tried to disconnect with invalid TID (%d != %d)
+%s: Peer tried to disconnect without specifying result code.
+%s: Connection closed to %s, port %d (%s), Local: %d, Remote: %d
+This tunnel cannot accept calls
+%s: Sending ICRP
+%s: Sending ICCN
+%s: Peer tried to disconnect without specifying call ID
+%s: Unable to determine call to be disconnected.
+%s: Peer tried to disconnect with invalid CID (%d != %d)
+%s: Connection closed to %s, serial %d (%s)
+%s: Sending an updated ZLB in reponse
+%s: Aempted to send payload on tunnel
+%s: sending payload ZLB
+send_zlb
+%s: tx connect speed not appropriate for message %s.  Ignoring.
+Connect Speed (tx)
+%s: rx connect speed not appropriate for message %s.  Ignoring.
+Connect Speed (RX)
+Call disconnected due to loss of carrier
+Call disconnected for the reason indicated in error code
+Call disconnected for administrative reasons
+Call was connected but no appropriate framing was detect
+General request to clear control connection
+Start-Control-Connection-Request
+Start-Control-Connection-Reply
+Start-Control-Connection-Connected
+Stop-Control-Connection-Notification
+Outgoing-Call-Connected
+Incoming-Call-Connected
+Call-Disconnect-Notify
+Transmit Connect Speed
+Receive Connect Speed
+Trustingly terminating pppd: sending TERM signal to pid %d
+Connection %d closed to %s, port %d (%s)
+%s: Call %d to %s disconnected
+%s: Unable to allocate socket. Terminating.
+%s: Unable to bind socket: %s. Terminating.
+%s: Unable to read socket name.Terminating.
+setsockopt recvref: %s
+sending with saref=%d
+trying to send control packet to %d
+%s: recvfrom returned error %d (%s)
+%s: recv packet from %s, size = %d, tunnel = %d, call = %d ref=%u refhim=%u
+%s: no such call %d on tunnel %d.  Sending special ZLB
+set_listenaddr: Setting listen address to %s
+listen-addr
+
+--- usr/sbin/bpalogin ---
+bind
+closesocket
+socketerror
+connect
+send_transaction
+send_udp_transaction
+send
+sendto
+recv
+recvfrom
+msg_connCliAndSend
+Listening on port %d
+Error binding auth socket
+Cant connect to auth server
+Error binding auth socket 2
+Error connecting auth socket 2
+Will accept heartbeats from %s = %s
+Socket closed - shutting down
+Error binding logout auth socket
+Error connecting logout auth socket
+Sending parm %d value %s
+Sending parm %d value %d
+
+--- usr/sbin/ripd ---
+sendto
+socket
+bind
+recvfrom
+zebra_redistribute_send
+rip_request_send
+connected_free
+accept
+connect
+connected_new
+connected_delete_by_prefix
+-A, --vty_addr     Set vty's bind address
+Cannot send RIP packet to socket %d, port %d, addr %s, to %x
+socket
+bind
+recvfrom failed: %s
+RECV packet from %s port %d on %s
+connected
+redistribute (kernel|connected|static|ospf|bgp)
+Connected
+no ip rip send version (1|2)
+no ip rip send version
+ip rip send version 2 1
+ip rip send version 1 2
+ip rip send version (1|2)
+
+--- usr/bin/dhcpc ---
+send_release
+listen_socket
+raw_socket
+send_discover
+send_renew
+send_selecting
+send_decline
+msg_recv
+bind
+sendto
+connect
+msg_connCliAndSend
+DHCPC: Couldn't create listen_fd on interface %s
+Recv no OFFER, DHCP Service unavailable
+Send REQUEST to server %s with request ip %s
+Recv OFFER from server %s with ip %s
+Offered address is in use, Send decline
+Recv ACK from server %s with ip %s lease time %ld
+Recv NAK from server %s with ip %s
+Recved DHCP offer for discover.
+bind call failed: %m
+Recv DNS server address %s,%s
+Could not open raw socket
+Could not setsocketopt on raw socket
+DHCPC: socket call failed: %m
+DHCPC: bind call failed: %m
+raw_socket
+
+--- usr/bin/wol ---
+socket
+sendto
+socket
+wol send failed!
+
+--- usr/bin/ntpc ---
+msg_send
+bind
+listen
+connect
+recvfrom
+socket
+msg_recv
+could not bind to udp port %d
+bind
+recvfrom
+socket
+ntp connect failed, return.
+
+--- usr/bin/cmxdns ---
+msg_connCliAndSend
+msg_recv
+recvfrom
+socket
+sendto
+dns_recvAndParseReply
+dns_send_query
+bind
+
+--- usr/bin/wanType ---
+msg_connCliAndSend
+recv
+socket
+bind
+sendto
+Could not open socket
+Error: Socket creation failed
+Error: raw socket call failed
+Error: Could not set reuse address option on DHCP socket
+Error: Could not set broadcast option on DHCP socket
+Error: Could not bind to DHCP socket
+Could not open raw socket
+
+--- usr/bin/afcd ---
+socket
+afcSocket
+afcSocket
+
+--- usr/bin/ebtables ---
+socket
+ --arpreply-target target         : ACCEPT, DROP, RETURN or CONTINUE
+ --ftos-target target : ACCEPT, DROP, RETURN or CONTINUE
+ --ftos-8021p value   : Set vlan tag's 802.1P value according to DSCP value --mark-target target : ACCEPT, DROP, RETURN or CONTINUE
+ --snat-target target   : ACCEPT, DROP, RETURN or CONTINUE
+ --dnat-target target   : ACCEPT, DROP, RETURN or CONTINUE
+ --redirect-target target   : ACCEPT, DROP, RETURN or CONTINUE
+Standard targets: DROP, ACCEPT, RETURN or CONTINUE;
+ACCEPT 
+stp-sender-prio
+stp-sender-addr
+--stp-sender-prio prio[:prio]    : sender priority (16-bit) range
+--stp-sender-addr address[/mask] : MAC address of sender
+Bad --stp-sender-prio range
+Bad --stp-sender-addr address
+Problem getting a socket, you probably don't have the right permissions
+ACCEPT
+
+--- usr/bin/cloud_https ---
+nextConnectTime
+/var/tmp/lastConnectTime
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - post connect timeout          : %d
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - get connect timeout           : %d
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - nextConnectTime               : %s
+post_connect_timeout_s
+get_connect_timeout_s
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - curl set option CURLOPT_CONNECTTIMEOUT ret %d
+
+--- usr/bin/ipping ---
+socket
+bind
+sendto
+recvfrom
+msg_send
+socket
+bind
+ping: recvfrom
+ping: sendto
+PING: sendto %s
+
+--- usr/bin/igmpd ---
+msg_recv
+recvmsg
+socket
+sendmsg
+igmpd# Err: send query - sendmsg
+
+--- usr/bin/wscd_5G ---
+socket
+recvfrom
+bind
+UpnpAcceptSubscription
+UpnpSendAdvertisement
+UpnpSendActionAsync
+SendReply
+gRecvThreadPool
+connect
+SoapSendAction
+gSendThreadPool
+SoapSendActionEx
+sendto
+gSsdpReqSocket
+http_SendMessage
+accept
+readFromSSDPSocket
+http_RecvMessage
+http_SendStatusResponse
+listen
+get_ssdp_sockets
+recv
+send
+http_Connect
+creat netlink socket thread failed!
+Create netlink socket thread success!
+creat ioctl socket failed!err=%d!
+Create ioctl socket(%d) success!
+ioctl socket create failed! errno=%d!
+recvfrom(netlink)
+Pthread(%s)Now waiting for the netlink socket incoming message!
+(%s):netlink socket data is available now.
+socket(PF_NETLINK,SOCK_RAW,NETLINK_ROUTE)
+bind(netlink)
+(%s):Ready to send pWscU2KMsg(len=%d) to kernel by ioctl(%d)!
+ioctl retval=%d! senderID=%d!
+WscEventDataMsgRecv-K2UMsg
+ca_event->Socket=%d!
+Error sending advertisements : %d
+WscEventDataMsgRecv
+WscEventMgmtMsgRecv
+ERROR: WscUPnPCPSendAction: Trying to add action param, rc=%d!
+Error in UpnpSendActionAsync -- %d
+Err sending SearchReq for Device UDN: %s -- err = %d
+Error sending search request%d
+ACCEPT
+ACCEPT-CHARSET
+ACCEPT-ENCODING
+ACCEPT-LANGUAGE
+ACCEPT-RANGES
+CONNECTION: close
+Accepted
+Not Acceptable
+UPNP_E_SOCKET_WRITE
+UPNP_E_SOCKET_READ
+UPNP_E_SOCKET_BIND
+UPNP_E_SOCKET_CONNECT
+UPNP_E_OUTOF_SOCKET
+UPNP_E_LISTEN
+UPNP_E_SUBSCRIBE_UNACCEPTED
+UPNP_E_UNSUBSCRIBE_UNACCEPTED
+UPNP_E_NOTIFY_UNACCEPTED
+
+--- usr/bin/ip ---
+rtnl_send_check
+socket
+sendto
+rtnl_send
+rtnl_listen
+bind
+recv
+sendmsg
+recvmsg
+accept_msg
+Failed to send flush request
+Cannot send dump request
+Not sending binary stream to stdout
+connected
+Failed to connect the route
+Cannot create control socket
+socket(PF_PACKET)
+bind
+Cannot create socket
+wildrecv%s
+socket 
+wildrecv
+Failed to send delete-all request
+FLAG := [ noecn | decap-dscp | nopmtudisc | wildrecv | icmp | af-unspec | align4 ]
+Failed to send delete-all request
+        [ loose_binding { on | off } ]
+loose_binding
+LOOSE_BINDING%s
+	[ listen-only { on | off } ]
+LISTEN-ONLY
+listen-only
+Cannot open netlink socket
+Cannot bind netlink socket
+sender address length == %d
+Sender address length == %d
+
+--- usr/bin/iwconfig ---
+iw_sockets_open
+socket
+
+--- usr/bin/mldProxy ---
+msg_recv
+recvmsg
+socket
+sendmsg
+mldProxy# Err: setsockopt - IPV6_RECVPKTINFO
+mldProxy# Err: send query - sendmsg
+
+--- usr/bin/curl ---
+=> Send header
+=> Send data
+<= Recv header
+<= Recv data
+<= Recv SSL data
+=> Send SSL data
+connect-timeout
+unix-socket
+connect-to
+abstract-unix-socket
+suppress-connect-headers
+    --abstract-unix-socket <path>
+connection
+Connect via abstract Unix domain socket
+    --connect-timeout <fractional seconds>
+Maximum time allowed for connection
+    --connect-to <HOST1:PORT1:HOST2:PORT2>
+Connect to host
+Send cookies from string/file
+Allow insecure DoH server connections
+EGD socket path for random data
+Send PRET before PASV
+Send CCC after authenticating
+Send HAProxy PROXY protocol v1 header
+Acceptable MD5 hash of the host public key
+Allow insecure server connections when using SSL
+Like --location, and send auth to other hosts
+Disable TCP keepalive on the connection
+Use HTTP NTLM authentication with winbind
+Do HTTPS proxy connections without verifying the proxy
+Operate through an HTTP proxy tunnel (using CONNECT)
+Send command(s) to server before transfer
+Retry on connection refused (use with --retry)
+    --suppress-connect-headers
+Suppress proxy CONNECT response headers
+Do not send any TFTP options
+    --unix-socket <path>
+Connect through this Unix domain socket
+Send User-Agent <name> to server
+UnixSockets
+CURLOPT_SUPPRESS_CONNECT_HEADERS
+CURLOPT_ACCEPT_ENCODING
+CURLOPT_MAX_SEND_SPEED_LARGE
+CURLOPT_MAX_RECV_SPEED_LARGE
+CURLOPT_EGDSOCKET
+CURLOPT_CONNECTTIMEOUT_MS
+CURLOPT_CONNECT_TO
+CURLOPT_ABSTRACT_UNIX_SOCKET
+CURLOPT_UNIX_SOCKET_PATH
+establish a secure connection to it. To learn more about this situation and
+: connection refused
+http_connect
+num_connects
+time_appconnect
+time_connect
+
+--- usr/bin/wscd ---
+socket
+recvfrom
+bind
+UpnpAcceptSubscription
+UpnpSendAdvertisement
+UpnpSendActionAsync
+SendReply
+gRecvThreadPool
+connect
+SoapSendAction
+gSendThreadPool
+SoapSendActionEx
+sendto
+gSsdpReqSocket
+http_SendMessage
+accept
+readFromSSDPSocket
+http_RecvMessage
+http_SendStatusResponse
+listen
+get_ssdp_sockets
+recv
+send
+http_Connect
+creat netlink socket thread failed!
+Create netlink socket thread success!
+creat ioctl socket failed!err=%d!
+Create ioctl socket(%d) success!
+ioctl socket create failed! errno=%d!
+recvfrom(netlink)
+Pthread(%s)Now waiting for the netlink socket incoming message!
+(%s):netlink socket data is available now.
+socket(PF_NETLINK,SOCK_RAW,NETLINK_ROUTE)
+bind(netlink)
+(%s):Ready to send pWscU2KMsg(len=%d) to kernel by ioctl(%d)!
+ioctl retval=%d! senderID=%d!
+WscEventDataMsgRecv-K2UMsg
+ca_event->Socket=%d!
+Error sending advertisements : %d
+WscEventDataMsgRecv
+WscEventMgmtMsgRecv
+ERROR: WscUPnPCPSendAction: Trying to add action param, rc=%d!
+Error in UpnpSendActionAsync -- %d
+Err sending SearchReq for Device UDN: %s -- err = %d
+Error sending search request%d
+ACCEPT
+ACCEPT-CHARSET
+ACCEPT-ENCODING
+ACCEPT-LANGUAGE
+ACCEPT-RANGES
+CONNECTION: close
+Accepted
+Not Acceptable
+UPNP_E_SOCKET_WRITE
+UPNP_E_SOCKET_READ
+UPNP_E_SOCKET_BIND
+UPNP_E_SOCKET_CONNECT
+UPNP_E_OUTOF_SOCKET
+UPNP_E_LISTEN
+UPNP_E_SUBSCRIBE_UNACCEPTED
+UPNP_E_UNSUBSCRIBE_UNACCEPTED
+UPNP_E_NOTIFY_UNACCEPTED
+
+--- usr/bin/noipdns ---
+msg_connCliAndSend
+msg_recv
+socket
+bind
+connect
+send
+dns_recvAndParseReply
+dns_send_query
+sendto
+recvfrom
+WANIPBinding
+Accept: */*
+
+--- usr/bin/openssl ---
+SSL_accept
+BIO_socket_ioctl
+BIO_new_socket
+SSL_set_accept_state
+SSL_set_connect_state
+BIO_s_connect
+SSL_connect
+BIO_new_connect
+bind
+listen
+OCSP_sendreq_new
+OCSP_sendreq_nbio
+BIO_new_accept
+ -keyout arg    file to send the key to
+%4ld client connects (SSL_connect())
+%4ld client renegotiates (SSL_connect())
+%4ld client connects that finished
+%4ld server accepts (SSL_accept())
+%4ld server renegotiates (SSL_accept())
+%4ld server accepts that finished
+LOOKUP during accept %s
+shutdown accept socket
+CONNECTION CLOSED
+ACCEPT
+CONNECTION FAILURE
+LOOKUP renego during accept
+CONNECTION ESTABLISHED
+Error: client did not send PSK identity
+-accept
+-naccept
+bad accept value %s
+ -accept arg   - port to accept on (default is %d)
+ -auth               - send and receive RFC 5878 TLS auth extensions and supplemental data
+ -auth_require_reneg - Do not send TLS auth extensions until renegotiation
+ -servername_fatal - on mismatch send fatal alert (default warning alert)
+Acceptable client certificate CA names
+-connect
+-reconnect
+ -host host     - use -connect instead
+ -port port     - use -connect instead
+ -connect host:port - who to connect to (default is %s:%s)
+ -reconnect    - Drop and re-make the connection with the same Session-ID
+ -prexit       - print session information even on connection failure
+ -fallback_scsv - send TLS_FALLBACK_SCSV
+ -serverinfo types - send empty ClientHello extensions (comma-separated numbers)
+connect:errno=%d
+CONNECTED(%08X)
+drop connection and then reconnect
+CONNECTION CLOSED BY SERVER
+-connect host:port - host:port to connect to (default is %s)
+-new          - Just time new connections
+-reuse        - Just time connection reuse
+Collecting connection statistics for %d seconds
+%d connections in %.2fs; %.2f connections/user sec, bytes read %ld
+%d connections in %ld real seconds, %ld bytes read per connection
+Unable to get connection
+SSL_connect
+SSL_accept
+socket
+bind
+Error accepting connection
+Error creating connect BIO
+Error connecting BIO
+Can't get connection fd
+Timeout on connect
+Illegal accept count %s
+-host host:n         send OCSP request to host on port n
+-nrequest n          number of requests to accept (default unlimited)
+-timeout n           timeout connection to OCSP responder after n seconds
+Error setting up accept BIO
+Waiting for OCSP client connections...
+
+--- usr/bin/upnpd ---
+msg_recv
+msg_send
+UpnpAcceptSubscriptionExt
+ConnectionStatus
+LastConnectionError
+UpnpSendAdvertisement
+socket
+PossibleConnectionTypes
+ConnectionStatus
+Connected
+NewDefaultConnectionService
+Failiure in SetDefaultConnectionService: Invalid Arguments!
+<u:GetDefaultConnectionServiceResponse xmlns:u="urn:schemas-upnp-org:service:L3Forwarding:1">
+<NewDefaultConnectionService>%s</NewDefaultConnectionService>
+</u:GetDefaultConnectionServiceResponse>
+Error parsing Response to GetDefaultConnectionService: %s
+SetDefaultConnectionService
+GetDefaultConnectionService
+GetConnectionTypeInfo
+SetConnectionType
+RequestConnection
+<u:GetConnectionTypeInfoResponse xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1">
+<NewConnectionType>IP_Routed</NewConnectionType>
+<NewPossibleConnectionTypes>IP_Routed</NewPossibleConnectionTypes></u:GetConnectionTypeInfoResponse>
+Error parsing Response to GetConnectionTypeinfo: %s
+<u:GetNATRSIPStatusResponse xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1">
+RequestConnection recieved ... Setting Status to %s.
+<NewConnectionStatus>Connected</NewConnectionStatus>
+<NewLastConnectionError>ERROR_NONE</NewLastConnectionError>
+urn:schemas-upnp-org:service:WANIPConnection:1
+<u:GetExternalIPAddressResponse xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1">
+Error Sending Advertisements.  Exiting ...
+Advertisements Sent.  Listening for requests ... 
+create socket error!
+%s -A %s -i %s -p %s -d %s --dport %s -j ACCEPT
+%s -D %s -i %s -p %s -d %s --dport %s -j ACCEPT
+user: socket creating failed
+Create socket error!
+WANIPConnection
+            <deviceType>urn:schemas-upnp-org:device:WANConnectionDevice:1</deviceType>
+                <serviceType>urn:schemas-upnp-org:service:WANIPConnection:1</serviceType>
+		<name>SetDefaultConnectionService</name>
+				<name>NewDefaultConnectionService</name>
+				<relatedStateVariable>DefaultConnectionService</relatedStateVariable>
+		<name>GetDefaultConnectionService</name>
+				<name>NewDefaultConnectionService</name>
+				<direction>out</direction>n				<relatedStateVariable>DefaultConnectionService</relatedStateVariable>
+  	<stateVariable sendEvents="yes">
+		<name>DefaultConnectionService</name>
+      <name>SetConnectionType</name>
+          <name>NewConnectionType</name>
+          <relatedStateVariable>ConnectionType</relatedStateVariable>
+    <name>GetConnectionTypeInfo</name>
+          <name>NewConnectionType</name>
+          <relatedStateVariable>ConnectionType</relatedStateVariable>
+          <name>NewPossibleConnectionTypes</name>
+          <relatedStateVariable>PossibleConnectionTypes</relatedStateVariable>
+      <name>RequestConnection</name>
+          <name>NewConnectionStatus</name>
+          <relatedStateVariable>ConnectionStatus</relatedStateVariable>
+          <name>NewLastConnectionError</name>
+          <relatedStateVariable>LastConnectionError</relatedStateVariable>
+    <stateVariable sendEvents="no">
+      <name>ConnectionType</name>
+    <stateVariable sendEvents="yes">
+      <name>PossibleConnectionTypes</name>
+    <stateVariable sendEvents="yes">
+      <name>ConnectionStatus</name>
+    	  <allowedValue>Connecting</allowedValue>
+        <allowedValue>PendingDisconnect</allowedValue>
+        <allowedValue>Disconnecting</allowedValue>
+        <allowedValue>Disconnected</allowedValue>
+        <allowedValue>Connected</allowedValue>
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+      <name>LastConnectionError</name>
+        <allowedValue>ERROR_USER_DISCONNECT</allowedValue>
+        <allowedValue>ERROR_ISP_DISCONNECT</allowedValue>
+        <allowedValue>ERROR_IDLE_DISCONNECT</allowedValue>
+        <allowedValue>ERROR_FORCED_DISCONNECT</allowedValue>
+    <stateVariable sendEvents="yes">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="yes">
+		<stateVariable sendEvents="no">
+		<stateVariable sendEvents="no">
+		<stateVariable sendEvents="no">
+		<stateVariable sendEvents="yes">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+      <name>MaximumActiveConnections</name>
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+    <stateVariable sendEvents="no">
+
+--- usr/bin/dropbearmulti ---
+Failed to connect to agent
+ssh-connection
+ssh-connection
+ssh-connection
+ssh-connection
+Host '%s' key accepted unconditionally.
+Do you want to continue connecting? (y/n) 
+Connection to %s@%s:%s exited: %s
+-y    Always accept remote host key if unknown
+-L <[listenaddress:]listenport:remotehost:remoteport> Local port forwarding
+-g    Allow remote hosts to connect to forwarded ports
+-R <[listenaddress:]listenport:remotehost:remoteport> Remote port forwarding
+-J <proxy_program> Use program pipe rather than TCP connection
+-b    [bind_address][:bind_port]
+Bad recv window '%s'
+Connect failed: %s
+Connection to %s@%s:%s closed.
+Remote closed the connection
+channel->recvwindow <= opts.recv_window
+channel->recvwindow <= cbuf_getavail(channel->writebuf)
+channel->extrabuf == NULL || channel->recvwindow <= cbuf_getavail(channel->extrabuf)
+channel->recvwindow >= datalen
+Error resolving bind address '%s' (port %s). %s
+Error binding local address '%s' (port %s). %s
+Error listening: %s
+Failed socket address: %s
+Disconnect received
+Sending file modes: %s
+lost connection
+dropped connection
+lost connection
+Failed to disconnect from controlling tty.
+ssh-connection
+SSH_CONNECTION
+Child connection from %s:%s
+No listening ports available.
+Listening socket error
+Failed listening on '%s': %s
+-a		Allow connections to forwarded ports from any host
+		Listen on specified tcp port (and optionally address),
+Bad recv window '%s'
+Bad listen address
+ssh-connection
+Request for connection before auth
+tcp-accept.c
+Communication error on send
+Socket operation on non-socket
+Protocol wrong type for socket
+Socket type not supported
+Network dropped connection on reset
+Software caused connection abort
+Connection reset by peer
+Transport endpoint is already connected
+Transport endpoint is not connected
+Cannot send after transport endpoint shutdown
+Connection timed out
+Connection refused
+
+--- usr/bin/traceroute ---
+connect
+sendto
+recvmsg
+tune_socket
+get_recv_ttl
+use_recv_ttl
+msg_send
+bind
+send_result
+socket
+socket
+sendto
+socket
+connect
+Enable socket level debugging
+Bypass the normal routing and send directly to a host on an attached network
+sendwait
+bad sendtime `%g' specified
+setsockopt SO_BINDTODEVICE
+bind
+setsockopt IPV6_FLOWINFO_SEND
+socket
+setsockopt IP_RECVERR
+setsockopt IPV6_RECVERR
+connect: %s
+connect
+send
+
+--- usr/bin/tdpd ---
+socket
+bind
+recvfrom
+sendto
+sendto
+ConnectionTrigger=AlwaysOn
+ConnectionTrigger=OnDemand
+ConnectionTrigger=Manual
+ConnectionType=%s
+IdleDisconnectTime=%d
+ConnectionType=%s
+WANIPConnectionNumberOfEntries
+WANPPPConnectionNumberOfEntries
+connectionType
+connectionStatus
+Connected
+connectionTrigger
+idleDisconnectTime
+Add spec staip second connection failed for PPPoE!
+
+--- usr/bin/wlNetlinkTool ---
+msg_send
+recvfrom
+socket
+bind
+Cannot open netlink socket
+Cannot bind netlink socket
+Can't initialize rtnetlink socket
+
+--- usr/bin/dhcpd ---
+sendNAK
+sendACK
+listen_socket
+listen_socket_on_ip
+msg_recv
+msg_send
+sendOffer
+send_inform
+sendto
+recvfrom
+bind
+connect
+Recv DISCOVER from %02X:%02X:%02X:%02X:%02X:%02X Tranaction ID %lx
+Recv REQUEST from %02X:%02X:%02X:%02X:%02X:%02X Tranaction ID %lx
+Recv DECLINE from %02X:%02X:%02X:%02X:%02X:%02X
+Recv RELEASE from %02X:%02X:%02X:%02X:%02X:%02X
+Recv INFORM from %02X:%02X:%02X:%02X:%02X:%02X
+Could not open raw socket
+Could not setsocketopt on raw socket
+couldn't create socket on ip %0X
+iptables -D INPUT -p udp --dport 67 -j ACCEPT
+iptables -A INPUT -p udp --dport 67 -j ACCEPT
+Send OFFER with ip %s
+Send NAK
+Send ACK to %s
+DHCPC: socket call failed: %m
+DHCPC: bind call failed: %m
+raw_socket
+bind call failed: %m
+socket create
+
+--- usr/bin/tc ---
+rtnl_listen
+socket
+bind
+sendto
+sendmsg
+recvmsg
+accept_tcmsg
+rtnl_send
+Cannot send dump request
+ref %d bind %d
+	index %d ref %d bind %d
+Cannot open netlink socket
+Cannot bind netlink socket
+sender address length == %d
+Sender address length == %d
+
+--- usr/bin/tmpd ---
+socket
+bind
+listen
+send
+accept
+msg_recv
+tpApp_inf_disconnectWan
+tpApp_inf_connectWan
+tpApp_inf_connectSmartHomeDev
+connected
+ConnectionTrigger=AlwaysOn
+ConnectionTrigger=OnDemand
+ConnectionTrigger=Manual
+ConnectionType=%s
+IdleDisconnectTime=%d
+ConnectionType=%s
+WANIPConnectionNumberOfEntries
+WANPPPConnectionNumberOfEntries
+connectionType
+connectionStatus
+Connected
+connectionTrigger
+idleDisconnectTime
+Add spec staip second connection failed for PPPoE!
+
+--- usr/bin/rtinicapd ---
+recv
+bind
+socket
+ieee802_1x_send_resp_to_server
+Radius_client_send
+sendto
+send_assoc_resp
+recvfrom
+recv
+ too short recv
+Recv vlan tag for 802.1x. (%02x %02x)
+socket[PF_PACKET,SOCK_RAW](eth_sock)
+Could not register read socket(eth_sock)
+bind
+Pre-auth raw packet socket binding on %s(socknum=%d,ifindex=%d)
+socket[PF_PACKET,SOCK_RAW]
+Could not register read socket
+EAP raw packet socket binding on %s (socknum=%d,ifindex=%d)
+socket[AF_INET,SOCK_DGRAM]
+Could not init ioctl socket 
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state DISCONNECTED
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state CONNECTING
+malloc() failed for ieee802_1x_send(len=%d)
+Send to Sta(%s) with Identifier %d
+Send to Sta(%s%d) with Identifier %d
+send[WPA2 pre-auth]
+ieee802_1x_send::WPA2, pre-auth, len=%d
+ioctl failed for ieee802_1x_send(len=%d)
+!!!access accept
+ioctl failed for ieee802_1x_send remediation url(len=%d)
+ioctl failed for ieee802_1x_send btm url(len=%d)
+AS send RADIUS_CODE_ACCESS_REJECT
+ieee802_1x_tx_canned_eap : Send to Sta with Identifier %d
+Finish Radius_client_send..(%d)
+AP_HANDLE_SESSION_TIMER : Send Deauth 
+recv[RADIUS]
+recv hdr:
+Send packet to server (%s)
+send[RADIUS]
+Radius_client_init_auth: can't create auth RADIUS socket for %s (it's invalid IP)
+Radius_client_init_auth: can't create auth RADIUS socket for %s%d (it's invalid IP)
+socket[PF_INET,SOCK_DGRAM]
+Could not register read socket for authentication server - iface-%d
+Radius_client_init : no any auth RADIUS socket ready 
+STA(%02x:%02x:%02x:%02x:%02x:%02x) Recv MlmePkt and len%d
+Failed to send assoc resp: %s
+reassociation request: STA=%02x:%02x:%02x:%02x:%02x:%02x capab_info=0x%02x listen_interval=%d current_ap=%02x:%02x:%02x:%02x:%02x:%02x seq_ctrl=0x%x%s
+association request: STA=%02x:%02x:%02x:%02x:%02x:%02x capab_info=0x%02x listen_interval=%d seq_ctrl=0x%x%s
+FILS: Waiting for HLP processing before sending (Re)Association Response frame to 
+send_assoc_resp
+FILS: DHCP sendto failed: %s
+FILS: Failed to open DHCP socket: %s
+FILS: Failed to bind DHCP socket: %s
+%s: DHCP sendto failed: %s
+
+--- usr/bin/rt2860apd ---
+recv
+bind
+socket
+ieee802_1x_send_resp_to_server
+Radius_client_send
+connect
+recv
+ too short recv
+Recv vlan tag for 802.1x. (%02x %02x)
+socket[PF_PACKET,SOCK_RAW](eth_sock)
+Could not register read socket(eth_sock)
+bind
+Pre-auth raw packet socket binding on %s(socknum=%d,ifindex=%d)
+socket[PF_PACKET,SOCK_RAW]
+Could not register read socket
+EAP raw packet socket binding on %s (socknum=%d,ifindex=%d)
+socket[AF_INET,SOCK_DGRAM]
+Could not init ioctl socket 
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state DISCONNECTED
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state CONNECTING
+malloc() failed for ieee802_1x_send(len=%d)
+Send to Sta(%s%d) with Identifier %d
+send[WPA2 pre-auth]
+ieee802_1x_send::WPA2, pre-auth, len=%d
+ioctl failed for ieee802_1x_send(len=%d)
+AS send RADIUS_CODE_ACCESS_REJECT
+ieee802_1x_tx_canned_eap : Send to Sta with Identifier %d
+Finish Radius_client_send..(%d)
+AP_HANDLE_SESSION_TIMER : Send Deauth 
+recv[RADIUS]
+Send packet to server (%s)
+send[RADIUS]
+connect[radius]
+Radius_change_server :: Connect to Radius Server(%s)
+Radius_client_init_auth: can't create auth RADIUS socket for %s%d (it's invalid IP)
+socket[PF_INET,SOCK_DGRAM]
+Could not register read socket for authentication server - iface-%d
+Radius_client_init : no any auth RADIUS socket ready 
+
+--- usr/bin/cos ---
+msg_recv
+rsl_dhcpc_send_msg
+socket
+socket_lock
+Connected
+It's time to disconnect %s
+dns probe failed, send ntp request......
+/var/tmp/lastConnectTime
+Timeout,Reconnect cloud
+Disconnected
+Connecting
+Can not find the bpa connection
+Can not find the connection of %s
+No IPv6 Dynamic MER connection found!
+PPPoE: ip addr/gw/dns of ppp connection/ip connection is in the same subnet with lan!
+The connection(%s) get an IP is in the same subnet with lan, change LAN IP to fix!
+Recv DNS Server Addr: %s
+iwpriv %s set DisConnectSta=%s
+No Dynamic MER connection found!
+accessLimitSocket
+disconnectAllClients
+Disconnect %s failed!
+echo 1 > /proc/sys/net/ipv6/conf/%s/sendrs 
+Disconnect dhcp error!ret=%d
+Connect dhcp error!ret=%d
+Disconnect ppp error!ret=%d
+Connect ppp error!ret=%d
+Connect l2tp error! ret=%d
+Disconnect l2tp error! ret=%d
+Connect pptp error! ret=%d
+Disconnect pptp error! ret=%d
+Connect bpa error!ret=%d
+Disconnect bpa error!ret=%d
+Disconnect ipv6 error!ret=%d
+connectPppHandler
+disconnectPppHandler
+connectDhcpHandler
+disconnectDhcpHandler
+connectL2tpHandler
+disconnectL2tpHandler
+connectPptpHandler
+disconnectPptpHandler
+connectBpaHandler
+disconnectBpaHandler
+disconnectIPV6Handler
+disconnectPPPV6Handler
+connectIPV6Handler
+connectPPPV6Handler
+Disconnect
+disconnectWds
+connectWds
+socket error.
+socket(SOCK_DRAGM)
+
+--- usr/bin/dyndns ---
+msg_connCliAndSend
+msg_recv
+socket
+bind
+connect
+send
+dns_recvAndParseReply
+dns_send_query
+sendto
+recvfrom
+DYNDNS: send state message error!
+
+--- usr/bin/httpd ---
+msg_recv
+http_inetd_delListenSocket
+http_inetd_addListenSocket
+socket
+bind
+listen
+SSL_accept
+#msg: listen sock list full, index = %d
+#msg: socket failed, index = %d
+#msg: bind failed, index = %d
+#msg: listen failed, index = %d
+#msg: ioctl accept nonblock fail, index = %d
+#msg: ioctl accept block fail, index = %d
+#msg: full one recv no data
+#msg: bio(socket & ssl)
+Connection: close
+Connection: keep-alive
+Connection
+/main/qsEnd.htm
+/main/wlConnect.htm
+/main/wlConnect5G.htm
+/main/arpBind.htm
+/main/arpBindEdit.htm
+
+--- usr/bin/dnsProxy ---
+msg_recv
+msg_send
+
+--- usr/bin/iwpriv ---
+iw_sockets_open
+Interface doesn't accept private ioctl...
+socket
+
+--- usr/bin/ated_tp ---
+recvfrom
+socket
+bind
+listen
+accept
+send
+iw_sockets_open
+socket listen error
+socket accept error
+socket select error
+socket timeout, return to listen
+recv:%s
+packet length: %d, send:%s
+socket close, return to listen
+socket recv error
+-p: listening port, i.e. 5000. default is 5000 and 5001
+socket open error
+socket bind error
+socket setsockopt error
+Interface doesn't accept private ioctl...
+socket
+
+--- usr/bin/xtables-multi ---
+libxt_socket_init
+socket
+ACCEPT
+ --type accept
+  --save-mark [--mask mask]     Save the packet nfmark in the connection
+  --save-mark [--mask mask]     Save the packet nfmark in the connection
+  --restore                Copy security mark from connection to packet
+ --notrack			Don't track connection
+ --helper name			Use conntrack helper 'name' for connection
+ --timeout name 		Use timeout policy 'name' for connection
+ --ctevents event[,event...]	Generate specified conntrack events for connection
+ --expevents event[,event...]	Generate specified expectation events for connection
+ --zone ID			Assign/Lookup connection in zone ID
+ --notrack			Don't track connection
+ --helper name			Use conntrack helper 'name' for connection
+ --ctevents event[,event...]	Generate specified conntrack events for connection
+ --expevents event[,event...]	Generate specified expectation events for connection
+ --zone ID			Assign/Lookup connection in zone ID
+  --queue-num value		Send packet to QUEUE number <value>.
+Can't open socket to ipset.
+                          Accepted symbolic names for value are:
+                      Accepted symbolic names for value are:
+  --on-port port		    Redirect connection to port, or the original port if 0
+  --connlimit-upto n     match if the number of existing connections is 0..n
+  --connlimit-above n    match if the number of existing connections is >n
+[!] --ipvs                      packet belongs to an IPVS connection
+[!] --vportctl port             VIP port of the controlling connection to
+[!] --socket-exists                  Match if socket exists
+owner: At least one of --uid-owner, --gid-owner or --socket-exists is required
+--socket-exists
+owner socket exists
+socket-exists
+		original: match the packets sended from the original direction		reply   : match the packets sended from the reply direction
+    --accept-local   do not reject packets with a local source address
+accept-local
+socket match options:
+  --transparent    Ignore non-transparent sockets
+ socket
+socket
+(If target is DROP, ACCEPT, RETURN or nothing)
+                          Accepted symbolic names for value are:
+NF_ACCEPT
+ --log-uid			Log UID owning the local socket.
+--reject-with type              drop input packet and send back
+ --log-uid			Log UID owning the local socket.
+binding-refresh-request
+binding-update
+binding-acknowledgement
+binding-error
+Could not open socket to kernel: %s
+
+--- usr/bin/tddp ---
+tddp_udpSocketCreate
+tddp_udpSocketBindToAnyAddr
+tddp_udpSocketClose
+recvfrom
+sendto
+bind
+socket
+tddp_parserHandler sendto error
+failed to bind socket
+tddp_udpSocketClose failed
+tddp_udpSocketCreate failed
+
+--- lib/libiw.so.29 ---
+iw_sockets_open
+socket
+socket
+mode:Force sending
+
+--- lib/libcutil.so ---
+socket
+bind
+sendto
+recvfrom
+Can't create socket.
+Can't bind. 
+
+--- lib/libcurl.so.4.7.0 ---
+bind
+curl_easy_recv
+curl_easy_send
+socketpair
+curl_multi_socket_all
+curl_multi_socket_action
+curl_multi_socket
+SSL_set_connect_state
+SSL_connect
+Couldn't bind to interface '%s'
+Couldn't bind to '%s'
+bind failed with errno %d: %s
+Connection time-out
+Connection timeout after %ld ms
+Failed to connect to %s port %u after %lld ms: %s
+CONNECT_ONLY is required!
+Failed to get recent socket
+ABSTRACT_UNIX_SOCKET
+ACCEPTTIMEOUT_MS
+ACCEPT_ENCODING
+CLOSESOCKETDATA
+CLOSESOCKETFUNCTION
+CONNECTTIMEOUT
+CONNECTTIMEOUT_MS
+CONNECT_ONLY
+CONNECT_TO
+EGDSOCKET
+FRESH_CONNECT
+KEEP_SENDING_ON_ERROR
+MAXCONNECTS
+MAX_RECV_SPEED_LARGE
+MAX_SEND_SPEED_LARGE
+OPENSOCKETDATA
+OPENSOCKETFUNCTION
+SUPPRESS_CONNECT_HEADERS
+UNIX_SOCKET_PATH
+Connection:
+Failed sending PUT request
+Failed sending POST request
+Failed sending HTTP POST request
+Failed sending HTTP request
+Accept: */*
+Proxy-Connection: Keep-Alive
+Accept-Encoding
+Accept-Encoding: %s
+Accept
+Proxy-Connection
+Proxy-Connection:
+CONNECT
+CONNECT %s HTTP/%s
+Failed sending CONNECT to proxy
+Proxy CONNECT aborted due to timeout
+Proxy CONNECT aborted
+CONNECT response too large!
+Received HTTP code %d from proxy after CONNECT
+Error %d sending MQTT CONN request
+Connection #%ld to host %s left intact
+Connection timed out after %lld milliseconds
+Accept: application/sdp
+Failed sending RTSP request
+Recv failure: %s
+Send failure: %s
+SOCKS4 connection to %s not supported
+Failed to resolve "%s" for SOCKS4 connect.
+Failed to send SOCKS4 connect request.
+SOCKS4: Failed receiving connect request ack: %s
+connection to proxy closed
+Can't complete SOCKS4 connection to %d.%d.%d.%d:%d. (%d), request rejected or failed.
+Can't complete SOCKS4 connection to %d.%d.%d.%d:%d. (%d), request rejected because SOCKS server cannot connect to identd on the client.
+Can't complete SOCKS4 connection to %d.%d.%d.%d:%d. (%d), request rejected because the client program and identd report different user-ids.
+Can't complete SOCKS4 connection to %d.%d.%d.%d:%d. (%d), Unknown.
+Unable to send initial SOCKS5 request.
+Connection to proxy closed
+No authentication method was acceptable.
+Failed to send SOCKS5 sub-negotiation request.
+Failed to resolve "%s" for SOCKS5 connect.
+SOCKS5 connection to %s not supported
+Failed to send SOCKS5 connect request.
+Failed to receive SOCKS5 connect request ack.
+Can't complete SOCKS5 connection to %s. (%d)
+Connection died, tried %d times before giving up
+No valid port number in connect to host string (%s)
+Unix socket path too long: '%s'
+SSL_ERROR_WANT_CONNECT
+SSL_ERROR_WANT_ACCEPT
+select/poll on SSL socket, errno: %d
+OpenSSL SSL_connect: %s in connection to %s:%ld 
+SSL connection timeout
+
+--- lib/libupnp.so ---
+gSendThreadPool
+gRecvThreadPool
+UpnpSendAdvertisement
+UpnpSendAdvertisementLowPower
+UpnpAcceptSubscription
+UpnpAcceptSubscriptionExt
+socket
+http_SendStatusResponse
+http_Connect
+http_SendMessage
+http_RecvMessage
+accept
+readFromSSDPSocket
+recvfrom
+bind
+listen
+get_ssdp_sockets
+sendto
+recv
+send
+connect
+SendReply
+Send Thread Pool
+Recv Thread Pool
+Inside UpnpSendAdvertisement 
+Inside UpnpSendAdvertisementLowPower 
+Exiting UpnpSendAdvertisementLowPower 
+Inside UpnpAcceptSubscription
+Exiting UpnpAcceptSubscription, ret = %d
+Exiting UpnpAcceptSubscription, ret = %d.
+Can't create addrlist socket
+UPNP_E_SOCKET_WRITE
+UPNP_E_SOCKET_READ
+UPNP_E_SOCKET_BIND
+UPNP_E_SOCKET_CONNECT
+UPNP_E_OUTOF_SOCKET
+UPNP_E_LISTEN
+UPNP_E_SOCKET_ERROR
+UPNP_E_SUBSCRIBE_UNACCEPTED
+UPNP_E_UNSUBSCRIBE_UNACCEPTED
+UPNP_E_NOTIFY_UNACCEPTED
+miniserver: Error in accept(): %s
+get_miniserver_sockets: resuseaddr is set.
+get_miniserver_sockets: Error in IPv4 bind(): %s
+get_miniserver_sockets: bind successful
+mserv start: Error in IPv4 listen(): %s
+Error in socket(): %s
+Error in binding localhost!!!
+SSDP_SERVER: StopSSDPServer: Error in socket() %s
+ACCEPT
+ACCEPT-CHARSET
+ACCEPT-ENCODING
+ACCEPT-LANGUAGE
+ACCEPT-RANGES
+<<< (RECVD) <<<
+(http_RecvMessage): Error %d, http_error_code = %d.
+CONNECTION: close
+Accepted
+Not Acceptable
+<<< (RECVD) <<<
+Failed to send response: err code = %d
+>>> SSDP SEND to %s >>>
+SSDP_LIB: New Request Handler:Error in socket(): %s
+Sending UDNStr = %s 
+Sending service Advertisement
+SSDP recvd bad msg code = %d
+Error in socket(): %s
+Error in bind(), addr=0x%08X, port=%d: %s
+
+--- lib/ld-uClibc-0.9.33.2.so ---
+LD_BIND_NOW
+
+--- lib/libssl.so.1.0.0 ---
+ssl3_accept
+ssl3_connect
+ssl3_send_hello_request
+ssl3_send_alert
+ssl3_send_server_hello
+ssl3_send_server_done
+ssl3_send_server_key_exchange
+ssl3_send_certificate_request
+ssl3_send_server_certificate
+ssl_get_server_send_pkey
+ssl3_send_newsession_ticket
+ssl3_send_cert_status
+ssl3_send_change_cipher_spec
+ssl3_send_finished
+ssl3_send_client_key_exchange
+ssl3_send_client_verify
+ssl3_send_next_proto
+ssl3_send_client_certificate
+ssl23_accept
+ssl23_connect
+SSL_accept
+SSL_connect
+dtls1_accept
+dtls1_connect
+dtls1_send_change_cipher_spec
+dtls1_listen
+BIO_s_socket
+SSL_set_connect_state
+SSL_set_accept_state
+BIO_new_ssl_connect
+BIO_s_connect
+BIO_new_buffer_ssl_connect
+CONNECT
+before accept initialization
+before connect initialization
+before/connect initialization
+ok/connect SSL initialization
+before/accept initialization
+ok/accept SSL initialization
+legacy_server_connect
+no_legacy_server_connect
+
+--- lib/libos.so ---
+os_queueSend
+socket
+bind
+msg_recv
+recvfrom
+msg_send
+sendto
+msg_connCliAndSend
+msg_sendAndGetReplyWithTimeout
+msgsend failed.
+os_queueSend
+socket
+bind
+recvfrom
+sendto
+pid %d send %d error
+pid %d send %d error, errno is %d
+Connect %d msg client error
+send %d error %d, %d
+new socket
+msg_sendAndGetReplyWithTimeout
+msg_connCliAndSend
+msg_send
+msg_recv
+Get socket failed, when do remote log
+
+--- lib/libuClibc-0.9.33.2.so ---
+sendfile
+sendfile64
+tcsendbreak
+bindresvport
+xdr_accepted_reply
+svc_sendreply
+__libc_accept
+bind
+__libc_connect
+listen
+__libc_recv
+__libc_recvfrom
+__libc_recvmsg
+__libc_send
+__libc_sendmsg
+__libc_sendto
+socket
+socketpair
+accept4
+Communication error on send
+Socket operation on non-socket
+Protocol wrong type for socket
+Socket type not supported
+Network dropped connection on reset
+Software caused connection abort
+Connection reset by peer
+Transport endpoint is already connected
+Transport endpoint is not connected
+Cannot send after transport endpoint shutdown
+Connection timed out
+Connection refused
+RPC: Unable to send
+get_myaddress: socket
+__get_myaddress: socket
+Cannot create socket for broadcast rpc
+Cannot set socket option SO_BROADCAST
+Cannot send broadcast packet
+rcmd: socket: All ports in use
+rcmd: socket: %m
+connect to address %s: 
+rcmd: accept: %m
+socket: protocol failure in circuit setup
+rexec: socket
+accept
+svc_tcp.c - tcp socket creation problem
+svc_tcp.c - cannot getsockname or listen
+svcudp_create: socket creation problem
+svc_unix.c - AF_UNIX socket creation problem
+svc_unix.c - cannot getsockname or listen
+
+--- lib/libcmm.so ---
+rsl_sendAppWlanCfg
+rsl_eth_disconnect_last
+rsl_sendHttpdCmxDnsCfg
+sendSwitch
+pptp_dhcpc_send_msg
+rsl_wan_disconnectL2tp
+rsl_initArpBindObj
+oal_wan6_disableAcceptRa
+wan_conn_wanIpConn_connect_v6
+rsl_sendHttpdHostCfg
+rsl_dhcpc_send_msg
+rsl_getArpBindEntryObj
+rsl_wan_connectPpp
+wan_conn_wanPppConn_connect
+sendUsrCfg
+rsl_sendHttpdUpCert
+l2tp_dhcpc_send_msg
+wan_conn_wanIpConn_getConnectionInfo
+wan_conn_wanPppconn_needReconnect_v6
+socket
+wan_conn_wanPptpConn_connect
+rsl_dhcps_sendWanStatusChangedMsg
+oal_wolSend
+ddns_sendRTChangedMsg
+rsl_sendHttpdNoipDnsCfg
+wan_conn_wanIpConn_connect_v4
+wan_conn_wanPppConn_disconnect
+msg_send
+rsl_upnp_sendUPnPUpdateMsgAndWaitReply
+wan_conn_wanL2tpConn_getConnectionInfo
+wan_conn_wanIpConn_disconnect_v6
+rsl_eth_connect_last
+wan_conn_getNumberOfValidConnections
+msg_connCliAndSend
+rsl_wan_connectPptp
+wan_conn_wanPppConn_connect_v6
+rsl_wan_disconnectPpp
+rsl_wan_disconnectPptp
+rsl_upnp_sendLanCfgChangeMsg
+wan_conn_wanIpConn_disconnect_v4
+rsl_sendHttpdAuthChallenge
+wan_conn_wanPppConn_getConnectionInfo
+rsl_wan_connectL2tp
+rsl_wan_connectBpa
+rsl_dhcps_sendReloadCfgMsg
+rsl_sendHttpdServiceCfg
+rsl_sendHttpdUserCfg
+rsl_sendAppUserCfg
+wan_conn_wanL2tpConn_disconnect
+oal_wan6_enableAcceptRa
+wan_conn_wanPptpConn_disconnect
+rsl_getArpBindObj
+setConnectEnable
+wan_conn_wanL2tpConn_connect
+rsl_setArpBindObj
+wan_conn_wanPppConn_disconnect_v6
+rsl_setArpBindEntryObj
+rsl_sendHttpdDynDnsCfg
+rsl_wan_disconnectBpa
+wan_conn_wanPptpConn_getConnectionInfo
+msg_sendAndGetReplyWithTimeout
+wan_conn_getNumberOfActiveConnections
+recv
+sendto
+rsl_sendHttpdUpCert
+rsl_sendAppWlanCfg
+getArpBindState
+rsl_initArpBindObj
+rsl_setArpBindObj
+rsl_setArpBindEntryObj
+rsl_upnp_sendLanCfgChangeMsg
+rsl_upnp_sendUPnPUpdateMsgAndWaitReply
+wan_conn_wanIpConn_getConnectionInfo
+wan_conn_wanIpConn_connect_v4
+wan_conn_wanIpConn_disconnect_v4
+wan_conn_wanPppConn_getConnectionInfo
+wan_conn_wanPppConn_connect
+wan_conn_wanPppConn_disconnect
+rsl_wan_connectPpp
+rsl_wan_disconnectPpp
+rsl_wan_connectBpa
+rsl_wan_disconnectBpa
+rsl_eth_connect_last
+rsl_eth_disconnect_last
+sendSwitch
+setSecondConnection
+wan_conn_wanIpConn_connect_v6
+wan_conn_wanPppConn_disconnect_v6
+rsl_wan_connectL2tp
+rsl_wan_disconnectL2tp
+rsl_wan_connectPptp
+rsl_wan_disconnectPptp
+wan_conn_wanL2tpConn_getConnectionInfo
+wan_conn_wanL2tpConn_connect
+wan_conn_wanL2tpConn_disconnect
+wan_conn_wanPptpConn_getConnectionInfo
+wan_conn_wanPptpConn_connect
+wan_conn_wanPptpConn_disconnect
+rsl_restoreLastConnection
+Failed to send 'CMSG_HTTPD_CERT_UPDATE' to 'httpd'!
+Failed to send update server cert msg to 'httpd'!
+send wlan cfg update msg to APP error!
+Connecting
+IPOE no second connection!
+Connected
+Unknown wan connection type:%d
+Get ArpBindEntry failed!
+This arp bind entry is existent(%s)!
+This arp bind entry is existent(RDP_OPT_SET_OBJ)!
+Fail to set firewall default policy to ACCEPT.
+Failed to alloc connection id of %s
+Get X_TP_ConnectionId %u
+connType %u fail to request connection!
+Invalid connectionType(%s)!
+Invalid ConnectionTrigger(%s)!
+Failed to get connection info!
+Can not pass WAN Connection filter!
+Disconnected
+Response the down status of connection(%s)!
+IP connection DOWN, set intf to 0.0.0.0
+Request to disconnect the connection of %s
+Failed to request disconnection, connType = %d
+IP connection Failed to remove subObj
+Failed to clone mac of the connection of %s
+Response the up status of connection(%s)!
+pNewObj->connectionStatus = %s
+pCurrObj->connectionStatus = %s
+The connection(%s) get an IP(%s) is in the same subnet with lan, igore it!
+Invalid connectionType(%s) format!
+Fail to get connection info!
+connType %u fail to request disconnection!
+PPP connection Failed to remove subObj
+Init nat on connection up!
+Set default gateway on connection up!
+Set default dns on connection up!
+PPPoE: ip addr/gw/dns of ppp connection/ip connection is in the same subnet with lan!
+The connection(%s) get an IP is in the same subnet with lan, change LAN IP to fix!
+Unknown connection type!
+Now connect the PPP....
+Now disconnect the PPP....
+Can't find the bridge connection with the %s and stack 
+Can't get IP object to connect
+There's no WAN connection device!
+Ewan don't support single-VID-multi-connection
+CAN'T SEND MSG TO COS FOR WDS
+Disconnect
+set wan PPP connection obj error!
+set wan IP connection obj error!
+set second connection error!
+echo 1 > /proc/sys/net/ipv6/conf/%s/sendrs 
+send msg to server error! 
+Unknown WAN connection type!
+X_TP_ConnectionId
+The connection device has no access type.
+Delete connection %s failed?
+Set fake DNS %s for the on-demand connection %s failed!
+Fail to get L2TP connection information!
+RSL init L2TP Connection(%s) success
+L2TP Connection(%s) is not enable.
+currObj  connectionStatusIP:%s, connectionStatus:%s
+pNewObj  connectionStatusIP:%s, connectionStatus:%s
+Can't get L2TP object to connect
+Now connect the L2TP....
+Now disconnect the L2TP....
+ready to send CMSG_DHCPC_RELEASE
+Fail to get PPTP connection information!
+RSL init PPTP Connection(%s) success
+PPTP Connection(%s) is not enable.
+Can't get PPTP object to connect
+Now connect the PPTP....
+Now disconnect the PPTP....
+MER connection up, activate intf with IPAddress = %s
+Start setup L2TP ppp connection...
+start down ppp connection(%s)
+Fail to get l2tp connection info!
+Fail to connect L2TP.
+Start up ppp connection...
+L2TP: ip addr of ip connection is in the same subnet with lan!
+L2TP: ip addr of ppp connection is in the same subnet with lan!
+wan_conn_wanL2tpConn_responseDown_ip ok (from Connected to Disconnected).
+Start setup PPTP ppp connection...
+Fail to connect PPTP.
+PPTP: ip addr of ip connection is in the same subnet with lan!
+PPTP: ip addr of ppp connection is in the same subnet with lan!
+wan_conn_wanPptpConn_responseDown_ip ok (from Connected to Disconnected).
+set secondary connection as default gateway failer: %d
+set secondary connection as DNS failer: %d
+Ready to setup L2TP PPP connection
+Ready to setup PPTP PPP connection
+set wan ip connection obj error!
+ARP_BIND
+ARP_BIND_ENTRY
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANDSLLinkConfig.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_WANPonLinkConfig.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANEthernetLinkConfig.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_WANUSB3gLinkConfig.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_WANUSB3gLinkConfig.UsbModemParam.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_L2TP_Connection.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_L2TP_Connection.PortMapping.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_L2TP_Connection.PortTriggering.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_L2TP_Connection.Stats.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_PPTP_Connection.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_PPTP_Connection.PortMapping.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_PPTP_Connection.PortTriggering.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.X_TP_PPTP_Connection.Stats.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANIPConnection.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANIPConnection.{i}.PortMapping.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANIPConnection.{i}.X_TP_PortTriggering.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANPPPConnection.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANPPPConnection.{i}.PortMapping.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANPPPConnection.{i}.X_TP_PortTriggering.{i}.
+InternetGatewayDevice.WANDevice.{i}.WANConnectionDevice.{i}.WANPPPConnection.{i}.Stats.
+InternetGatewayDevice.X_TP_ARP.ArpBindTbl.
+InternetGatewayDevice.X_TP_ARP.ArpBindTbl.ArpBindEntry.{i}.
+InternetGatewayDevice.DownloadDiagnostics.PerConnectionResult.{i}.
+InternetGatewayDevice.UploadDiagnostics.PerConnectionResult.{i}.
+oal_wan6_enableAcceptRa
+oal_wan6_disableAcceptRa
+socket
+socket: %s
+send write leases msg error!
+iptables -A FORWARD_DMZ -i %s -d %s -m conntrack --ctstate DNAT -j ACCEPT
+iptables -t nat -I PREROUTING_DMZ 1 -p icmp 	--icmp-type echo-request -d %s -j ACCEPT
+iptables -D FORWARD_DMZ -i %s -d %s -m conntrack --ctstate DNAT -j ACCEPT
+iptables -t nat -D PREROUTING_DMZ -p icmp 	--icmp-type echo-request -d %s -j ACCEPT
+iptables -A FORWARD_VS -i %s -p tcp 		--dport %d:%d -d %s -j ACCEPT
+iptables -A FORWARD_VS -i %s -p udp 		--dport %d:%d -d %s -j ACCEPT
+iptables -D FORWARD_VS -i %s -p tcp 		--dport %d:%d -d %s -j ACCEPT
+iptables -D FORWARD_VS -i %s -p udp 		--dport %d:%d -d %s -j ACCEPT
+iptables -D FIREWALL -m connmark --mark 0x80000000/0x80000000 -j ACCEPT
+ebtables -P FIREWALL ACCEPT
+iptables -I FIREWALL 1 -m connmark --mark 0x80000000/0x80000000 -j ACCEPT
+iptables -t filter -D FORWARD -i %s 			-m conntrack --ctstate NEW -j ACCEPT
+iptables -t filter -A FORWARD -i %s 			-m conntrack --ctstate NEW -j ACCEPT
+set url - init socket failed.
+iptables -A PARENTCTL -m connmark --mark 0x80000000/0x80000000 -j ACCEPT
+ebtables -D FORWARD --logical-in %s --logical-out %s -j ACCEPT
+ebtables -I FORWARD 1 --logical-in %s --logical-out %s -j ACCEPT
+Invalid ppp connection name!
+No connection %s found!
+Couldn't create IP socket
+Couldn't create IP socket: %m
+statSocket
+statSocket
+iptables -t filter -I INPUT 4 ! -i br+ -p icmp --icmp-type echo-request -j ACCEPT
+iptables -t filter -D INPUT ! -i br+ -p icmp --icmp-type echo-request -j ACCEPT
+WANIPBinding %d
+redistribute connected
+ip rip send version 1
+ip rip send version 2
+ip rip send version 1 2
+iptables -I INPUT 1 -p udp --dport 520 -i %s -j ACCEPT
+iptables -t filter -A FORWARD -o br+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -t filter -A FORWARD -i br+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -t nat -A PREROUTING ! -i br+ -d 255.255.255.255 					-p udp --sport 67 --dport 68 -j ACCEPT
+iptables -t nat -A PREROUTING -d 224.0.0.0/4 -j ACCEPT
+iptables -t filter -A FORWARD -i br+ -j ACCEPT
+iptables -t filter -A FORWARD -d 224.0.0.0/4 -j ACCEPT
+iptables -t filter -A INPUT -i lo -p ALL -j ACCEPT 		-m comment --comment "loop back"
+iptables -t filter -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -t filter -A INPUT -d 224.0.0.0/4 -j ACCEPT
+iptables -A INPUT -p udp ! -i br+ --sport 67 --dport 68 -j ACCEPT
+iptables -A INPUT -p udp --dport 161 -j ACCEPT
+iptables -t filter -I BRIDGE_ISOLATION -i %s -o %s -j ACCEPT
+iptables -t filter -D BRIDGE_ISOLATION -i %s -o %s -j ACCEPT
+iptables -t filter -A INPUT -i br+ -j ACCEPT
+iptables -t filter -D INPUT -i br+ -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport %d -j ACCEPT
+iptables -t nat -I PREROUTING 1 -p tcp --dport %d -j ACCEPT
+iptables -t filter -D INPUT -p tcp --dport %d -j ACCEPT
+iptables -t nat -D PREROUTING -p tcp --dport %d -j ACCEPT
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="yes">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="yes">
+<stateVariable sendEvents="yes">
+<stateVariable sendEvents="no">
+<stateVariable sendEvents="no">
+iptables -I %s -p udp --dport 53 -j ACCEPT
+iptables -I %s -p udp --dport 67 -j ACCEPT
+ebtables -D %s -j ACCEPT
+ebtables -I %s -j ACCEPT
+iptables -I %s -p tcp --dport 445 -j ACCEPT
+iptables -I %s -p tcp --dport 139 -j ACCEPT
+iptables -I %s -p udp --dport 138 -j ACCEPT
+iptables -I %s -p udp --dport 137 -j ACCEPT
+iptables -D %s -p tcp --dport 445 -j ACCEPT
+iptables -D %s -p tcp --dport 139 -j ACCEPT
+iptables -D %s -p udp --dport 138 -j ACCEPT
+iptables -D %s -p udp --dport 137 -j ACCEPT
+socket error
+WAN Connection does not established!
+l2Name should not be NULL or empty when WAN connection type is TC_WAN_PPP_TO_BRIDGE_INTF
+socket(AF_INET, SOCK_DGRAM) failed
+    AdvSendAdvert on;
+echo 2 > /proc/sys/net/ipv6/conf/%s/accept_ra
+echo 0 > /proc/sys/net/ipv6/conf/%s/accept_ra
+send %s %d, %s %d;
+send %s %d;
+ip6tables -D FIREWALL -j ACCEPT
+ip6tables -A FIREWALL -j ACCEPT
+ip6tables -P INPUT ACCEPT
+ip6tables -P OUTPUT ACCEPT
+ip6tables -A INPUT -i lo -p ALL -j ACCEPT -m comment 					--comment "loop back"
+ip6tables -A INPUT  -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+ip6tables -A INPUT -i br+ -p tcp --dport 23 -j ACCEPT
+ip6tables -A INPUT -i br+ -p tcp --dport 22 -j ACCEPT
+ip6tables -A INPUT -i br+ -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+ip6tables -A FORWARD -i br+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+ip6tables -A FORWARD -o br+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+Invalid l2tp connection name!
+Could not open raw socket
+Could not setsocketopt on raw socket
+
+--- lib/librt-0.9.33.2.so ---
+mq_timedsend
+mq_send
+
+--- lib/libdl-0.9.33.2.so ---
+LD_BIND_NOW
+
+--- lib/libcrypto.so.1.0.0 ---
+DSO_bind_var
+DSO_bind_func
+BIO_s_socket
+BIO_new_socket
+BIO_socket_nbio
+BIO_CONNECT_new
+BIO_CONNECT_free
+BIO_s_connect
+BIO_new_connect
+BIO_socket_ioctl
+BIO_get_accept_socket
+bind
+listen
+BIO_accept
+BIO_s_accept
+BIO_new_accept
+recvfrom
+sendto
+OCSP_accept_responses_new
+OCSP_sendreq_new
+OCSP_sendreq_nbio
+OCSP_sendreq_bio
+id-smime-cti-ets-proofOfSender
+id-cmc-senderNonce
+id-cmc-confirmCertAcceptance
+acceptableResponses
+Acceptable OCSP Responses
+bind_engine
+socket
+socket connect
+socket accept
+datagram socket
+unacceptedPolicy
+unacceptedExtension
+
+--- lib/libpthread-0.9.33.2.so ---
+__libc_accept
+__libc_connect
+__libc_recv
+__libc_recvfrom
+__libc_recvmsg
+__libc_send
+__libc_sendmsg
+__libc_sendto
+
+--- lib/modules/l2tp_ppp.ko ---
+<7>PPPOL2TP: %s: recv %d byte data frame, passing to ppp
+<6>PPPOL2TP: %s: socket not bound
+<6>PPPOL2TP: %s: no socket
+   mtu/mru/rcvseq/sendseq/lns debug reorderto
+<6>PPPOL2TP: %s: get recv_seq=%d
+<6>PPPOL2TP: %s: get send_seq=%d
+<6>PPPOL2TP: %s: set recv_seq=%d
+<6>PPPOL2TP: %s: set send_seq=%d
+.rel.text.pppol2tp_recvmsg
+.rel.text.pppol2tp_sendmsg
+.rel.text.pppol2tp_connect
+.rel.text.pppol2tp_recv
+.rel.text.pppol2tp_backlog_recv
+.rel.text.pppol2tp_recv_payload_hook
+sock_no_accept
+sock_no_listen
+pppox_unbind_sock
+sock_no_bind
+sock_no_socketpair
+skb_recv_datagram
+l2tp_udp_encap_recv
+
+--- lib/modules/ipt_STAT.ko ---
+<1>recv a unknowed get ctl command
+<1>recv a unknowed set ctl command
+
+--- lib/modules/tp_domain.ko ---
+--->>> Send Http Response error!
+Connection: close
+tp_send_dns6_packet
+.rel.text.tp_send_dns_packet
+.rel.text.tp_send_dns6_packet
+
+--- lib/modules/pptp.ko ---
+<6>PPTP[%i]: send packet: seq=%i
+<6>PPTP[%i]: connect: addr=%X call_id=%i
+<6>PPTP: bind: addr=%X call_id=%i
+<6>PPTP[%i]: accepting packet %d size=%i (%02x %02x %02x %02x %02x %02x)
+.rel.text.pptp_connect
+.rel.text.pptp_bind
+sock_no_sendmsg
+sock_no_accept
+sock_no_listen
+pppox_unbind_sock
+sock_no_socketpair
+sock_no_recvmsg
+ip_send_check
+
+--- lib/modules/pppol2tp.ko ---
+<7>L2TP: %s: send %Zd bytes, ns=%u
+<7>L2TP: %s: send %Zd bytes
+<7>L2TP: %s: recv data ns=%u, nr=%u, session nr=%u
+<7>L2TP: %s: recv data ns=%u, session nr=%u
+<4>L2TP: %s: recv data has no seq numbers when required. Discarding
+<6>L2TP: %s: recv short packet (len=%d)
+<7>%s: recv: 
+<6>L2TP: %s: recv protocol version mismatch: got %d expected %d
+<7>L2TP: %s: recv control packet, len=%d
+l2tp_udp_encap_recv
+l2tp_udp_recv_core
+l2tp_recv_common
+.rel.text.l2tp_recv_common
+.rel.text.l2tp_udp_recv_core
+.rel.text.l2tp_udp_encap_recv
+kernel_bind
+l2tp_udp_recv_core
+kernel_connect
+l2tp_recv_common
+l2tp_udp_encap_recv
+
+--- lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko ---
+rt2880_eth_send
+.rel.text.rt2880_eth_send
+rt2880_eth_send
+send_sig
+
+--- lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko ---
+description=Shortcut Forwarding Engine - Connection Manager
+.rel.text.sfe_cm_recv
+sfe_ipv4_recv
+sfe_cm_recv
+athrs_fast_nat_recv
+
+--- lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko ---
+SFE CONNECTIONS: %u
+connections
+failed to register sfe_ipv4 connections proc entry
+max_connections
+sfe_ipv4_recv
+.text.sfe_ipv4_connection_match_compute_translations
+.rel.text.sfe_ipv4_gen_sync_sfe_ipv4_connection.isra.4
+.rel.text.sfe_ipv4_flush_sfe_ipv4_connection.constprop.9
+.rel.text.sfe_ipv4_remove_sfe_ipv4_connection.constprop.11
+.rel.text.sfe_ipv4_recv
+sfe_ipv4_recv
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko ---
+description=ftp connection tracking helper
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko ---
+description=SIP connection tracking helper
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko ---
+description=H.323 connection tracking helper
+parm=gkrouted_only:only accept calls from gatekeeper
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko ---
+description=RTSP connection tracking module
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko ---
+description=Netfilter connection tracking helper module for PPTP
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko ---
+description=TFTP connection tracking helper
+
+--- lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko ---
+SendMIMOPS
+DisConnectSta
+DisConnectAllSta
+ApCliAutoConnect
+ApCli%d Connected AP : %02X:%02X:%02X:%02X:%02X:%02X   SSID:%s
+ApCli%d Connected AP : Disconnect
+Do not send null frame here.
+	<connectionType>ESS</connectionType>
+.rel.text.APPeerAuthSimpleRspGenAndSend
+.rel.text.WpaSend
+.rel.text.ApAllowToSendPacket
+.rel.text.APSendPacket
+.text.QBSS_LoadIsBusyTimeAccepted
+.rel.text.Set_ApCli_AutoConnect_Proc
+.rel.text.Set_DisConnectAllSta_Proc
+.rel.text.Set_DisConnectSta_Proc
+.rel.text.ApCliAllowToSendPacket
+.rel.text.ApCliSimulateRecvBeacon
+.rel.text.ApCliAutoConnectExec
+.rel.text.ApCliCtrlDisconnectReqAction
+.rel.text.RTMPRepeaterReconnectionCheck
+.rel.text.ApCliRTMPSendNullFrame
+.rel.text.MlmeEnqueueForRecv
+.rel.text.SendNotifyBWActionFrame
+.rel.text.Send2040CoexistAction
+.rel.text.SendBSS2040CoexistMgmtAction
+.rel.text.SendRefreshBAR
+.rel.text.CntlEnqueueForRecv
+.rel.text.SendSMPSAction
+.rel.text.SendBeaconRequest
+.rel.text.AsicSendCommandToMcu
+.rel.text.AsicSendCmdToMcuAndWait
+.rel.text.AsicSendCommandToMcuBBP
+.rel.text.Set_SendSMPSAction_Proc
+.rel.text.RTMPSendPackets
+.text.MtAsicSendCommandToMcu
+.rel.text.MtAsicSendCmdToMcuAndWait
+.text.MtAsicSendCommandToMcuBBP
+.rel.text.AndesSendCmdMsg
+.rel.text.MtPsSendToken
+.rel.text.send_reset_to_user
+.rel.text.WscSendEapReqId
+.rel.text.WscSendEapolStart
+.rel.text.WscSendEapRspId
+.rel.text.WscSendUPnPMessage
+.rel.text.WscSendUPnPConfReqMsg
+.rel.text.WscSendMessage
+.rel.text.WscSendEapFail
+.rel.text.WscSendNACK
+.rel.text.WscDelListEntryByMAC
+.rel.text.WscSendEapFragAck
+.rel.text.WscSendEapFragData
+.rel.text.sae_send_auth
+.rel.text.sae_send_auth_confirm
+.rel.text.sae_send_auth_commit
+.text.SendSignalToDaemon
+.rel.text.RtmpOSWrielessEventSend
+.rel.text.RtmpOSWrielessEventSendExt
+.rel.text.rt28xx_send_packets
+Set_DisConnectSta_Proc
+MtPsSendToken
+SendSignalToDaemon
+AndesSendCmdMsg
+RtmpOSWrielessEventSend
+WscSendEapolStart
+WscSendEapFragData
+Set_DisConnectAllSta_Proc
+APPeerAuthSimpleRspGenAndSend
+sae_send_auth_commit
+ApCliAutoConnectExec
+SendBSS2040CoexistMgmtAction
+WscDelListEntryByMAC
+Set_SendSMPSAction_Proc
+MtAsicSendCommandToMcuBBP
+sae_send_auth
+SendRefreshBAR
+SendSMPSAction
+ApCliSimulateRecvBeacon
+WscSendMessage
+SendNotifyBWActionFrame
+MtAsicSendCommandToMcu
+send_reset_to_user
+Send2040CoexistAction
+MlmeEnqueueForRecv
+SendBeaconRequest
+wireless_send_event
+RTMPSendPackets
+WscSendUPnPMessage
+WscSendEapReqId
+WscSendEapFragAck
+Set_ApCli_AutoConnect_Proc
+RTMPRepeaterReconnectionCheck
+CntlEnqueueForRecv
+RtmpOSWrielessEventSendExt
+ApCliRTMPSendNullFrame
+sae_send_auth_confirm
+rt28xx_send_packets
+WscSendNACK
+AsicSendCommandToMcu
+WscSendEapFail
+WscSendUPnPConfReqMsg
+WpaSend
+AsicSendCommandToMcuBBP
+AsicSendCmdToMcuAndWait
+APSendPacket
+send_sig
+WscSendEapRspId
+QBSS_LoadIsBusyTimeAccepted
+MtAsicSendCmdToMcuAndWait
+ApAllowToSendPacket
+ApCliAllowToSendPacket
+
+--- lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko ---
+WpaSend
+Set_ApCli_AutoConnect_Proc
+Set_DisConnectAllSta_Proc
+Send_BTM_Req
+Send_WNM_Notify_Req
+ap_cntl_disconnect_proc
+ApCliAutoConnectBWAdjust
+sta_cntl_disconnect_proc
+sta_cntl_connect_by_ssid
+sta_cntl_connect_by_bssid
+sta_cntl_connect_by_cfg
+sta_cntl_connect_proc
+sta_send_auth_req
+RTMPRepeaterReconnectionCheck
+greenap_check_peer_connection_status
+SendSMPSAction
+cntl_mlme_disconnect
+cntl_mlme_connect
+cntl_connect_request
+ApCliRTMPSendNullFrame
+MlmeEnqueueForRecv
+AsicSendCommandToMcu
+AsicSendCmdToMcuAndWait
+MtAsicSendCommandToMcu
+MtAsicSendCommandToMcuBBP
+AndesSendCmdMsg
+MtCmdSendRaw
+CmdExtTlvBufferSend
+bssConnectOwnDev
+WscSendEapolStart
+sae_send_auth
+sae_send_auth_commit
+sae_send_auth_confirm
+SendBTMConfirm
+SendBTMReqParam
+SendBTMReqIE
+SendBTMReq
+SendBTMQueryIndication
+send_btm_req_ie
+send_btm_req_param
+SendWNMNotifyConfirm
+SendWNMNotifyReq
+Send DEAUTH - Reason = %d frame  TO %x %x %x %x %x %x
+BTM ASSOC - Send DISASSOC  Reason = %d frame  TO %x %x %x %x %x %x
+ASSOC - Send DISASSOC  Reason = %d frame  TO %x %x %x %x %x %x
+%s(): connect action fail!
+Counter measure timer expired, resume connection access.
+WpaSend - No such MAC - %02x:%02x:%02x:%02x:%02x:%02x
+Send EAP_CODE_SUCCESS
+IEEE8021X-WEP : Send EAP_CODE_SUCCESS
+Send Deauth, Reason : REASON_8021X_AUTH_FAIL
+Send Deauth, Reason : REASON_NO_LONGER_VALID
+Send a pacekt was not classified!!
+%s(): FIXME!!!Unexpected frame(Type=%d, SubType=%d) send to MgmtRing, need to assign the length!
+%s(): FIXME!!!Unexpected frame send to MgmtRing, need to assign the length!
+AUTH - Class 2 error, Send DEAUTH frame to %02x:%02x:%02x:%02x:%02x:%02x
+ASSOC - Class 3 Error, Send DISASSOC frame to %02x:%02x:%02x:%02x:%02x:%02x
+Send DeAuth (Reason=%d) to %02x:%02x:%02x:%02x:%02x:%02x
+Registrar does NOT accept the same PIN again!(PIN:%s)
+I/F(apclii%d) Set_ApCli_AutoConnect_Proc::(Len=%d,Ssid=%s)
+SendMIMOPS
+DisConnectSta
+DisConnectAllSta
+ApCliSendPsPoll
+ApCliAutoConnect
+set_mu_send_gid_mgmt_frame
+AUTH_RSP - Send AUTH response (SUCCESS)...
+%s: wcid%d exist in Band%d but Recv Band%d, CH%d => SKIP
+Failed in ACL checking => send an AUTH seq#2 with Status code = %d
+AUTH - Send AUTH seq#2 (Challenge)
+AUTH - Send DE-AUTH req to %02x:%02x:%02x:%02x:%02x:%02x
+Accept RSSI: ===> %d, %d
+%s - Send %s response (Status=%d)...
+%s():connect action fail!!
+####### Send L2 Frame Mac=%02x:%02x:%02x:%02x:%02x:%02x
+ASSOC - MLME disassociates %02x:%02x:%02x:%02x:%02x:%02x; Send DISASSOC request
+Send DISASSOC Broadcast frame(%d) with ra%d
+Send a pacekt was not classified!!
+%s(): FIXME!!!Unexpected frame(Type=%d, SubType=%d) send to MgmtRing, need to assign the length!
+%s(): FIXME!!!Unexpected frame send to MgmtRing, need to assign the length!
+-----> WpaSendEapolStart
+<----- WpaSendEapolStart
+IF Set_AutoReconnect_Proc::(bAutoReconnect=%d)
+NDIS_STATUS_MEDIA_DISCONNECT Event BB!
+fSTA_STATUS_MEDIA_STATE_CONNECTED
+Registrar does NOT accept the same PIN again!(PIN:%08u)
+RT_OID_802_11_ADD_IMME_BA. break on no connection.----:%x:%x
+RT_OID_WSC_DRIVER_AUTO_CONNECT::WscDriverAutoConnect is %d
+Connected(AP: %s[%02X:%02X:%02X:%02X:%02X:%02X])
+Connected
+Disconnected
+ConnStatus is not connected
+MediaState is connected
+MediaState is not connected, ess
+%s - WSC_SET_DRIVER_CONNECT_BY_CREDENTIAL_IDX, value = %d
+%s - WSC_SET_DRIVER_AUTO_CONNECT, value = %d
+WPS Information(Driver Auto-Connect is %s - %d):
+AutoReconnect
+%s: Enqueue connect by BSSID for WPS
+---> ApCliAutoConnectExec()
+I/F(apclii%d) ApCliAutoConnectExec:(Len=%d,Ssid=%s, Channel=%d, Rssi=%d)
+I/F(apclii%d) ApCliAutoConnectExec::(AuthMode=%s, EncrypType=%s)
+<--- ApCliAutoConnectExec()
+Reconnection falied with pmkid ,delete cache entry and sae instance 
+ApCliIfMonitor: Reconnect the Root-Ap again.
+CNTL - BSSID not found. reply NDIS_STATUS_NOT_ACCEPTED
+ApCli auto connected: ApCliLinkUp()
+%s(): connect fail!!
+NDIS_STATUS_MEDIA_DISCONNECT Event AA!
+NDIS_STATUS_MEDIA_CONNECT Event B!.BACapability = %x. ClientStatusFlags = %lx
+%s():Send HW_STA_BF_SOUNDING_ADJUST Cmd
+NDIS_STATUS_MEDIA_DISCONNECT Event A!
+AUTH - Send DE-AUTH request (Reason=%d)...
+AUTH - Send AUTH request seq#3...
+%s - Send AUTH request seq#1 (Alg=%d)...
+AUTH - Class 2 error, Send DEAUTH frame...
+WPA3PSK STA connecting to WPA2PSK AP
+[PMF] Use PMF Connect
+ %s, %u  isGoingToConnect %d
+%s(): connect fail!!
+%s:: Send PS-POLL to retrieve buffered data
+ASSOC - Send DISASSOC request[BSSID::%02x:%02x:%02x:%02x:%02x:%02x (Reason=%d)
+ASSOC - Send RE-ASSOC request...
+ASSOC - Send ASSOC request...
+%s: (apcli%d) connect AKM(0x%x)=%s, PairwiseCipher(0x%x)=%s, GroupCipher(0x%x)=%s
+pMacEntry connect to mbss idx:%d, use CliLink:%d to RootAP
+%s:Connection falied with pmkid ,delete cache entry and sae instance 
+[%s]WlanIdx=%d, ConnectionState=%d
+ACT - SendNotifyBWAction() allocate memory failed
+ACT - SendNotifyBWAction(NotifyBW= %d)!
+ACT - Send2040CoexistAction() allocate memory failed
+ACT - Send2040CoexistAction( BSSCoexist2040 = 0x%x )
+SendBSS2040CoexistMgmtAction(): Wcid=%d, apidx=%d, InfoReq=%d!
+ACT - SendBSS2040CoexistMgmtAction() allocate memory failed
+ACT - SendBSS2040CoexistMgmtAction(BSSCoexist2040=0x%x)
+%s():No binding wdev for wcid(%d)
+%s: PMF connection, Ignore AddBaReq Send DUE TO NOT IN PORTSECURED
+BA - Send ADDBA request. StartSeq = %x,  FrameLen = %ld. BufSize = %d
+Radio - SendBeaconRequest() allocate memory failed
+Radio - SendBeaconRequest
+BA Ori Session Timeout(%d) : Send ADD BA again
+Can't Accept ADDBA for %02x:%02x:%02x:%02x:%02x:%02x TID = %d
+%s(bForceSend):alloc memory failed!
+%s: PMF Connection IGNORE THIS PKT DUE TO NOT IN PORTSECURED
+%s: PMF CONNECTION BUT RECV WEP=0 ACTION, ACTIVE THE SA QUERY
+Send MCU log by Event
+DAD found, and do not send this packet
+No Setting RTMP_SET_PACKET_RECV_FROM(5G_H) wdev->channel(%d) wdev->wdev_type(%d)
+No Setting RTMP_SET_PACKET_RECV_FROM(5G) wdev->channel(%d) wdev->wdev_type(%d)
+No Setting RTMP_SET_PACKET_RECV_FROM(2G) wdev->channel(%d) wdev->wdev_type(%d)
+%s(): No need to send to OS!
+%s():%02x:%02x:%02x:%02x:%02x:%02x recv BAR
+%s, recv broadcast from InvalidRept Entry, drop this packet
+MoreData bit=1, Sending trigger frm again
+	AutoReconnect = %d
+SendSMPSAction SMPS mode = %d
+ApCli%d Connected AP : %02X:%02X:%02X:%02X:%02X:%02X   SSID:%s
+ApCli%d         Connected AP : %02X:%02X:%02X:%02X:%02X:%02X   SSID:%s, avgrssi: %-7d, %-7d, %-7d
+Rept[wcid=%-3d] Connected AP : %02X:%02X:%02X:%02X:%02X:%02X   SSID:%s
+ApCli%d Connected AP : Disconnect
+%s: Status: Cmd Send to FW!
+AutoReconnect
+AutoConnect
+FastConnect
+FastConnect=%d
+ConnectionType: %d
+ConnectionState: %d
+MlmeScanReqAction -- Send PSM Data frame for off channel RM, SCAN_IN_PROGRESS=%d!
+LISTEN
+%s: No cntl_disconnect_proc hook api.
+%s: No cntl_connect_proc hook api.
+CNTL_MACHINE_BASE/CNTL_MLME_CONNECT
+CNTL_MLME_DISCONNECT
+Send DEAUTH frame with ReasonCode(%d) to %02x:%02x:%02x:%02x:%02x:%02x
+[ERROR]%s : cannot get binding wdev(%p).
+<=== %s: send Msg1 of 4-way
+!!!!msg 4 send btm req
+<=== %s: send Msg2 of 4-way
+<=== %s: send Msg3 of 4-way
+Apcli auto connected:WPABuildPairMsg4(),pAd->ApCfg.ApCliAutoConnectRunning[%d]=%d
+<=== %s: send Msg4 of 4-way
+<=== %s : send out Group Message 1
+<=== %s : send out Group Message 2
+Driver auto reconnect to last OID_802_11_BSSID setting - %02X:%02X:%02X:%02X:%02X:%02X
+send NULL Frame @%d Mbps to AID#%d...
+NDIS_STATUS_MEDIA_DISCONNECT Event B!
+SYNC - SCAN_2040_BSS_COEXIST !! Prepare to send Probe Request
+%s():Send PWA NullData frame to notify the associated AP!
+%s -- Send null frame
+bFastRoamingScan ~~~ Get back to send data ~~~
+%s: The connection table is full in ra%d.
+%s(): disconnection fail!
+Send DeAuth (Reason=%d) to %02x:%02x:%02x:%02x:%02x:%02x
+%s: Could not send in band command due to diablefRTMP_ADAPTER_MCU_SEND_IN_BAND_CMD
+%s: Could not send in band command due to fRTMP_ADAPTER_NIC_NOT_EXIST
+%s: Could not send in band command due to fRTMP_ADAPTER_SUSPEND
+%s: send cmd to N9 CmdBWFEnable.ucBwfLwcEnable [%d] Enable[%d]
+%s: send cmd to CR4 CmdBWFEnable.ucBwfLwcEnable [%d] Enable[%d]
+%s, ucHwBSSIndex = %d, ucOwnMacIdx = %d, u4ConnectionType = %x
+%s(CMD_STAREC_COMMON_T), u4ConnectionType = %d, ucConnectionState = %d, ucIsQBSS = %d, u2AID = %d, aucPeerMacAddr = %02x:%02x:%02x:%02x:%02x:%02x
+%s(): : packet not send by HW then ignore other PS-Poll Aid[%d]!
+uapsd> aux: send EOSP frame...
+uapsd> No data, send a Qos-Null frame with ESOP bit on and UP=%d to end USP
+-----> WscSendEapReqId
+<----- WscSendEapReqId
+-----> WscSendEapolStart
+<----- WscSendEapolStart
+-----> WscSendEapRspId
+<----- WscSendEapRspId
+-----> WscSendUPnPMessage
+<----- WscSendUPnPMessage
+Into WscUPnPErrHandle, send WSC_OPCODE_UPNP_CTRL with eventID=0x%x!
+-----> WscSendMessage
+<----- WscSendMessage
+WscSendNACK:: WscData Allocate failed!
+-----> WscSendEapFail
+<----- WscSendEapFail
+Recv WscMsg(%d) from UPnP, request EventID=%d! drop it!
+WscEapApProxyAction: send WSC_DONE to UPnP Registrar!
+Recv WSC Msg(%d) from EAP , it's impossible, drop it!
+Need to send UPnP but bUPnPStatus is false!MsgType=%d, regID=0x%x!
+%s(): send EAP-Fail to wireless Station!
+will connect %s (%02X:%02X:%02X:%02X:%02X:%02X) on %d
+No PIN CODE, cannot send M2 out!
+WscEAPOLStartAction(ra%d) - send EAP-Req(Id) to %02x:%02x:%02x:%02x:%02x:%02x
+WscDelListEntryByMAC : pMacAddr = %02X:%02X:%02X:%02X:%02X:%02X
+%s(%d): WscAutoTrigger is disabled! Send EapFail to STA.
+	<connectionType>ESS</connectionType>
+Send VHT NDPA Frame to STA(%02x:%02x:%02x:%02x:%02x:%02x)
+%s(): do not accept re-use of previous peer-commit-scalar
+peer_send_confirm = %d
+confirm fail: SAE_SILENTLY_DISCARDED due to  peer_send_confirm =%d, ast_peer_sc = %d
+==> %s(), send_confirm = %d
+==> %s()is_send = %d
+[PMF]%s - Send SA Query Request to STA(%02x:%02x:%02x:%02x:%02x:%02x)
+[PMF]%s - Send SA Query Response to STA(%02x:%02x:%02x:%02x:%02x:%02x)
+[PMF]%s: PMF Connection
+[PMF]%s: SAE connection fail due to not PMF connection(peer MFPR = %d, MFPC = %d)
+%s: PMF Connection IGNORE THIS PKT DUE TO NOT IN PORTSECURED
+%s: PMF CONNECTION BUT RECV WEP=0 ACTION, ACTIVE THE SA QUERY
+%s receive btm req timeout the uplayer does not send btm req in time
+		ownmac: the OwnMAC index we'll used to send frame to this peer, in range 0~4 or 16~31
+.text.media_state_connected
+.rel.text.WpaSend
+.rel.text.ap_send_data_pkt
+.rel.text.ap_send_mlme_pkt
+.rel.text.QBSS_LoadIsBusyTimeAccepted
+.rel.text.Set_DisConnectAllSta_Proc
+.rel.text.Set_ApCli_AutoConnect_Proc
+.rel.text.Set_ApCli_SendPsPoll_Proc
+.rel.text.Set_DisConnectSta_Proc
+.rel.text.Send_BTM_Req
+.rel.text.Send_WNM_Notify_Req
+.rel.text.ap_cntl_disconnect_proc
+.rel.text.ap_peer_auth_simple_rsp_gen_and_send
+.rel.text.ap_send_broadcast_deauth
+.rel.text.IAPP_L2_Update_Frame_Send
+.rel.text.sta_send_data_pkt
+.rel.text.sta_send_mlme_pkt
+.rel.text.WpaSendEapolStart
+.rel.text.Set_AutoReconnect_Proc
+.rel.text.StaAllowToSendPacket_new
+.rel.text.sta_media_state_connected
+.rel.text.ApCliAutoConnectBWAdjust
+.rel.text.ApCliAutoConnectExec
+.rel.text.sta_cntl_disconnect_proc
+.rel.text.sta_cntl_priv_disconnect.constprop.7
+.rel.text.sta_cntl_connect_by_bssid
+.text.ApCliCheckConConnectivity
+.rel.text.sta_cntl_connect_proc
+.rel.text.sta_send_auth_req
+.rel.text.RTMPRepeaterReconnectionCheck
+.rel.text.greenap_check_peer_connection_status
+.rel.text.greenap_check_peer_connection_at_link_up_down
+.rel.text.SendNotifyBWActionFrame
+.rel.text.Send2040CoexistAction
+.rel.text.SendBSS2040CoexistMgmtAction
+.rel.text.SendRefreshBAR
+.rel.text.SendSMPSAction
+.rel.text.SendBeaconRequest
+.rel.text.send_data_pkt
+.text.send_mlme_pkt
+.text.fp_send_data_pkt
+.rel.text.Show_AutoReconnect_Proc
+.rel.text.Set_SendSMPSAction_Proc
+.rel.text.cntl_mlme_disconnect
+.rel.text.cntl_mlme_connect
+.rel.text.cntl_connect_request
+.rel.text.cntl_disconnect_request
+.rel.text.ApCliRTMPSendPsPollFrame
+.rel.text.AppsApCliRTMPSendNullFrame
+.rel.text.ApCliRTMPSendNullFrame
+.rel.text.RTMPSendNullFrame
+.rel.text.MlmeAutoReconnectLastSSID
+.rel.text.MlmeEnqueueForRecv
+.rel.text.AsicSendCommandToMcu
+.rel.text.AsicSendCmdToMcuAndWait
+.rel.text.RTMPSendPackets
+.rel.text.MtAsicSendCommandToMcu
+.rel.text.MtAsicSendCmdToMcuAndWait
+.rel.text.MtAsicSendCommandToMcuBBP
+.rel.text.AndesSendCmdMsg
+.rel.text.MtCmdSendMsg
+.rel.text.MtCmdSendRaw
+.rel.text.bssConnectOwnDev
+.rel.text.CmdExtTlvBufferSend
+.rel.text.mtk_band_steering_netlink_send
+.rel.text.send_reset_to_user
+.rel.text.WscSendEapReqId
+.rel.text.WscSendEapolStart
+.rel.text.WscSendEapRspId
+.rel.text.WscSendUPnPMessage
+.rel.text.WscSendUPnPConfReqMsg
+.rel.text.WscSendMessage
+.rel.text.WscSendNACK
+.rel.text.WscSendEapFail
+.rel.text.WscDelListEntryByMAC
+.rel.text.WscSendEapFragAck
+.rel.text.WscSendEapFragData
+.rel.text.sae_send_auth
+.rel.text.sae_send_auth_confirm
+.rel.text.sae_send_auth_commit
+.text.SendBTMQuery
+.text.SendBTMIndication
+.text.SendBTMRsp
+.rel.text.SendWNMNotifyConfirm
+.rel.text.SendBTMReqIE
+.rel.text.wext_send_btm_query_event_newapi
+.rel.text.wext_send_btm_query_event
+.rel.text.SendBTMQueryEvent
+.rel.text.wext_send_btm_cfm_event_newapi
+.rel.text.wext_send_btm_cfm_event
+.rel.text.SendBTMConfirmEvent
+.rel.text.SendBTMConfirm
+.rel.text.wext_send_proxy_arp_event
+.rel.text.SendProxyARPEvent
+.rel.text.SendBTMReq
+.rel.text.SendBTMQueryIndication
+.rel.text.send_btm_req_ie
+.rel.text.send_btm_req_param
+.rel.text.SendBTMReqParam
+.rel.text.SendWNMNotifyReq
+.text.SendSignalToDaemon
+.rel.text.RtmpOSWrielessEventSend
+.rel.text.RtmpOSWrielessEventSendExt
+.rel.text.rt28xx_send_packets
+greenap_check_peer_connection_status
+cntl_disconnect_request
+Set_ApCli_SendPsPoll_Proc
+wext_send_btm_query_event
+QBSS_LoadIsBusyTimeAccepted
+MtAsicSendCommandToMcu
+Set_SendSMPSAction_Proc
+ApCliAutoConnectExec
+MtCmdSendRaw
+WscSendEapolStart
+sae_send_auth
+send_data_pkt
+WpaSend
+WscSendMessage
+send_btm_req_ie
+sae_send_auth_commit
+RTMPSendNullFrame
+wext_send_btm_cfm_event_newapi
+MtCmdSendMsg
+Show_AutoReconnect_Proc
+send_btm_req_param
+rt28xx_send_packets
+SendWNMNotifyConfirm
+WscSendEapFail
+Set_DisConnectSta_Proc
+Send_BTM_Req
+WpaSendEapolStart
+sae_send_auth_confirm
+ApCliAutoConnectBWAdjust
+AsicSendCommandToMcu
+WscSendUPnPConfReqMsg
+SendBTMQueryEvent
+wext_send_btm_cfm_event
+sta_media_state_connected
+ap_send_broadcast_deauth
+ApCliRTMPSendNullFrame
+mtk_band_steering_netlink_send
+send_reset_to_user
+WscSendEapFragData
+CmdExtTlvBufferSend
+Set_AutoReconnect_Proc
+Set_DisConnectAllSta_Proc
+RtmpOSWrielessEventSendExt
+AppsApCliRTMPSendNullFrame
+IAPP_L2_Update_Frame_Send
+sta_send_data_pkt
+StaAllowToSendPacket_new
+RtmpOSWrielessEventSend
+SendSMPSAction
+ApCliRTMPSendPsPollFrame
+fp_send_data_pkt
+AndesSendCmdMsg
+ApCliCheckConConnectivity
+Set_ApCli_AutoConnect_Proc
+media_state_connected
+SendBSS2040CoexistMgmtAction
+MtAsicSendCmdToMcuAndWait
+wext_send_proxy_arp_event
+AsicSendCmdToMcuAndWait
+MtAsicSendCommandToMcuBBP
+sta_send_mlme_pkt
+SendProxyARPEvent
+cntl_connect_request
+WscSendEapFragAck
+greenap_check_peer_connection_at_link_up_down
+wireless_send_event
+WscSendUPnPMessage
+SendRefreshBAR
+SendNotifyBWActionFrame
+RTMPSendPackets
+sta_send_auth_req
+Send_WNM_Notify_Req
+MlmeEnqueueForRecv
+WscDelListEntryByMAC
+MlmeAutoReconnectLastSSID
+Send2040CoexistAction
+WscSendEapReqId
+RTMPRepeaterReconnectionCheck
+SendBeaconRequest
+ap_send_mlme_pkt
+SendSignalToDaemon
+ap_send_data_pkt
+send_mlme_pkt
+WscSendEapRspId
+SendBTMConfirmEvent
+wext_send_btm_query_event_newapi

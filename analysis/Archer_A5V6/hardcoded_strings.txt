@@ -35,10 +35,6 @@ More details here: https://curl.se/docs/sslcerts.html
 @http://
 https://
 
---- usr/bin/openssl ---
-<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
-http://
-
 --- usr/bin/wscd ---
 http://%s:%d/description.xml
 http://
@@ -59,6 +55,10 @@ CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
 
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
+
 --- usr/bin/upnpd ---
 http://%s:%d/%s
 http://%d.%d.%d.%d:%d/
@@ -67,9 +67,6 @@ http://%d.%d.%d.%d:%d/
 Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 
---- usr/bin/rtinicapd ---
- secret_len = %d, secret= %s
-
 --- usr/bin/rt2860apd ---
  secret_len = %d, secret= %s
 
@@ -77,6 +74,9 @@ Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 Location: https://%s:%d
 Location: https://%s
 http://
+
+--- usr/bin/rtinicapd ---
+ secret_len = %d, secret= %s
 
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/

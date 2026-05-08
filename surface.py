@@ -46,6 +46,14 @@ class AttackPath(TypedDict):
     evidence: list[str]
 
 
+# ── Constants ────────────────────────────────────────────────────────────────
+
+_EMPTY_HASH   = {"*", "!", "x", ""}  # passwd/shadow entries that mean "no password"
+_MAX_EVIDENCE = 5   # evidence lines kept per finding
+_MAX_ITEMS    = 10  # generic item lists (services, references, embedded keys)
+_MAX_LIST     = 20  # top-level list fields (credentials, endpoints, nvram)
+
+
 # ── File I/O ──────────────────────────────────────────────────────────────────
 
 def read_file(path: Path) -> str:
@@ -86,7 +94,6 @@ def parse_users(analysis_dir: Path) -> list[User]:
         if len(parts) >= 2:
             shadow_hashes[parts[0]] = parts[1]
 
-    EMPTY_HASH = {"*", "!", "x", ""}
     users: list[User] = []
     for line in passwd.splitlines():
         parts = line.split(":")
@@ -100,8 +107,8 @@ def parse_users(analysis_dir: Path) -> list[User]:
             "gid": int(gid) if gid.isdigit() else gid,
             "home": home,
             "shell": shell,
-            "has_password": effective_hash not in EMPTY_HASH,
-            "password_hash": effective_hash if effective_hash not in EMPTY_HASH else None,
+            "has_password": effective_hash not in _EMPTY_HASH,
+            "password_hash": effective_hash if effective_hash not in _EMPTY_HASH else None,
         })
     return users
 
@@ -147,10 +154,10 @@ def parse_init_services(analysis_dir: Path) -> dict:
         "detected_services":    detected,
         "explicit_ports":       list({int(p) for p in re.findall(r"-p\s+(\d+)", port_raw)}),
         "has_command_injection": bool(injection_raw),
-        "injection_evidence":   non_empty_lines(injection_raw)[:5],
+        "injection_evidence":   non_empty_lines(injection_raw)[:_MAX_EVIDENCE],
         "has_hardcoded_creds":  bool(creds_raw),
-        "vendor_services":      non_empty_lines(vendor_raw)[:10],
-        "outbound_connections": non_empty_lines(outbound_raw)[:10],
+        "vendor_services":      non_empty_lines(vendor_raw)[:_MAX_ITEMS],
+        "outbound_connections": non_empty_lines(outbound_raw)[:_MAX_ITEMS],
         "has_firewall_rules":   bool(firewall_raw),
     }
 
@@ -175,7 +182,7 @@ def parse_web(analysis_dir: Path) -> dict:
         "httpd_binaries": httpd_bins,
         "cgi_scripts":    cgi_files,
         "lua_handlers":   lua_handlers,
-        "api_endpoints":  api_endpoints[:20],
+        "api_endpoints":  api_endpoints[:_MAX_LIST],
         "config_files":   [k for k in ws_sections if k != "Web Server Config Files Found"],
         "inferred_ports": list(set(ports)) or [80],
     }
@@ -192,7 +199,7 @@ def parse_protocols(analysis_dir: Path) -> dict:
     result = {}
     for proto, title in proto_map.items():
         evidence = _section_lines(sections, title)
-        result[proto] = {"present": bool(evidence), "evidence": evidence[:5]}
+        result[proto] = {"present": bool(evidence), "evidence": evidence[:_MAX_EVIDENCE]}
     return result
 
 
@@ -205,12 +212,12 @@ def parse_credentials(analysis_dir: Path) -> dict:
     hardcoded = [
         line for line in _section_lines(cred_sections, "Passwords and Secrets (all config files)")
         if not line.startswith("Binary file")
-    ][:20]
-    cloud_urls = _section_lines(cred_sections, "Cloud and Update Endpoints (all config files)")[:20]
+    ][:_MAX_LIST]
+    cloud_urls = _section_lines(cred_sections, "Cloud and Update Endpoints (all config files)")[:_MAX_LIST]
     defaults = (
         _section_lines(def_sections, "Default Passwords / SSIDs in Configs") +
         _section_lines(def_sections, "Default Credentials in Scripts")
-    )[:20]
+    )[:_MAX_LIST]
 
     return {
         "hardcoded_in_configs": hardcoded,
@@ -225,7 +232,7 @@ def parse_weak_crypto(analysis_dir: Path) -> list:
     for title, body in parse_sections(read_file(analysis_dir / "weak_crypto.txt")).items():
         evidence = non_empty_lines(body)
         if evidence:
-            findings.append({"context": title, "evidence": evidence[:5]})
+            findings.append({"context": title, "evidence": evidence[:_MAX_EVIDENCE]})
     return findings
 
 
@@ -234,7 +241,7 @@ def parse_debug(analysis_dir: Path) -> list:
     for title, body in parse_sections(read_file(analysis_dir / "debug_artifacts.txt")).items():
         items = non_empty_lines(body)
         if items:
-            findings.append({"context": title, "items": items[:10]})
+            findings.append({"context": title, "items": items[:_MAX_ITEMS]})
     return findings
 
 
@@ -242,7 +249,7 @@ def parse_ipc(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "unix_sockets.txt"))
     return {
         "socket_files": _section_lines(sections, "Unix Socket Files"),
-        "references":   _section_lines(sections, "Unix Socket References")[:10],
+        "references":   _section_lines(sections, "Unix Socket References")[:_MAX_ITEMS],
     }
 
 
@@ -250,7 +257,7 @@ def parse_certs(analysis_dir: Path) -> dict:
     sections = parse_sections(read_file(analysis_dir / "certificates_keys.txt"))
     return {
         "files":               _section_lines(sections, "Certificate and Key Files"),
-        "embedded_in_binaries": _section_lines(sections, "Embedded Keys / Certs in Files")[:10],
+        "embedded_in_binaries": _section_lines(sections, "Embedded Keys / Certs in Files")[:_MAX_ITEMS],
     }
 
 
@@ -285,7 +292,7 @@ def parse_architecture(analysis_dir: Path) -> dict:
         line = line.strip()
         if not line.startswith("type :"):
             continue
-        m = _PAT.search(line[len("type :"):])
+        m = _PAT.search(line.removeprefix("type :"))
         if not m:
             continue
         bits         = int(m.group(1))
@@ -356,8 +363,8 @@ def parse_shellcheck(analysis_dir: Path) -> dict:
 def parse_nvram(analysis_dir: Path) -> list:
     evidence = []
     for _, body in parse_sections(read_file(analysis_dir / "nvram.txt")).items():
-        evidence.extend(non_empty_lines(body)[:5])
-    return evidence[:20]
+        evidence.extend(non_empty_lines(body)[:_MAX_EVIDENCE])
+    return evidence[:_MAX_LIST]
 
 
 # ── Model Builders ────────────────────────────────────────────────────────────
@@ -783,7 +790,7 @@ def _ap_vendor_backdoor(init: dict, **_) -> AttackPath | None:
             "Send crafted vendor protocol packets (TDDP, TDP, OMCI)",
             "Exploit known CVEs or undocumented command execution paths",
         ],
-        "evidence": [f"init_scripts.txt: vendor services — {', '.join(init['vendor_services'][:5])}"],
+        "evidence": [f"init_scripts.txt: vendor services — {', '.join(init['vendor_services'][:_MAX_EVIDENCE])}"],
     }
 
 

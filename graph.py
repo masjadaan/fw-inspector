@@ -110,6 +110,9 @@ _HARDENING_SEVERITY: dict[str, str] = {
     "pie_no":        "medium",
 }
 
+# Numeric weight per severity level — used to score weakness contribution in attack paths
+_SEV_WEIGHT: dict[str, float] = {"high": 2.0, "medium": 1.0, "low": 0.5}
+
 # ShellCheck code → (CWE-ID, description) for security-relevant codes only
 _SC_CWE: dict[int, tuple[str, str]] = {
     2059: ("CWE-134", "Variable used as printf format string — format string injection"),
@@ -146,8 +149,9 @@ class Graph:
         self.nodes: dict[str, dict] = {}
         self.edges: list[dict] = []
         # adjacency: out_edges[src] = [(rel, dst)], in_edges[dst] = [(rel, src)]
-        self._out: dict[str, list[tuple[str, str]]] = defaultdict(list)
-        self._in:  dict[str, list[tuple[str, str]]] = defaultdict(list)
+        self._out:      dict[str, list[tuple[str, str]]] = defaultdict(list)
+        self._in:       dict[str, list[tuple[str, str]]] = defaultdict(list)
+        self._edge_ids: set[str]                         = set()
 
     def add_node(self, nid: str, type_: str, attrs: dict, prov_: dict) -> str:
         if nid not in self.nodes:
@@ -157,14 +161,20 @@ class Graph:
 
     def add_edge(self, src: str, dst: str, rel: str, attrs: dict, prov_: dict) -> None:
         eid = mkid("edge", src, rel, dst)
+        if eid in self._edge_ids:
+            return
+        self._edge_ids.add(eid)
         self.edges.append({"id": eid, "source": src, "target": dst,
                            "relationship": rel, "attributes": attrs,
                            "provenance": prov_})
         self._out[src].append((rel, dst))
         self._in[dst].append((rel, src))
 
-    def has_edge(self, src: str, dst: str) -> bool:
-        return any(d == dst for _, d in self._out.get(src, []))
+    def has_edge(self, src: str, dst: str, rel: str | None = None) -> bool:
+        return any(
+            d == dst and (rel is None or r == rel)
+            for r, d in self._out.get(src, [])
+        )
 
     def successors(self, nid: str, rel: str | None = None) -> list[str]:
         return [d for r, d in self._out.get(nid, []) if rel is None or r == rel]
@@ -444,7 +454,8 @@ class GraphBuilder:
     # ── Credentials ───────────────────────────────────────────────────────────
 
     def _build_credentials(self, surface: dict) -> None:
-        creds = surface.get("credentials", {})
+        creds  = surface.get("credentials", {})
+        fw_nid = mkid("Firmware", self.firmware_id)
 
         for line in creds.get("hardcoded_in_configs", [])[:15]:
             clean = strip_rootfs(line)
@@ -455,6 +466,13 @@ class GraphBuilder:
                 "cwe": "CWE-798",
                 "description": "Hardcoded credential or secret in config file",
             }, prov(EXTRACTED, "credentials.txt", 0.80))
+            raw_path = line.split(":")[0] if ":" in line else line
+            fs_nid = mkid("FilesystemObject", raw_path)
+            self.g.add_node(fs_nid, "FilesystemObject", {
+                "path": strip_rootfs(raw_path), "fs_type": "file", "role": "config",
+            }, prov(EXTRACTED, "credentials.txt", 0.80))
+            self.g.add_edge(fs_nid, nid, "CONTAINS_SECRET", {},
+                            prov(EXTRACTED, "credentials.txt", 0.80))
 
         for line in creds.get("default_credentials", [])[:15]:
             clean = line.replace("/output/extracted/rootfs/squashfs-root", "")
@@ -472,6 +490,12 @@ class GraphBuilder:
                         "cwe": "CWE-916",
                         "description": "MD5-crypt hash is brute-forceable with modern hardware",
                     }, prov(EXTRACTED, "default_credentials.txt", 0.90))
+                    shadow_nid = mkid("FilesystemObject", "/etc/shadow")
+                    self.g.add_node(shadow_nid, "FilesystemObject", {
+                        "path": "/etc/shadow", "fs_type": "file", "role": "shadow",
+                    }, prov(EXTRACTED, "default_credentials.txt", 0.90))
+                    self.g.add_edge(shadow_nid, nid, "CONTAINS_SECRET", {},
+                                    prov(EXTRACTED, "default_credentials.txt", 0.90))
                     continue
 
             nid = mkid("Credential", "default", clean)
@@ -480,6 +504,17 @@ class GraphBuilder:
                 "evidence": clean[:200],
                 "cwe": "CWE-1392",
             }, prov(EXTRACTED, "default_credentials.txt", 0.75))
+            raw_path = line.split(":")[0] if ":" in line else None
+            if raw_path and raw_path.startswith("/"):
+                fs_nid = mkid("FilesystemObject", raw_path)
+                self.g.add_node(fs_nid, "FilesystemObject", {
+                    "path": strip_rootfs(raw_path), "fs_type": "file",
+                }, prov(EXTRACTED, "default_credentials.txt", 0.75))
+                self.g.add_edge(fs_nid, nid, "CONTAINS_SECRET", {},
+                                prov(EXTRACTED, "default_credentials.txt", 0.75))
+            else:
+                self.g.add_edge(fw_nid, nid, "CONTAINS_SECRET", {},
+                                prov(INFERRED, "default_credentials.txt", 0.65))
 
         for url in creds.get("cloud_endpoints", [])[:10]:
             clean = strip_rootfs(url)
@@ -490,6 +525,8 @@ class GraphBuilder:
                 "cwe": "CWE-200",
                 "description": "Hardcoded cloud/update endpoint — potential MITM or impersonation target",
             }, prov(EXTRACTED, "credentials.txt", 0.75))
+            self.g.add_edge(fw_nid, nid, "CONTAINS_SECRET", {},
+                            prov(EXTRACTED, "credentials.txt", 0.75))
 
     # ── Certificates ──────────────────────────────────────────────────────────
 
@@ -501,15 +538,29 @@ class GraphBuilder:
                 "path": strip_rootfs(path),
                 "type": "file",
             }, prov(EXTRACTED, "certificates_keys.txt", 0.95))
+            fs_nid = mkid("FilesystemObject", path)
+            self.g.add_node(fs_nid, "FilesystemObject", {
+                "path": strip_rootfs(path), "fs_type": "file", "role": "certificate",
+            }, prov(EXTRACTED, "certificates_keys.txt", 0.95))
+            self.g.add_edge(fs_nid, nid, "CONTAINS_SECRET", {},
+                            prov(EXTRACTED, "certificates_keys.txt", 0.95))
 
         for line in certs.get("embedded_in_binaries", [])[:10]:
-            clean = strip_rootfs(line.split(":")[0] if ":" in line else line)
+            bin_path = line.split(":")[0] if ":" in line else line
+            clean    = strip_rootfs(bin_path)
             nid = mkid("Certificate", "embedded", clean)
             self.g.add_node(nid, "Certificate", {
                 "path": clean[:200],
                 "type": "embedded",
                 "note": "Certificate material embedded in binary or config",
             }, prov(EXTRACTED, "certificates_keys.txt", 0.85))
+            bin_nid = mkid("Binary", bin_path)
+            self.g.add_node(bin_nid, "Binary", {
+                "name": Path(bin_path).name,
+                "path": clean,
+            }, prov(EXTRACTED, "certificates_keys.txt", 0.85))
+            self.g.add_edge(bin_nid, nid, "LINKS_TO", {},
+                            prov(EXTRACTED, "certificates_keys.txt", 0.85))
 
     # ── ShellCheck findings ───────────────────────────────────────────────────
 
@@ -652,18 +703,21 @@ class GraphBuilder:
                             if algo and algo not in crypto_algos:
                                 crypto_algos.append(algo)
 
-                    # Weaknesses reachable from filesystem objects
+                    # Weaknesses scoped to binaries in this chain
                     weakness_types: list[str] = []
-                    for fs_nid, data in g.nodes.items():
-                        if data["type"] != "FilesystemObject":
-                            continue
-                        for w_nid in g.successors(fs_nid, "EXPOSES_WEAKNESS"):
-                            wt = g.nodes[w_nid]["attributes"].get("type", "")
+                    weakness_score: float = 0.0
+                    for bin_nid in binaries:
+                        for w_nid in g.successors(bin_nid, "EXPOSES_WEAKNESS"):
+                            wattrs = g.nodes[w_nid]["attributes"]
+                            wt = wattrs.get("type", "")
                             if wt and wt not in weakness_types:
                                 weakness_types.append(wt)
+                                weakness_score += _SEV_WEIGHT.get(
+                                    wattrs.get("severity", "low"), 0.5
+                                )
 
                     # Severity scoring
-                    score = 0
+                    score: float = 0.0
                     if zone_name == "WAN":
                         score += 3
                     elif zone_name == "LAN":
@@ -671,7 +725,7 @@ class GraphBuilder:
                     if runs_as_root:
                         score += 3
                     score += min(len(crypto_algos), 2)
-                    score += min(len(weakness_types), 2)
+                    score += min(weakness_score, 4)
 
                     if score >= 6:
                         severity = "critical"

@@ -96,6 +96,7 @@ CWE-1392\n[E:0.75]" fillcolor="#c62828"];
   "7dbc338d-87cb-5b26-b6a8-842c9860515c" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "124f026d-96a7-5f36-81fb-3426643151da" [label="FilesystemObject\n/etc/RT2860AP5G.dat\n[E:0.75]" fillcolor="#00695c"];
   "3b293f21-0eb4-5f43-a812-6003abf47fe0" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
@@ -117,6 +118,7 @@ CWE-1392\n[E:0.75]" fillcolor="#c62828"];
   "60001d05-2222-592a-b425-11df33d38dcd" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" [label="FilesystemObject\n/etc/RT2860AP.dat\n[E:0.75]" fillcolor="#00695c"];
   "94be37a1-24bd-53a2-a498-72047276d1e6" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
@@ -131,8 +133,12 @@ CWE-1392\n[E:0.75]" fillcolor="#c62828"];
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
   "c6c3a11d-aca5-59f5-8293-85aa4624d9cf" [label="Credential\nadmin (MD5-crypt ($1$))
 WEAK CWE-916\n[E:0.9]" fillcolor="#c62828"];
+  "1bbcc256-f50e-5db6-8277-eb3ada944154" [label="FilesystemObject\n/etc/shadow
+shadow\n[E:0.9]" fillcolor="#00695c"];
   "b0cdff4c-22d7-5a22-94ac-28ee8935dd29" [label="Certificate\n/etc/cloud/2048_newroot.cer
 embedded\n[E:0.85]" fillcolor="#f57f17"];
+  "c5ef4ff6-aede-5fcc-81ec-31d7b57cd2c8" [label="Binary\n2048_newroot.cer
+/etc/cloud/2048_newroot.cer\n[E:0.85]" fillcolor="#6a1b9a"];
   "6debcc39-594f-52f0-b414-6419a448ec7d" [label="Binary\nbusybox
 bin/busybox\n[E:0.95]" fillcolor="#6a1b9a"];
   "8c1a98f6-fccb-548e-a36f-242165495a3d" [label="Weakness\nCWE-693 nx_disabled
@@ -851,6 +857,21 @@ usr/bin/httpd\n[E:0.95]" fillcolor="#bf360c"];
   "c10650e7-21cf-5168-bbc5-4e2d343706dc" -> "63035ab1-62ac-52b2-80d9-5d8ae26b2b20" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
   "613604ef-4f57-5c0e-bd85-1ec794b716fa" -> "7f5c9d70-1a13-5372-96e9-581a85f30c90" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
   "e759137b-0c44-5b4b-9bb0-05975ed24a22" -> "a82f5654-e925-5beb-a217-31c1f6c2f70e" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "a6294af6-7ae8-56db-ab36-d6c39603e9d7" -> "9e6b0d2c-e2a2-5c00-a1ee-f7af6bf5b687" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "7dbc338d-87cb-5b26-b6a8-842c9860515c" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "3b293f21-0eb4-5f43-a812-6003abf47fe0" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "35f1e079-f04b-56e1-a050-0d4300b50691" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "47b0d35c-455f-596c-88f1-4f4329e287bb" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "aa217d6d-7ff6-51f3-809c-0520f198881f" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "c37d8892-79ee-5640-b28d-69d7a0d7cfff" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "124f026d-96a7-5f36-81fb-3426643151da" -> "9c400bb1-4475-54d2-ad07-f1ec96145934" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" -> "60001d05-2222-592a-b425-11df33d38dcd" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" -> "94be37a1-24bd-53a2-a498-72047276d1e6" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" -> "5d3ae3cb-923a-56b3-bd71-e0194f1e5c6c" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" -> "79daf2e1-ce91-5c18-a063-9cd8c139f838" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289" -> "d4f9643d-72e4-5943-9ed1-9c707bf974a9" [label="CONTAINS_SECRET\n[0.75]" style=dashed];
+  "1bbcc256-f50e-5db6-8277-eb3ada944154" -> "c6c3a11d-aca5-59f5-8293-85aa4624d9cf" [label="CONTAINS_SECRET\n[0.9]" style=dashed];
+  "c5ef4ff6-aede-5fcc-81ec-31d7b57cd2c8" -> "b0cdff4c-22d7-5a22-94ac-28ee8935dd29" [label="LINKS_TO\n[0.85]" style=dotted];
   "6debcc39-594f-52f0-b414-6419a448ec7d" -> "8c1a98f6-fccb-548e-a36f-242165495a3d" [label="EXPOSES_WEAKNESS\n[0.95]" style=solid];
   "6debcc39-594f-52f0-b414-6419a448ec7d" -> "bd859a38-8750-50a3-9c12-596e7c931f99" [label="EXPOSES_WEAKNESS\n[0.95]" style=solid];
   "6debcc39-594f-52f0-b414-6419a448ec7d" -> "cb38fb51-f4bf-593a-bafe-cee7fe502a8e" [label="EXPOSES_WEAKNESS\n[0.95]" style=solid];

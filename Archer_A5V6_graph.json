@@ -2,19 +2,19 @@
   "metadata": {
     "firmware_id": "Archer_A5V6",
     "schema_version": "1.0",
-    "generated_at": "2026-05-08T08:48:09.593565+00:00",
-    "node_count": 402,
-    "edge_count": 292,
+    "generated_at": "2026-05-08T10:11:34.856555+00:00",
+    "node_count": 406,
+    "edge_count": 307,
     "node_type_counts": {
       "Firmware": 1,
       "TrustZone": 3,
-      "Binary": 87,
+      "Binary": 88,
       "Service": 2,
       "Port": 2,
       "ProcessContext": 1,
       "CryptoPrimitive": 5,
       "WeaknessClass": 1,
-      "FilesystemObject": 12,
+      "FilesystemObject": 15,
       "Weakness": 273,
       "Credential": 14,
       "Certificate": 1
@@ -26,7 +26,9 @@
       "RUNS_AS": 2,
       "ASSOCIATED_WITH": 5,
       "USES_CRYPTO": 6,
-      "EXPOSES_WEAKNESS": 273
+      "EXPOSES_WEAKNESS": 273,
+      "CONTAINS_SECRET": 14,
+      "LINKS_TO": 1
     }
   },
   "nodes": [
@@ -710,6 +712,19 @@
       }
     },
     {
+      "id": "124f026d-96a7-5f36-81fb-3426643151da",
+      "type": "FilesystemObject",
+      "attributes": {
+        "path": "/etc/RT2860AP5G.dat",
+        "fs_type": "file"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
       "id": "3b293f21-0eb4-5f43-a812-6003abf47fe0",
       "type": "Credential",
       "attributes": {
@@ -808,6 +823,19 @@
       }
     },
     {
+      "id": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "type": "FilesystemObject",
+      "attributes": {
+        "path": "/etc/RT2860AP.dat",
+        "fs_type": "file"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
       "id": "94be37a1-24bd-53a2-a498-72047276d1e6",
       "type": "Credential",
       "attributes": {
@@ -881,12 +909,39 @@
       }
     },
     {
+      "id": "1bbcc256-f50e-5db6-8277-eb3ada944154",
+      "type": "FilesystemObject",
+      "attributes": {
+        "path": "/etc/shadow",
+        "fs_type": "file",
+        "role": "shadow"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.9
+      }
+    },
+    {
       "id": "b0cdff4c-22d7-5a22-94ac-28ee8935dd29",
       "type": "Certificate",
       "attributes": {
         "path": "/etc/cloud/2048_newroot.cer",
         "type": "embedded",
         "note": "Certificate material embedded in binary or config"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "certificates_keys.txt",
+        "confidence": 0.85
+      }
+    },
+    {
+      "id": "c5ef4ff6-aede-5fcc-81ec-31d7b57cd2c8",
+      "type": "Binary",
+      "attributes": {
+        "name": "2048_newroot.cer",
+        "path": "/etc/cloud/2048_newroot.cer"
       },
       "provenance": {
         "type": "extracted",
@@ -6806,6 +6861,186 @@
       }
     },
     {
+      "id": "3729c0b3-9e46-52e3-baa5-1edc1df19b59",
+      "source": "a6294af6-7ae8-56db-ab36-d6c39603e9d7",
+      "target": "9e6b0d2c-e2a2-5c00-a1ee-f7af6bf5b687",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "d79d6e1d-c60d-50e1-bcaf-5640abf70cb5",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "7dbc338d-87cb-5b26-b6a8-842c9860515c",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "92e6c6cd-40f4-534e-99f4-8337ed0bc16a",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "3b293f21-0eb4-5f43-a812-6003abf47fe0",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "242b4556-de66-5016-baeb-cc66f311ff80",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "35f1e079-f04b-56e1-a050-0d4300b50691",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "590b8692-8dd3-52d3-b0de-56f2c430d3a5",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "47b0d35c-455f-596c-88f1-4f4329e287bb",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "3f61c601-edf8-5ad0-8c3c-ba6f630ccd74",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "aa217d6d-7ff6-51f3-809c-0520f198881f",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "87af402b-586a-5859-8eef-62833071bb27",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "c37d8892-79ee-5640-b28d-69d7a0d7cfff",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "7317ee73-149c-5b9f-af1d-4d9b9a2c0a50",
+      "source": "124f026d-96a7-5f36-81fb-3426643151da",
+      "target": "9c400bb1-4475-54d2-ad07-f1ec96145934",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "ff188737-804d-5a50-bb99-9646e1d156dd",
+      "source": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "target": "60001d05-2222-592a-b425-11df33d38dcd",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "a132eca0-1933-5ee9-a217-b89387489d80",
+      "source": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "target": "94be37a1-24bd-53a2-a498-72047276d1e6",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "dd9ddd23-90f9-5b00-8c59-c6b385873ae7",
+      "source": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "target": "5d3ae3cb-923a-56b3-bd71-e0194f1e5c6c",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "a553a17b-4aec-5ff5-b695-a62851580716",
+      "source": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "target": "79daf2e1-ce91-5c18-a063-9cd8c139f838",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "8cafa74b-444d-512f-8a40-b830c9c13b98",
+      "source": "6fe95f5b-9cdc-5a95-a156-ea5a6ddbb289",
+      "target": "d4f9643d-72e4-5943-9ed1-9c707bf974a9",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.75
+      }
+    },
+    {
+      "id": "a2feb0e1-0a7a-59b6-b6c4-900af4ae9769",
+      "source": "1bbcc256-f50e-5db6-8277-eb3ada944154",
+      "target": "c6c3a11d-aca5-59f5-8293-85aa4624d9cf",
+      "relationship": "CONTAINS_SECRET",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "default_credentials.txt",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e40bfce2-e559-538d-aede-523afa792a52",
+      "source": "c5ef4ff6-aede-5fcc-81ec-31d7b57cd2c8",
+      "target": "b0cdff4c-22d7-5a22-94ac-28ee8935dd29",
+      "relationship": "LINKS_TO",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "certificates_keys.txt",
+        "confidence": 0.85
+      }
+    },
+    {
       "id": "b0b1bd4a-2a72-5f38-869e-ab17a63e4ce0",
       "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
       "target": "8c1a98f6-fccb-548e-a36f-242165495a3d",
@@ -9942,18 +10177,15 @@
     {
       "id": "74486eb1-fa3c-5d36-a902-8e5812473af2",
       "title": "LAN \u2192 SSH :22/tcp",
-      "severity": "critical",
-      "score": 6,
+      "severity": "high",
+      "score": 4.0,
       "zone": "LAN",
       "port": 22,
       "protocol": "tcp",
       "service": "ssh",
       "runs_as_root": true,
       "crypto_weaknesses": [],
-      "structural_weaknesses": [
-        "world_writable_file",
-        "debug_artifact"
-      ],
+      "structural_weaknesses": [],
       "steps": [
         "Reach port 22/tcp from LAN",
         "Interact with ssh service",
@@ -9969,18 +10201,15 @@
     {
       "id": "a7dbcd5d-02f2-5799-8499-7af1a85d57bf",
       "title": "LAN \u2192 HTTP :80/tcp",
-      "severity": "critical",
-      "score": 6,
+      "severity": "high",
+      "score": 4.0,
       "zone": "LAN",
       "port": 80,
       "protocol": "tcp",
       "service": "http",
       "runs_as_root": true,
       "crypto_weaknesses": [],
-      "structural_weaknesses": [
-        "world_writable_file",
-        "debug_artifact"
-      ],
+      "structural_weaknesses": [],
       "steps": [
         "Reach port 80/tcp from LAN",
         "Interact with http service",

@@ -81,10 +81,6 @@ http://
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/
 
---- lib/libixml.so ---
-http://www.w3.org/XML/1998/namespace
-http://www.w3.org/2000/xmlns/
-
 --- lib/libcurl.so.4.7.0 ---
 # Your alt-svc cache. https://curl.se/docs/alt-svc.html
 # https://curl.se/docs/http-cookies.html
@@ -93,6 +89,10 @@ Authorization: Bearer %s
 auth=Bearer %s
 auth=Bearer %s
 auth=Bearer %s
+
+--- lib/libixml.so ---
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
 
 --- lib/libupnp.so ---
 http://schemas.xmlsoap.org/soap/envelope/

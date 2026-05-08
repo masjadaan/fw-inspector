@@ -27,7 +27,7 @@ from analyzers.binary import (
     analyze_symlinks,
     analyze_weak_crypto,
 )
-from analyzers.context import AnalysisContext, find_all_configs, run
+from analyzers.context import AnalysisContext, Analyzer, find_all_configs, run
 from analyzers.elf_cache import build_elf_cache
 from analyzers.network import analyze_interface_binding, analyze_protocols
 from analyzers.system import (
@@ -65,28 +65,98 @@ _STEP_WORKERS = 8
 _print_lock   = threading.Lock()
 
 
-def _run_step(label: str, fn) -> None:
+def _run_step(step: Analyzer, ctx: AnalysisContext) -> None:
     """Run one pipeline step, buffer its stdout, then print label + output atomically."""
     buf = io.StringIO()
     try:
         with redirect_stdout(buf):
-            fn()
+            step.run(ctx)
     except Exception as e:
         buf.write(f"  [ERROR] {e}\n")
     with _print_lock:
-        print(label)
+        print(step.label)
         print(buf.getvalue(), end="")
         print()
 
 
-def _run_parallel(steps) -> None:
-    """Execute (label, fn) pairs concurrently, capped at _STEP_WORKERS threads."""
+def _run_parallel(steps: list[Analyzer], ctx: AnalysisContext) -> None:
+    """Execute Analyzer steps concurrently, capped at _STEP_WORKERS threads."""
     n = min(_STEP_WORKERS, len(steps) or 1)
     with ThreadPoolExecutor(max_workers=n) as executor:
-        futures = {executor.submit(_run_step, label, fn): label for label, fn in steps}
+        futures = {executor.submit(_run_step, step, ctx): step.label for step in steps}
         for future in as_completed(futures):
             future.result()
 
+
+# ── Pipeline steps ─────────────────────────────────────────────────────────────
+
+# Each Analyzer declares label, fn(ctx), and needs_elf.
+# needs_elf=True  → reads ctx.elf_cache; runs after the cache is built (phase 3).
+# needs_elf=False → independent of ELF data; runs concurrently in phase 1.
+STEPS: list[Analyzer] = [
+    Analyzer("[*] Scripts",                                                          analyze_scripts),
+    Analyzer("[*] ShellCheck static analysis",                                       analyze_shellcheck),
+    Analyzer("[*] Init scripts",                                                     analyze_init_scripts),
+    Analyzer("[*] Systemd services",                                                 analyze_systemd_services),
+    Analyzer("[*] Users and groups",                                                 analyze_users_groups),
+    Analyzer("[*] SSH keys",                                                         analyze_ssh_keys),
+    Analyzer("[*] Web interface",                                                    analyze_web_interface),
+    Analyzer("[*] Web server configs",                                               analyze_web_server_configs),
+    Analyzer("[*] CGI and web handler injection vectors",                            analyze_cgi_injection),
+    Analyzer("[*] PHP OS command injection  (taint: $_GET/$_POST/... → exec/system/...)",
+             analyze_php_cmdinject),
+    Analyzer("[*] PHP code injection sinks  (eval / assert / preg_replace-/e / create_function / call_user_func)",
+             analyze_php_codeinject),
+    Analyzer("[*] PHP local file inclusion  (taint: $_GET/$_POST/... → include/require)",
+             analyze_php_lfi),
+    Analyzer("[*] PHP information disclosure  (phpinfo / display_errors / error_reporting)",
+             analyze_php_infodisclosure),
+    Analyzer("[*] Credentials and secrets",                                          analyze_credentials),
+    Analyzer("[*] Default credentials / SSIDs",                                      analyze_default_credentials),
+    Analyzer("[*] Library versions",                                                 analyze_library_versions),
+    Analyzer("[*] BusyBox detection and applet enumeration",                         analyze_busybox),
+    Analyzer("[*] Symlink map",                                                      analyze_symlinks),
+    Analyzer("[*] Kernel modules",                                                   analyze_kernel_modules),
+    Analyzer("[*] Protocol exposure  (SNMP / UPnP / TR-069 / MQTT)",               analyze_protocols),
+    Analyzer("[*] Interface binding  (LAN / WAN)",                                  analyze_interface_binding),
+    Analyzer("[*] NVRAM references",                                                 analyze_nvram),
+    Analyzer("[*] World-writable files and SetGID",                                  analyze_world_writable),
+    Analyzer("[*] Linker configuration and library paths",                           analyze_linker_config),
+    Analyzer("[*] SetUID binaries",
+             lambda ctx: run(["find", str(ctx.rootfs), "-perm", "-4000"],
+                             ctx.out_dir / "setuid_binaries.txt")),
+    Analyzer("[*] Capabilities",
+             lambda ctx: run(["getcap", "-r", str(ctx.rootfs)],
+                             ctx.out_dir / "capabilities.txt")),
+    Analyzer("[*] Extended attributes",
+             lambda ctx: run(["getfattr", "-R", "-n", "security.capability", str(ctx.rootfs)],
+                             ctx.out_dir / "xattr_capabilities.txt")),
+    Analyzer("[*] Scheduled tasks",                                                  analyze_scheduled_tasks),
+    Analyzer("[*] Mount points and writable overlays",                               analyze_mount_points),
+    Analyzer("[*] Firmware update mechanism",                                        analyze_firmware_update),
+    Analyzer("[*] SSL/TLS certificates and keys",                                    analyze_certificates),
+    Analyzer("[*] Unix sockets and IPC",                                             analyze_unix_sockets),
+    Analyzer("[*] Port / listen references",
+             lambda ctx: run(["grep", "-E", "port|listen|bind"] + ctx.configs,
+                             ctx.out_dir / "ports_listen.txt") if ctx.configs else None),
+    Analyzer("[*] HTTP server binaries",
+             lambda ctx: run(["find", str(ctx.rootfs),
+                              "-name", "*httpd*", "-o", "-name", "*nginx*", "-o", "-name", "*boa*",
+                              "-o", "-name", "*lighttpd*", "-o", "-name", "*uhttpd*"],
+                             ctx.out_dir / "httpd_binaries.txt")),
+    Analyzer("[*] Debug artifacts",                                                  analyze_debug_artifacts),
+    Analyzer("[*] DNS and routing",                                                  analyze_dns_routing),
+    Analyzer("[*] Firewall rules",                                                   analyze_firewall_rules),
+    Analyzer("[*] Strings on HTTP binaries",                                         _strings_http_binaries),
+    # ── ELF-dependent (phase 3) ────────────────────────────────────────────────
+    Analyzer("[*] Architecture and endianness detection",  analyze_architecture,    needs_elf=True),
+    Analyzer("[*] Binary inventory",                       analyze_binary_inventory, needs_elf=True),
+    Analyzer("[*] Binary hardening (NX / PIE / RELRO / stack canary)",
+             analyze_hardening,                                                      needs_elf=True),
+    Analyzer("[*] Network-capable binaries",               analyze_network_binaries, needs_elf=True),
+    Analyzer("[*] Hardcoded strings in binaries",          analyze_hardcoded_strings, needs_elf=True),
+    Analyzer("[*] Weak cryptography",                      analyze_weak_crypto,      needs_elf=True),
+]
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
@@ -142,112 +212,11 @@ def main():
 
     ctx = AnalysisContext(rootfs=rootfs, out_dir=out_dir, configs=all_configs)
 
-    # Each step: (label, fn, needs_elf).
-    # needs_elf=True  → reads ctx.elf_cache; must run after the cache is built.
-    # needs_elf=False → independent of ELF data; runs in the first parallel wave.
-    steps = [
-        ("[*] Scripts",
-         lambda: analyze_scripts(ctx),                                                          False),
-        ("[*] ShellCheck static analysis",
-         lambda: analyze_shellcheck(ctx),                                                       False),
-        ("[*] Init scripts",
-         lambda: analyze_init_scripts(ctx),                                                     False),
-        ("[*] Systemd services",
-         lambda: analyze_systemd_services(ctx),                                                 False),
-        ("[*] Users and groups",
-         lambda: analyze_users_groups(ctx),                                                     False),
-        ("[*] SSH keys",
-         lambda: analyze_ssh_keys(ctx),                                                         False),
-        ("[*] Web interface",
-         lambda: analyze_web_interface(ctx),                                                    False),
-        ("[*] Web server configs",
-         lambda: analyze_web_server_configs(ctx),                                               False),
-        ("[*] CGI and web handler injection vectors",
-         lambda: analyze_cgi_injection(ctx),                                                    False),
-        ("[*] PHP OS command injection  (taint: $_GET/$_POST/... → exec/system/...)",
-         lambda: analyze_php_cmdinject(ctx),                                                    False),
-        ("[*] PHP code injection sinks  (eval / assert / preg_replace-/e / create_function / call_user_func)",
-         lambda: analyze_php_codeinject(ctx),                                                   False),
-        ("[*] PHP local file inclusion  (taint: $_GET/$_POST/... → include/require)",
-         lambda: analyze_php_lfi(ctx),                                                          False),
-        ("[*] PHP information disclosure  (phpinfo / display_errors / error_reporting)",
-         lambda: analyze_php_infodisclosure(ctx),                                               False),
-        ("[*] Credentials and secrets",
-         lambda: analyze_credentials(ctx),                                                      False),
-        ("[*] Default credentials / SSIDs",
-         lambda: analyze_default_credentials(ctx),                                              False),
-        ("[*] Library versions",
-         lambda: analyze_library_versions(ctx),                                                 False),
-        ("[*] BusyBox detection and applet enumeration",
-         lambda: analyze_busybox(ctx),                                                          False),
-        ("[*] Symlink map",
-         lambda: analyze_symlinks(ctx),                                                         False),
-        ("[*] Kernel modules",
-         lambda: analyze_kernel_modules(ctx),                                                   False),
-        ("[*] Protocol exposure  (SNMP / UPnP / TR-069 / MQTT)",
-         lambda: analyze_protocols(ctx),                                                        False),
-        ("[*] Interface binding  (LAN / WAN)",
-         lambda: analyze_interface_binding(ctx),                                                False),
-        ("[*] NVRAM references",
-         lambda: analyze_nvram(ctx),                                                            False),
-        ("[*] World-writable files and SetGID",
-         lambda: analyze_world_writable(ctx),                                                   False),
-        ("[*] Linker configuration and library paths",
-         lambda: analyze_linker_config(ctx),                                                    False),
-        ("[*] SetUID binaries",
-         lambda: run(["find", str(ctx.rootfs), "-perm", "-4000"], ctx.out_dir / "setuid_binaries.txt"),
-                                                                                                False),
-        ("[*] Capabilities",
-         lambda: run(["getcap", "-r", str(ctx.rootfs)], ctx.out_dir / "capabilities.txt"),     False),
-        ("[*] Extended attributes",
-         lambda: run(["getfattr", "-R", "-n", "security.capability", str(ctx.rootfs)],
-                     ctx.out_dir / "xattr_capabilities.txt"),                                   False),
-        ("[*] Scheduled tasks",
-         lambda: analyze_scheduled_tasks(ctx),                                                  False),
-        ("[*] Mount points and writable overlays",
-         lambda: analyze_mount_points(ctx),                                                     False),
-        ("[*] Firmware update mechanism",
-         lambda: analyze_firmware_update(ctx),                                                  False),
-        ("[*] SSL/TLS certificates and keys",
-         lambda: analyze_certificates(ctx),                                                     False),
-        ("[*] Unix sockets and IPC",
-         lambda: analyze_unix_sockets(ctx),                                                     False),
-        ("[*] Port / listen references",
-         lambda: run(["grep", "-E", "port|listen|bind"] + ctx.configs,
-                     ctx.out_dir / "ports_listen.txt") if ctx.configs else None,               False),
-        ("[*] HTTP server binaries",
-         lambda: run(["find", str(ctx.rootfs),
-                      "-name", "*httpd*", "-o", "-name", "*nginx*", "-o", "-name", "*boa*",
-                      "-o", "-name", "*lighttpd*", "-o", "-name", "*uhttpd*"],
-                     ctx.out_dir / "httpd_binaries.txt"),                                       False),
-        ("[*] Debug artifacts",
-         lambda: analyze_debug_artifacts(ctx),                                                  False),
-        ("[*] DNS and routing",
-         lambda: analyze_dns_routing(ctx),                                                      False),
-        ("[*] Firewall rules",
-         lambda: analyze_firewall_rules(ctx),                                                   False),
-        ("[*] Strings on HTTP binaries",
-         lambda: _strings_http_binaries(ctx),                                                   False),
-        # ── ELF-dependent steps (run after cache is built) ─────────────────────
-        ("[*] Architecture and endianness detection",
-         lambda: analyze_architecture(ctx),                                                     True),
-        ("[*] Binary inventory",
-         lambda: analyze_binary_inventory(ctx),                                                 True),
-        ("[*] Binary hardening (NX / PIE / RELRO / stack canary)",
-         lambda: analyze_hardening(ctx),                                                        True),
-        ("[*] Network-capable binaries",
-         lambda: analyze_network_binaries(ctx),                                                 True),
-        ("[*] Hardcoded strings in binaries",
-         lambda: analyze_hardcoded_strings(ctx),                                                True),
-        ("[*] Weak cryptography",
-         lambda: analyze_weak_crypto(ctx),                                                      True),
-    ]
-
-    pre_steps  = [(label, fn) for label, fn, needs_elf in steps if not needs_elf]
-    post_steps = [(label, fn) for label, fn, needs_elf in steps if needs_elf]
+    pre_steps  = [s for s in STEPS if not s.needs_elf]
+    post_steps = [s for s in STEPS if s.needs_elf]
 
     # Phase 1: all ELF-independent steps in parallel.
-    _run_parallel(pre_steps)
+    _run_parallel(pre_steps, ctx)
 
     # Phase 2: build the ELF cache (its own internal thread pool; runs once).
     print("[*] ELF analysis cache  (parallel: file + readelf + strings on every ELF binary)")
@@ -255,7 +224,7 @@ def main():
     print()
 
     # Phase 3: all ELF-dependent steps in parallel.
-    _run_parallel(post_steps)
+    _run_parallel(post_steps, ctx)
 
     print(f"[+] Analysis complete. Results in {out_dir}/")
 

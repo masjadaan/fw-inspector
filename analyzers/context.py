@@ -1,4 +1,5 @@
 import subprocess
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -56,3 +57,14 @@ class AnalysisContext:
     out_dir:   Path
     configs:   list
     elf_cache: dict = field(default_factory=dict)
+
+
+@dataclass
+class Analyzer:
+    """One pipeline step: a label, the function to run, and whether it needs the ELF cache."""
+    label:     str
+    fn:        Callable[["AnalysisContext"], None]
+    needs_elf: bool = False
+
+    def run(self, ctx: AnalysisContext) -> None:
+        self.fn(ctx)

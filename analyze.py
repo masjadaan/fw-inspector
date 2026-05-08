@@ -10,6 +10,7 @@ import re
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -60,6 +61,16 @@ def multi_section_file(checks: list, out_file: Path, label: str):
         sections.append(section(title, output))
     out_file.write_text("".join(sections))
     print(f"  {out_file.name:45s}  {total_lines} lines across {len(checks)} checks")
+
+
+# ── Analysis context ───────────────────────────────────────────────────────────
+
+@dataclass
+class AnalysisContext:
+    rootfs:    Path
+    out_dir:   Path
+    configs:   list
+    elf_cache: dict = field(default_factory=dict)
 
 
 # ── ELF helpers ────────────────────────────────────────────────────────────────
@@ -259,16 +270,16 @@ def build_elf_cache(rootfs: Path) -> dict:
 
 # ── Analysis functions ─────────────────────────────────────────────────────────
 
-def analyze_scripts(rootfs: Path, out_dir: Path):
+def analyze_scripts(ctx: AnalysisContext):
     EXTENSIONS = {".sh", ".py", ".lua", ".pl", ".rb", ".php", ".js", ".expect"}
     found = sorted(
-        p for p in rootfs.rglob("*")
+        p for p in ctx.rootfs.rglob("*")
         if p.is_file() and p.suffix.lower() in EXTENSIONS
     )
 
     # Index file — just paths
-    index_file = out_dir / "scripts.txt"
-    index_file.write_text("\n".join(str(p.relative_to(rootfs)) for p in found))
+    index_file = ctx.out_dir / "scripts.txt"
+    index_file.write_text("\n".join(str(p.relative_to(ctx.rootfs)) for p in found))
     print(f"  {'scripts.txt':45s}  {len(found)} files")
 
     # Content file — full source of every script
@@ -280,21 +291,21 @@ def analyze_scripts(rootfs: Path, out_dir: Path):
             content = f"(could not read: {e})"
         sections.append(
             f"{'=' * 60}\n"
-            f"  {p.relative_to(rootfs)}  ({p.suffix})\n"
+            f"  {p.relative_to(ctx.rootfs)}  ({p.suffix})\n"
             f"{'=' * 60}\n"
             f"{content}\n"
         )
-    content_file = out_dir / "scripts_content.txt"
+    content_file = ctx.out_dir / "scripts_content.txt"
     content_file.write_text("\n".join(sections))
     total_lines = sum(len(s.splitlines()) for s in sections)
     print(f"  {'scripts_content.txt':45s}  {total_lines} lines")
 
 
-def analyze_systemd_services(rootfs: Path, out_dir: Path):
-    found = sorted(rootfs.rglob("*.service"))
+def analyze_systemd_services(ctx: AnalysisContext):
+    found = sorted(ctx.rootfs.rglob("*.service"))
 
-    index_file = out_dir / "services.txt"
-    index_file.write_text("\n".join(str(p.relative_to(rootfs)) for p in found))
+    index_file = ctx.out_dir / "services.txt"
+    index_file.write_text("\n".join(str(p.relative_to(ctx.rootfs)) for p in found))
     print(f"  {'services.txt':45s}  {len(found)} files")
 
     if not found:
@@ -308,18 +319,19 @@ def analyze_systemd_services(rootfs: Path, out_dir: Path):
             content = f"(could not read: {e})"
         sections.append(
             f"{'=' * 60}\n"
-            f"  {p.relative_to(rootfs)}\n"
+            f"  {p.relative_to(ctx.rootfs)}\n"
             f"{'=' * 60}\n"
             f"{content}\n"
         )
-    content_file = out_dir / "services_content.txt"
+    content_file = ctx.out_dir / "services_content.txt"
     content_file.write_text("\n".join(sections))
     total_lines = sum(len(s.splitlines()) for s in sections)
     print(f"  {'services_content.txt':45s}  {total_lines} lines")
 
 
-def analyze_init_scripts(rootfs: Path, out_file: Path):
-    init_dirs = existing(rootfs / "etc/init.d", rootfs / "etc/rc.d")
+def analyze_init_scripts(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "init_scripts.txt"
+    init_dirs = existing(ctx.rootfs / "etc/init.d", ctx.rootfs / "etc/rc.d")
     if not init_dirs:
         out_file.write_text("No init.d / rc.d directories found.\n")
         print(f"  {'init_scripts.txt':45s}  no init dirs found")
@@ -348,13 +360,14 @@ def analyze_init_scripts(rootfs: Path, out_file: Path):
     ], out_file, "init_scripts.txt")
 
 
-def analyze_network_binaries(rootfs: Path, out_file: Path, elf_cache: dict):
+def analyze_network_binaries(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "network_binaries.txt"
     KEYWORDS = {"bind", "listen", "accept", "socket", "connect", "recv", "send"}
     results = []
-    for path, rec in elf_cache.items():
+    for path, rec in ctx.elf_cache.items():
         matches = [l for l in rec.strings_lines if any(kw in l.lower() for kw in KEYWORDS)]
         if matches:
-            results.append(f"--- {path.relative_to(rootfs)} ---")
+            results.append(f"--- {path.relative_to(ctx.rootfs)} ---")
             results.extend(matches)
             results.append("")
     content = "\n".join(results)
@@ -363,27 +376,29 @@ def analyze_network_binaries(rootfs: Path, out_file: Path, elf_cache: dict):
     print(f"  {'network_binaries.txt':45s}  {lines} lines")
 
 
-def analyze_web_interface(rootfs: Path, out_file: Path):
-    web_roots = existing(rootfs / "www", rootfs / "web", rootfs / "webroot", rootfs / "usr/share/www")
+def analyze_web_interface(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "web_interface.txt"
+    web_roots = existing(ctx.rootfs / "www", ctx.rootfs / "web", ctx.rootfs / "webroot", ctx.rootfs / "usr/share/www")
     checks = [section("CGI Scripts",
-                       subprocess.run(["find", str(rootfs), "-name", "*.cgi"], capture_output=True, text=True).stdout)]
+                       subprocess.run(["find", str(ctx.rootfs), "-name", "*.cgi"], capture_output=True, text=True).stdout)]
     checks.append(section("Lua Handlers",
-                           subprocess.run(["find", str(rootfs), "-name", "*.lua"], capture_output=True, text=True).stdout))
+                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.lua"], capture_output=True, text=True).stdout))
     checks.append(section("JavaScript Files",
-                           subprocess.run(["find", str(rootfs), "-name", "*.js"], capture_output=True, text=True).stdout))
+                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.js"], capture_output=True, text=True).stdout))
     if web_roots:
         r = subprocess.run(["grep", "-rE", r"url|api|endpoint|/cgi-bin|action="] + web_roots, capture_output=True, text=True)
         checks.append(section("API Endpoints in Web Root", r.stdout))
     checks.append(section("HTML Pages",
-                           subprocess.run(["find", str(rootfs), "-name", "*.html", "-o", "-name", "*.htm"],
+                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.html", "-o", "-name", "*.htm"],
                                           capture_output=True, text=True).stdout))
     out_file.write_text("".join(checks))
     print(f"  {'web_interface.txt':45s}  {sum(len(c.splitlines()) for c in checks)} lines")
 
 
-def analyze_web_server_configs(rootfs: Path, out_file: Path):
+def analyze_web_server_configs(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "web_server_configs.txt"
     r = subprocess.run(
-        ["find", str(rootfs), "-name", "httpd.conf", "-o", "-name", "nginx.conf",
+        ["find", str(ctx.rootfs), "-name", "httpd.conf", "-o", "-name", "nginx.conf",
          "-o", "-name", "lighttpd.conf", "-o", "-name", "uhttpd.conf", "-o", "-name", "boa.conf"],
         capture_output=True, text=True,
     )
@@ -391,24 +406,25 @@ def analyze_web_server_configs(rootfs: Path, out_file: Path):
     for path_str in r.stdout.strip().splitlines():
         p = Path(path_str)
         if p.is_file():
-            sections.append(section(str(p.relative_to(rootfs)), p.read_text(errors="replace")))
+            sections.append(section(str(p.relative_to(ctx.rootfs)), p.read_text(errors="replace")))
     out_file.write_text("".join(sections))
     total = sum(len(s.splitlines()) for s in sections)
     print(f"  {'web_server_configs.txt':45s}  {total} lines")
 
 
-def analyze_credentials(rootfs: Path, out_dir: Path, configs: list):
+def analyze_credentials(ctx: AnalysisContext):
     multi_section_file([
         ("Passwords and Secrets (all config files)",
-         ["grep", "-Ei", "password|passwd|secret|community|apikey|token|key="] + configs),
+         ["grep", "-Ei", "password|passwd|secret|community|apikey|token|key="] + ctx.configs),
         ("Hardcoded IP Addresses (all config files)",
-         ["grep", "-E", r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"] + configs),
+         ["grep", "-E", r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"] + ctx.configs),
         ("Cloud and Update Endpoints (all config files)",
-         ["grep", "-E", r"https?://"] + configs),
-    ], out_dir / "credentials.txt", "credentials.txt")
+         ["grep", "-E", r"https?://"] + ctx.configs),
+    ], ctx.out_dir / "credentials.txt", "credentials.txt")
 
 
-def analyze_users_groups(rootfs: Path, out_file: Path):
+def analyze_users_groups(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "users_groups.txt"
     HASH_ALGOS = {
         "$1$":  "MD5-crypt       [WEAK — crackable]",
         "$2a$": "bcrypt",
@@ -419,10 +435,10 @@ def analyze_users_groups(rootfs: Path, out_file: Path):
     }
     sections = []
     for name in ("etc/passwd", "etc/shadow", "etc/group"):
-        p = rootfs / name
+        p = ctx.rootfs / name
         sections.append(section(name, p.read_text(errors="replace") if p.exists() else "(not found)"))
 
-    shadow_p = rootfs / "etc/shadow"
+    shadow_p = ctx.rootfs / "etc/shadow"
     if shadow_p.exists():
         lines = []
         for line in shadow_p.read_text(errors="replace").splitlines():
@@ -444,9 +460,10 @@ def analyze_users_groups(rootfs: Path, out_file: Path):
     print(f"  {'users_groups.txt':45s}  {total} lines")
 
 
-def analyze_ssh_keys(rootfs: Path, out_file: Path):
+def analyze_ssh_keys(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "ssh_keys.txt"
     r = subprocess.run(
-        ["find", str(rootfs),
+        ["find", str(ctx.rootfs),
          "-name", "authorized_keys", "-o", "-name", "id_rsa", "-o", "-name", "id_ecdsa",
          "-o", "-name", "id_ed25519", "-o", "-name", "dropbear_*_host_key",
          "-o", "-name", "*.pub"],
@@ -456,13 +473,14 @@ def analyze_ssh_keys(rootfs: Path, out_file: Path):
     for path_str in r.stdout.strip().splitlines():
         p = Path(path_str)
         if p.is_file():
-            sections.append(section(str(p.relative_to(rootfs)), p.read_text(errors="replace")))
+            sections.append(section(str(p.relative_to(ctx.rootfs)), p.read_text(errors="replace")))
     out_file.write_text("".join(sections))
     total = sum(len(s.splitlines()) for s in sections)
     print(f"  {'ssh_keys.txt':45s}  {total} lines")
 
 
-def analyze_library_versions(rootfs: Path, out_file: Path):
+def analyze_library_versions(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "library_versions.txt"
     libs = {
         "libc":      ["libc.so*", "libc-*.so"],
         "libssl":    ["libssl.so*"],
@@ -472,13 +490,13 @@ def analyze_library_versions(rootfs: Path, out_file: Path):
     }
     sections = []
     for name, patterns in libs.items():
-        found = [p for pat in patterns for p in rootfs.rglob(pat)]
+        found = [p for pat in patterns for p in ctx.rootfs.rglob(pat)]
         if not found:
             sections.append(section(name, "(not found)"))
             continue
         output_lines = []
         for lib in found:
-            output_lines.append(f"  {lib.relative_to(rootfs)}")
+            output_lines.append(f"  {lib.relative_to(ctx.rootfs)}")
             r = subprocess.run(["strings", str(lib)], capture_output=True, text=True)
             versions = [
                 l for l in r.stdout.splitlines()
@@ -491,13 +509,14 @@ def analyze_library_versions(rootfs: Path, out_file: Path):
     print(f"  {'library_versions.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
 
-def analyze_binary_inventory(rootfs: Path, out_file: Path, elf_cache: dict):
-    all_files = [p for p in rootfs.rglob("*") if p.is_file() and not p.is_symlink()]
+def analyze_binary_inventory(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "binary_inventory.txt"
+    all_files = [p for p in ctx.rootfs.rglob("*") if p.is_file() and not p.is_symlink()]
     lines = []
     for f in all_files:
-        rec = elf_cache.get(f)
+        rec = ctx.elf_cache.get(f)
         if rec:
-            lines.append(str(f.relative_to(rootfs)))
+            lines.append(str(f.relative_to(ctx.rootfs)))
             lines.append(f"  type : {rec.file_type}")
             lines.append(f"  libs : {', '.join(rec.needed_libs) if rec.needed_libs else 'none'}")
             if rec.crypto_imports:
@@ -511,19 +530,20 @@ def analyze_binary_inventory(rootfs: Path, out_file: Path, elf_cache: dict):
                 file_type = r.stdout.split(":", 1)[-1].strip()
             except Exception:
                 file_type = "(error)"
-            lines.append(str(f.relative_to(rootfs)))
+            lines.append(str(f.relative_to(ctx.rootfs)))
             lines.append(f"  type : {file_type}")
         lines.append("")
     out_file.write_text("\n".join(lines))
     print(f"  {'binary_inventory.txt':45s}  {len(all_files)} files")
 
 
-def analyze_architecture(rootfs: Path, out_file: Path, elf_cache: dict):
+def analyze_architecture(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "architecture.txt"
     _PAT  = re.compile(r'ELF\s+(\d+)-bit\s+(LSB|MSB)\s+\w+,\s+([^,]+)')
     _NAME = {"Intel": "x86", "AArch64": "ARM64"}
 
     votes: dict = {}
-    for path, rec in elf_cache.items():
+    for path, rec in ctx.elf_cache.items():
         m = _PAT.search(rec.file_type)
         if not m:
             continue
@@ -542,7 +562,7 @@ def analyze_architecture(rootfs: Path, out_file: Path, elf_cache: dict):
     dominant = max(votes, key=lambda k: len(votes[k]))
     arch, bits, endian_short = dominant
     agreeing  = len(votes[dominant])
-    total_elf = len(elf_cache)
+    total_elf = len(ctx.elf_cache)
     confidence = round(agreeing / total_elf, 2)
     endianness = "little-endian" if endian_short == "LSB" else "big-endian"
 
@@ -557,7 +577,7 @@ def analyze_architecture(rootfs: Path, out_file: Path, elf_cache: dict):
     ])
 
     evidence = [
-        f"  {p.relative_to(rootfs)}  |  {elf_cache[p].file_type[:80]}"
+        f"  {p.relative_to(ctx.rootfs)}  |  {ctx.elf_cache[p].file_type[:80]}"
         for p in sorted(votes[dominant])[:20]
     ]
 
@@ -568,43 +588,45 @@ def analyze_architecture(rootfs: Path, out_file: Path, elf_cache: dict):
     print(f"  {'architecture.txt':45s}  {arch} {bits}-bit {endianness}  (conf={confidence}, {agreeing}/{total_elf} ELFs)")
 
 
-def analyze_kernel_modules(rootfs: Path, out_file: Path):
-    r = subprocess.run(["find", str(rootfs), "-name", "*.ko"], capture_output=True, text=True)
+def analyze_kernel_modules(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "kernel_modules.txt"
+    r = subprocess.run(["find", str(ctx.rootfs), "-name", "*.ko"], capture_output=True, text=True)
     sections = [section("Kernel Modules (.ko)", r.stdout)]
     # Also check if there is a modules.dep
-    for dep in rootfs.rglob("modules.dep"):
-        sections.append(section(str(dep.relative_to(rootfs)), dep.read_text(errors="replace")))
+    for dep in ctx.rootfs.rglob("modules.dep"):
+        sections.append(section(str(dep.relative_to(ctx.rootfs)), dep.read_text(errors="replace")))
     out_file.write_text("".join(sections))
     total = sum(len(s.splitlines()) for s in sections)
     print(f"  {'kernel_modules.txt':45s}  {total} lines")
 
 
-def analyze_nvram(rootfs: Path, out_file: Path):
+def analyze_nvram(ctx: AnalysisContext):
     multi_section_file([
         ("nvram_get / nvram_set calls",
-         ["grep", "-rE", "nvram_get|nvram_set|nvram get|nvram set", str(rootfs)]),
+         ["grep", "-rE", "nvram_get|nvram_set|nvram get|nvram set", str(ctx.rootfs)]),
         ("NVRAM key references",
-         ["grep", "-rE", r"nvram\s+\w+", str(rootfs)]),
-    ], out_file, "nvram.txt")
+         ["grep", "-rE", r"nvram\s+\w+", str(ctx.rootfs)]),
+    ], ctx.out_dir / "nvram.txt", "nvram.txt")
 
 
-def analyze_weak_crypto(rootfs: Path, out_file: Path, configs: list, elf_cache: dict):
+def analyze_weak_crypto(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "weak_crypto.txt"
     checks = [
         ("Weak Crypto in Config Files",
-         ["grep", "-Ei", r"md5|des|rc4|ecb|base64.*key|static.*key"] + configs),
+         ["grep", "-Ei", r"md5|des|rc4|ecb|base64.*key|static.*key"] + ctx.configs),
         ("Weak Crypto References in Binaries (string grep — approximate)",
-         ["grep", "-rE", "MD5|DES|RC4|ECB", str(rootfs / "usr"), str(rootfs / "lib")]
-         if (rootfs / "usr").exists() else []),
+         ["grep", "-rE", "MD5|DES|RC4|ECB", str(ctx.rootfs / "usr"), str(ctx.rootfs / "lib")]
+         if (ctx.rootfs / "usr").exists() else []),
     ]
     checks = [(t, c) for t, c in checks if c]
     multi_section_file(checks, out_file, "weak_crypto.txt")
 
     # Concrete evidence from cache — no extra subprocess calls
     findings = []
-    for path, rec in elf_cache.items():
+    for path, rec in ctx.elf_cache.items():
         syms = [s for s in rec.crypto_imports if _WEAK_SYM_PAT.match(s)]
         if syms:
-            findings.append(f"  {path.relative_to(rootfs)}: {', '.join(syms)}")
+            findings.append(f"  {path.relative_to(ctx.rootfs)}: {', '.join(syms)}")
     sec = section(
         "Binaries Importing Weak Crypto Symbols  [readelf — concrete, not inferred]",
         "\n".join(findings) if findings else "(none)",
@@ -615,56 +637,58 @@ def analyze_weak_crypto(rootfs: Path, out_file: Path, configs: list, elf_cache: 
         print(f"    → {len(findings)} ELF binaries import weak crypto symbols (readelf)")
 
 
-def analyze_world_writable(rootfs: Path, out_file: Path):
+def analyze_world_writable(ctx: AnalysisContext):
     multi_section_file([
         ("World-Writable Files",
-         ["find", str(rootfs), "-type", "f", "-perm", "-002"]),
+         ["find", str(ctx.rootfs), "-type", "f", "-perm", "-002"]),
         ("World-Writable Directories",
-         ["find", str(rootfs), "-type", "d", "-perm", "-002"]),
+         ["find", str(ctx.rootfs), "-type", "d", "-perm", "-002"]),
         ("SetGID Binaries",
-         ["find", str(rootfs), "-perm", "-2000"]),
-    ], out_file, "world_writable.txt")
+         ["find", str(ctx.rootfs), "-perm", "-2000"]),
+    ], ctx.out_dir / "world_writable.txt", "world_writable.txt")
 
 
-def analyze_default_credentials(rootfs: Path, out_file: Path, configs: list):
+def analyze_default_credentials(ctx: AnalysisContext):
     multi_section_file([
         ("Default Passwords / SSIDs in Configs",
-         ["grep", "-Ei", r"admin|default.*pass|ssid|tplink|admin123|password=admin"] + configs),
+         ["grep", "-Ei", r"admin|default.*pass|ssid|tplink|admin123|password=admin"] + ctx.configs),
         ("Default Credentials in Scripts",
          ["grep", "-rEi", r"admin|default.*pass|ssid|tplink|admin123",
-          str(rootfs / "etc")] if (rootfs / "etc").exists() else []),
-    ], out_file, "default_credentials.txt")
+          str(ctx.rootfs / "etc")] if (ctx.rootfs / "etc").exists() else []),
+    ], ctx.out_dir / "default_credentials.txt", "default_credentials.txt")
 
 
-def analyze_debug_artifacts(rootfs: Path, out_file: Path):
+def analyze_debug_artifacts(ctx: AnalysisContext):
     multi_section_file([
         ("Debug / Test / Factory Files",
-         ["find", str(rootfs), "-iname", "*debug*", "-o", "-iname", "*test*",
+         ["find", str(ctx.rootfs), "-iname", "*debug*", "-o", "-iname", "*test*",
           "-o", "-iname", "*factory*", "-o", "-iname", "*diag*"]),
         ("Debug References in Configs",
          ["grep", "-rEi", "debug|verbose|factory|test.mode|diagnostic",
-          str(rootfs / "etc")] if (rootfs / "etc").exists() else []),
-    ], out_file, "debug_artifacts.txt")
+          str(ctx.rootfs / "etc")] if (ctx.rootfs / "etc").exists() else []),
+    ], ctx.out_dir / "debug_artifacts.txt", "debug_artifacts.txt")
 
 
-def analyze_dns_routing(rootfs: Path, out_file: Path):
+def analyze_dns_routing(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "dns_routing.txt"
     sections = []
     for name in ("etc/hosts", "etc/resolv.conf", "etc/resolv.conf.d"):
-        p = rootfs / name
+        p = ctx.rootfs / name
         if p.is_file():
             sections.append(section(name, p.read_text(errors="replace")))
         elif p.is_dir():
             for f in p.iterdir():
-                sections.append(section(str(f.relative_to(rootfs)), f.read_text(errors="replace")))
+                sections.append(section(str(f.relative_to(ctx.rootfs)), f.read_text(errors="replace")))
     if not sections:
         sections.append(section("DNS / Routing", "(no hosts or resolv.conf found)"))
     out_file.write_text("".join(sections))
     print(f"  {'dns_routing.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
 
-def analyze_firewall_rules(rootfs: Path, out_file: Path):
+def analyze_firewall_rules(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "firewall_rules.txt"
     r = subprocess.run(
-        ["find", str(rootfs), "-name", "iptables.conf", "-o", "-name", "firewall*",
+        ["find", str(ctx.rootfs), "-name", "iptables.conf", "-o", "-name", "firewall*",
          "-o", "-name", "nftables*", "-o", "-name", "ip6tables*"],
         capture_output=True, text=True,
     )
@@ -672,21 +696,22 @@ def analyze_firewall_rules(rootfs: Path, out_file: Path):
     for path_str in r.stdout.strip().splitlines():
         p = Path(path_str)
         if p.is_file():
-            sections.append(section(str(p.relative_to(rootfs)), p.read_text(errors="replace")))
+            sections.append(section(str(p.relative_to(ctx.rootfs)), p.read_text(errors="replace")))
     out_file.write_text("".join(sections))
     print(f"  {'firewall_rules.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
 
-def analyze_hardcoded_strings(rootfs: Path, out_file: Path, elf_cache: dict):
+def analyze_hardcoded_strings(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "hardcoded_strings.txt"
     PATTERNS = [r"https?://", r"api[_-]?key", r"token=", r"secret=", r"Bearer\s"]
     results = []
-    for path, rec in elf_cache.items():
+    for path, rec in ctx.elf_cache.items():
         matches = [
             l for l in rec.strings_lines
             if any(re.search(pat, l, re.IGNORECASE) for pat in PATTERNS)
         ]
         if matches:
-            results.append(f"--- {path.relative_to(rootfs)} ---")
+            results.append(f"--- {path.relative_to(ctx.rootfs)} ---")
             results.extend(matches)
             results.append("")
     content = "\n".join(results)
@@ -695,60 +720,62 @@ def analyze_hardcoded_strings(rootfs: Path, out_file: Path, elf_cache: dict):
     print(f"  {'hardcoded_strings.txt':45s}  {lines} lines")
 
 
-def analyze_protocols(rootfs: Path, out_file: Path, configs: list):
+def analyze_protocols(ctx: AnalysisContext):
     multi_section_file([
         ("SNMP Community Strings",
-         ["grep", "-Ei", "community|snmpd|public|private"] + configs),
+         ["grep", "-Ei", "community|snmpd|public|private"] + ctx.configs),
         ("UPnP / SSDP",
-         ["grep", "-Ei", "upnp|ssdp|igd"] + configs),
+         ["grep", "-Ei", "upnp|ssdp|igd"] + ctx.configs),
         ("TR-069 / CWMP",
-         ["grep", "-Ei", "cwmp|tr069|acs.url|inform|tr_069"] + configs),
+         ["grep", "-Ei", "cwmp|tr069|acs.url|inform|tr_069"] + ctx.configs),
         ("MQTT",
-         ["grep", "-Ei", "mqtt|broker"] + configs),
-    ], out_file, "protocols.txt")
+         ["grep", "-Ei", "mqtt|broker"] + ctx.configs),
+    ], ctx.out_dir / "protocols.txt", "protocols.txt")
 
 
-def analyze_interface_binding(rootfs: Path, out_file: Path, configs: list):
+def analyze_interface_binding(ctx: AnalysisContext):
     multi_section_file([
         ("Interface References (LAN/WAN)",
-         ["grep", "-Ei", "br-lan|eth0|eth1|wan|pppoe|interface"] + configs),
+         ["grep", "-Ei", "br-lan|eth0|eth1|wan|pppoe|interface"] + ctx.configs),
         ("Any-Interface Bindings (0.0.0.0)",
-         ["grep", "-E", r"0\.0\.0\.0"] + configs),
+         ["grep", "-E", r"0\.0\.0\.0"] + ctx.configs),
         ("Loopback Only (127.0.0.1)",
-         ["grep", "-E", r"127\.0\.0\.1"] + configs),
-    ], out_file, "interface_binding.txt")
+         ["grep", "-E", r"127\.0\.0\.1"] + ctx.configs),
+    ], ctx.out_dir / "interface_binding.txt", "interface_binding.txt")
 
 
-def analyze_scheduled_tasks(rootfs: Path, out_file: Path):
-    r = subprocess.run(["find", str(rootfs), "-path", "*/cron*"], capture_output=True, text=True)
+def analyze_scheduled_tasks(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "scheduled_tasks.txt"
+    r = subprocess.run(["find", str(ctx.rootfs), "-path", "*/cron*"], capture_output=True, text=True)
     sections = [section("Cron Files Found", r.stdout)]
-    for f in list(rootfs.rglob("crontab")) + list(rootfs.rglob("cron.d")):
+    for f in list(ctx.rootfs.rglob("crontab")) + list(ctx.rootfs.rglob("cron.d")):
         if f.is_file():
-            sections.append(section(str(f.relative_to(rootfs)), f.read_text(errors="replace")))
+            sections.append(section(str(f.relative_to(ctx.rootfs)), f.read_text(errors="replace")))
     out_file.write_text("".join(sections))
     print(f"  {'scheduled_tasks.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
 
-def analyze_firmware_update(rootfs: Path, out_file: Path, configs: list):
+def analyze_firmware_update(ctx: AnalysisContext):
     multi_section_file([
         ("Update / Upgrade References",
-         ["grep", "-Ei", "upgrade|update|firmware|download"] + configs),
+         ["grep", "-Ei", "upgrade|update|firmware|download"] + ctx.configs),
         ("Checksum / Signature Verification",
-         ["grep", "-Ei", "checksum|verify|signature|md5|sha"] + configs),
+         ["grep", "-Ei", "checksum|verify|signature|md5|sha"] + ctx.configs),
         ("TP-Link Cloud / Update URLs",
-         ["grep", "-Ei", r"tplinkcloud|tplinkwifi|tp-link\.com|devs\.tplinkcloud"] + configs),
-    ], out_file, "firmware_update.txt")
+         ["grep", "-Ei", r"tplinkcloud|tplinkwifi|tp-link\.com|devs\.tplinkcloud"] + ctx.configs),
+    ], ctx.out_dir / "firmware_update.txt", "firmware_update.txt")
 
 
-def analyze_certificates(rootfs: Path, out_file: Path):
+def analyze_certificates(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "certificates_keys.txt"
     r = subprocess.run(
-        ["find", str(rootfs), "-name", "*.pem", "-o", "-name", "*.key",
+        ["find", str(ctx.rootfs), "-name", "*.pem", "-o", "-name", "*.key",
          "-o", "-name", "*.crt", "-o", "-name", "*.p12", "-o", "-name", "*.der"],
         capture_output=True, text=True,
     )
     sections = [section("Certificate and Key Files", r.stdout)]
     r2 = subprocess.run(
-        ["grep", "-rE", "BEGIN (RSA|EC|PRIVATE|CERTIFICATE)", str(rootfs)],
+        ["grep", "-rE", "BEGIN (RSA|EC|PRIVATE|CERTIFICATE)", str(ctx.rootfs)],
         capture_output=True, text=True,
     )
     sections.append(section("Embedded Keys / Certs in Files", r2.stdout))
@@ -756,12 +783,13 @@ def analyze_certificates(rootfs: Path, out_file: Path):
     print(f"  {'certificates_keys.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
 
-def analyze_unix_sockets(rootfs: Path, out_file: Path):
+def analyze_unix_sockets(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "unix_sockets.txt"
     r1 = subprocess.run(
-        ["find", str(rootfs), "-name", "*.sock", "-o", "-name", "*.socket"],
+        ["find", str(ctx.rootfs), "-name", "*.sock", "-o", "-name", "*.socket"],
         capture_output=True, text=True,
     )
-    etc_usr = existing(rootfs / "etc", rootfs / "usr")
+    etc_usr = existing(ctx.rootfs / "etc", ctx.rootfs / "usr")
     r2 = subprocess.run(
         ["grep", "-rE", r"AF_UNIX|SOCK_STREAM|/var/run/.*\.sock"] + etc_usr,
         capture_output=True, text=True,
@@ -778,8 +806,9 @@ def _points_to_busybox(link: Path) -> bool:
         return False
 
 
-def analyze_busybox(rootfs: Path, out_file: Path):
-    bb_bins = [p for p in rootfs.rglob("busybox") if p.is_file() and not p.is_symlink()]
+def analyze_busybox(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "busybox.txt"
+    bb_bins = [p for p in ctx.rootfs.rglob("busybox") if p.is_file() and not p.is_symlink()]
     if not bb_bins:
         out_file.write_text(section("BusyBox", "(busybox binary not found)"))
         print(f"  {'busybox.txt':45s}  not found")
@@ -792,12 +821,12 @@ def analyze_busybox(rootfs: Path, out_file: Path):
         version_lines = [l for l in r.stdout.splitlines()
                          if re.search(r"BusyBox\s+v\d+", l, re.IGNORECASE)]
         all_sections.append(section(
-            f"Version  ({bb.relative_to(rootfs)})",
+            f"Version  ({bb.relative_to(ctx.rootfs)})",
             "\n".join(version_lines) if version_lines else "(version string not found)",
         ))
         applets = sorted(
-            str(p.relative_to(rootfs))
-            for p in rootfs.rglob("*")
+            str(p.relative_to(ctx.rootfs))
+            for p in ctx.rootfs.rglob("*")
             if p.is_symlink() and _points_to_busybox(p)
         )
         total_applets = len(applets)
@@ -807,18 +836,19 @@ def analyze_busybox(rootfs: Path, out_file: Path):
     print(f"  {'busybox.txt':45s}  {len(bb_bins)} binary(s), {total_applets} applets")
 
 
-def analyze_symlinks(rootfs: Path, out_file: Path):
+def analyze_symlinks(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "symlinks.txt"
     valid, broken = [], []
-    for p in sorted(rootfs.rglob("*")):
+    for p in sorted(ctx.rootfs.rglob("*")):
         if not p.is_symlink():
             continue
         try:
             raw = p.readlink()
-            resolved = rootfs / str(raw).lstrip("/") if raw.is_absolute() else p.parent / raw
-            entry = f"{p.relative_to(rootfs)} -> {raw}"
+            resolved = ctx.rootfs / str(raw).lstrip("/") if raw.is_absolute() else p.parent / raw
+            entry = f"{p.relative_to(ctx.rootfs)} -> {raw}"
             (valid if resolved.exists() else broken).append(entry)
         except Exception:
-            broken.append(f"{p.relative_to(rootfs)} -> (unreadable)")
+            broken.append(f"{p.relative_to(ctx.rootfs)} -> (unreadable)")
     out_file.write_text(
         section(f"Valid Symlinks  ({len(valid)})", "\n".join(valid)) +
         section(f"Broken Symlinks  ({len(broken)})", "\n".join(broken) if broken else "(none)")
@@ -826,7 +856,9 @@ def analyze_symlinks(rootfs: Path, out_file: Path):
     print(f"  {'symlinks.txt':45s}  {len(valid)} valid, {len(broken)} broken")
 
 
-def analyze_php_cmdinject(rootfs: Path, out_file: Path):
+def analyze_php_cmdinject(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "php_cmdinject.txt"
+    rootfs = ctx.rootfs
     """
     Taint-flow check for PHP OS command injection.
 
@@ -947,7 +979,9 @@ def analyze_php_cmdinject(rootfs: Path, out_file: Path):
         print(f"    !! {len(same_line_hits)} same-line + {len(no_san)} file-level HIGH findings")
 
 
-def analyze_php_codeinject(rootfs: Path, out_file: Path):
+def analyze_php_codeinject(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "php_codeinject.txt"
+    rootfs = ctx.rootfs
     """
     Detect PHP code injection sinks — functions that evaluate arbitrary strings as code.
 
@@ -1049,7 +1083,9 @@ def analyze_php_codeinject(rootfs: Path, out_file: Path):
         print(f"    !! {total_hits} code injection sink hits — review php_codeinject.txt")
 
 
-def analyze_php_lfi(rootfs: Path, out_file: Path):
+def analyze_php_lfi(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "php_lfi.txt"
+    rootfs = ctx.rootfs
     """
     Local File Inclusion taint check.
 
@@ -1195,7 +1231,9 @@ def analyze_php_lfi(rootfs: Path, out_file: Path):
         print(f"    !! {high} HIGH-confidence LFI findings — review php_lfi.txt")
 
 
-def analyze_php_infodisclosure(rootfs: Path, out_file: Path):
+def analyze_php_infodisclosure(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "php_infodisclosure.txt"
+    rootfs = ctx.rootfs
     """
     Detect PHP information-disclosure patterns.
 
@@ -1296,9 +1334,10 @@ def analyze_php_infodisclosure(rootfs: Path, out_file: Path):
         print(f"    !! {total_hits} information-disclosure findings — review php_infodisclosure.txt")
 
 
-def analyze_cgi_injection(rootfs: Path, out_file: Path):
+def analyze_cgi_injection(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "cgi_injection.txt"
     r_find = subprocess.run(
-        ["find", str(rootfs), "-name", "*.cgi", "-o", "-name", "*.lua", "-o", "-name", "*.sh"],
+        ["find", str(ctx.rootfs), "-name", "*.cgi", "-o", "-name", "*.lua", "-o", "-name", "*.sh"],
         capture_output=True, text=True,
     )
     script_files = [l.strip() for l in r_find.stdout.splitlines() if l.strip()]
@@ -1321,12 +1360,13 @@ def analyze_cgi_injection(rootfs: Path, out_file: Path):
     ], out_file, "cgi_injection.txt")
 
 
-def analyze_mount_points(rootfs: Path, out_file: Path):
+def analyze_mount_points(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "mount_points.txt"
     VOLATILE = {"tmpfs", "overlayfs", "overlay", "ramfs"}
     SENSITIVE = {"/etc", "/var", "/sbin", "/bin", "/usr", "/lib"}
     all_sections = []
     for name in ("etc/fstab", "etc/mtab"):
-        p = rootfs / name
+        p = ctx.rootfs / name
         if p.exists():
             content = p.read_text(errors="replace")
             all_sections.append(section(name, content))
@@ -1344,15 +1384,16 @@ def analyze_mount_points(rootfs: Path, out_file: Path):
     print(f"  {'mount_points.txt':45s}  {sum(len(s.splitlines()) for s in all_sections)} lines")
 
 
-def analyze_hardening(rootfs: Path, out_file: Path, elf_cache: dict):
+def analyze_hardening(ctx: AnalysisContext):
     """Summarise NX / PIE / RELRO / stack-canary status for every ELF executable."""
+    out_file = ctx.out_dir / "hardening.json"
     binaries = []
-    for path, rec in sorted(elf_cache.items(), key=lambda x: x[0]):
+    for path, rec in sorted(ctx.elf_cache.items(), key=lambda x: x[0]):
         h = rec.hardening
         if not h or h.get("pie") == "so":  # skip shared libraries
             continue
         binaries.append({
-            "path":   str(path.relative_to(rootfs)),
+            "path":   str(path.relative_to(ctx.rootfs)),
             "nx":     h.get("nx"),
             "pie":    h.get("pie", "unknown"),
             "relro":  h.get("relro", "unknown"),
@@ -1383,9 +1424,10 @@ def analyze_hardening(rootfs: Path, out_file: Path, elf_cache: dict):
     print(f"    Canary : {summary['canary_yes']} yes / {summary['canary_no']} no")
 
 
-def analyze_shellcheck(rootfs: Path, out_file: Path):
+def analyze_shellcheck(ctx: AnalysisContext):
     """Run shellcheck --format=json on every .sh script and write findings to shellcheck.json."""
-    scripts = sorted(p for p in rootfs.rglob("*.sh") if p.is_file())
+    out_file = ctx.out_dir / "shellcheck.json"
+    scripts = sorted(p for p in ctx.rootfs.rglob("*.sh") if p.is_file())
     if not scripts:
         out_file.write_text("[]")
         print(f"  {'shellcheck.json':45s}  no shell scripts found")
@@ -1414,9 +1456,10 @@ def analyze_shellcheck(rootfs: Path, out_file: Path):
     print(f"  {'shellcheck.json':45s}  {len(findings)} findings ({summary or 'none'}) in {len(scripts)} scripts")
 
 
-def analyze_linker_config(rootfs: Path, out_file: Path):
+def analyze_linker_config(ctx: AnalysisContext):
+    out_file = ctx.out_dir / "linker_config.txt"
     all_sections = []
-    preload = rootfs / "etc/ld.so.preload"
+    preload = ctx.rootfs / "etc/ld.so.preload"
     if preload.exists():
         r = subprocess.run(["stat", "-c", "%a %U %G", str(preload)], capture_output=True, text=True)
         all_sections.append(section(
@@ -1426,11 +1469,11 @@ def analyze_linker_config(rootfs: Path, out_file: Path):
     else:
         all_sections.append(section("etc/ld.so.preload", "(not present)"))
 
-    ld_conf = rootfs / "etc/ld.so.conf"
+    ld_conf = ctx.rootfs / "etc/ld.so.conf"
     if ld_conf.exists():
         all_sections.append(section("etc/ld.so.conf", ld_conf.read_text(errors="replace")))
 
-    lib_dirs = [str(d) for d in (rootfs / "lib", rootfs / "usr/lib") if d.is_dir()]
+    lib_dirs = [str(d) for d in (ctx.rootfs / "lib", ctx.rootfs / "usr/lib") if d.is_dir()]
     if lib_dirs:
         r = subprocess.run(
             ["find"] + lib_dirs + ["-type", "d", "-perm", "-002"],
@@ -1494,104 +1537,104 @@ def main():
     total_lines = sum(len(s.splitlines()) for s in sections)
     print(f"[*] Config files content saved to config_files_content.txt  ({total_lines} lines)\n")
 
-    elf_cache: dict = {}
+    ctx = AnalysisContext(rootfs=rootfs, out_dir=out_dir, configs=all_configs)
 
     steps = [
         ("[*] Scripts",
-         lambda: analyze_scripts(rootfs, out_dir)),
+         lambda: analyze_scripts(ctx)),
         ("[*] ShellCheck static analysis",
-         lambda: analyze_shellcheck(rootfs, out_dir / "shellcheck.json")),
+         lambda: analyze_shellcheck(ctx)),
         ("[*] Init scripts",
-         lambda: analyze_init_scripts(rootfs, out_dir / "init_scripts.txt")),
+         lambda: analyze_init_scripts(ctx)),
         ("[*] Systemd services",
-         lambda: analyze_systemd_services(rootfs, out_dir)),
+         lambda: analyze_systemd_services(ctx)),
         ("[*] Users and groups",
-         lambda: analyze_users_groups(rootfs, out_dir / "users_groups.txt")),
+         lambda: analyze_users_groups(ctx)),
         ("[*] SSH keys",
-         lambda: analyze_ssh_keys(rootfs, out_dir / "ssh_keys.txt")),
+         lambda: analyze_ssh_keys(ctx)),
         ("[*] Web interface",
-         lambda: analyze_web_interface(rootfs, out_dir / "web_interface.txt")),
+         lambda: analyze_web_interface(ctx)),
         ("[*] Web server configs",
-         lambda: analyze_web_server_configs(rootfs, out_dir / "web_server_configs.txt")),
+         lambda: analyze_web_server_configs(ctx)),
         ("[*] CGI and web handler injection vectors",
-         lambda: analyze_cgi_injection(rootfs, out_dir / "cgi_injection.txt")),
+         lambda: analyze_cgi_injection(ctx)),
         ("[*] PHP OS command injection  (taint: $_GET/$_POST/... → exec/system/...)",
-         lambda: analyze_php_cmdinject(rootfs, out_dir / "php_cmdinject.txt")),
+         lambda: analyze_php_cmdinject(ctx)),
         ("[*] PHP code injection sinks  (eval / assert / preg_replace-/e / create_function / call_user_func)",
-         lambda: analyze_php_codeinject(rootfs, out_dir / "php_codeinject.txt")),
+         lambda: analyze_php_codeinject(ctx)),
         ("[*] PHP local file inclusion  (taint: $_GET/$_POST/... → include/require)",
-         lambda: analyze_php_lfi(rootfs, out_dir / "php_lfi.txt")),
+         lambda: analyze_php_lfi(ctx)),
         ("[*] PHP information disclosure  (phpinfo / display_errors / error_reporting)",
-         lambda: analyze_php_infodisclosure(rootfs, out_dir / "php_infodisclosure.txt")),
+         lambda: analyze_php_infodisclosure(ctx)),
         ("[*] Credentials and secrets",
-         lambda: analyze_credentials(rootfs, out_dir, all_configs)),
+         lambda: analyze_credentials(ctx)),
         ("[*] Default credentials / SSIDs",
-         lambda: analyze_default_credentials(rootfs, out_dir / "default_credentials.txt", all_configs)),
+         lambda: analyze_default_credentials(ctx)),
         ("[*] Library versions",
-         lambda: analyze_library_versions(rootfs, out_dir / "library_versions.txt")),
+         lambda: analyze_library_versions(ctx)),
         ("[*] ELF analysis cache  (parallel: file + readelf + strings on every ELF binary)",
-         lambda: elf_cache.update(build_elf_cache(rootfs))),
+         lambda: ctx.elf_cache.update(build_elf_cache(ctx.rootfs))),
         ("[*] Architecture and endianness detection",
-         lambda: analyze_architecture(rootfs, out_dir / "architecture.txt", elf_cache)),
+         lambda: analyze_architecture(ctx)),
         ("[*] Binary inventory",
-         lambda: analyze_binary_inventory(rootfs, out_dir / "binary_inventory.txt", elf_cache)),
+         lambda: analyze_binary_inventory(ctx)),
         ("[*] Binary hardening (NX / PIE / RELRO / stack canary)",
-         lambda: analyze_hardening(rootfs, out_dir / "hardening.json", elf_cache)),
+         lambda: analyze_hardening(ctx)),
         ("[*] BusyBox detection and applet enumeration",
-         lambda: analyze_busybox(rootfs, out_dir / "busybox.txt")),
+         lambda: analyze_busybox(ctx)),
         ("[*] Symlink map",
-         lambda: analyze_symlinks(rootfs, out_dir / "symlinks.txt")),
+         lambda: analyze_symlinks(ctx)),
         ("[*] Kernel modules",
-         lambda: analyze_kernel_modules(rootfs, out_dir / "kernel_modules.txt")),
+         lambda: analyze_kernel_modules(ctx)),
         ("[*] Network-capable binaries",
-         lambda: analyze_network_binaries(rootfs, out_dir / "network_binaries.txt", elf_cache)),
+         lambda: analyze_network_binaries(ctx)),
         ("[*] Hardcoded strings in binaries",
-         lambda: analyze_hardcoded_strings(rootfs, out_dir / "hardcoded_strings.txt", elf_cache)),
+         lambda: analyze_hardcoded_strings(ctx)),
         ("[*] Protocol exposure  (SNMP / UPnP / TR-069 / MQTT)",
-         lambda: analyze_protocols(rootfs, out_dir / "protocols.txt", all_configs)),
+         lambda: analyze_protocols(ctx)),
         ("[*] Interface binding  (LAN / WAN)",
-         lambda: analyze_interface_binding(rootfs, out_dir / "interface_binding.txt", all_configs)),
+         lambda: analyze_interface_binding(ctx)),
         ("[*] NVRAM references",
-         lambda: analyze_nvram(rootfs, out_dir / "nvram.txt")),
+         lambda: analyze_nvram(ctx)),
         ("[*] Weak cryptography",
-         lambda: analyze_weak_crypto(rootfs, out_dir / "weak_crypto.txt", all_configs, elf_cache)),
+         lambda: analyze_weak_crypto(ctx)),
         ("[*] World-writable files and SetGID",
-         lambda: analyze_world_writable(rootfs, out_dir / "world_writable.txt")),
+         lambda: analyze_world_writable(ctx)),
         ("[*] Linker configuration and library paths",
-         lambda: analyze_linker_config(rootfs, out_dir / "linker_config.txt")),
+         lambda: analyze_linker_config(ctx)),
         ("[*] SetUID binaries",
-         lambda: run(["find", str(rootfs), "-perm", "-4000"], out_dir / "setuid_binaries.txt")),
+         lambda: run(["find", str(ctx.rootfs), "-perm", "-4000"], ctx.out_dir / "setuid_binaries.txt")),
         ("[*] Capabilities",
-         lambda: run(["getcap", "-r", str(rootfs)], out_dir / "capabilities.txt")),
+         lambda: run(["getcap", "-r", str(ctx.rootfs)], ctx.out_dir / "capabilities.txt")),
         ("[*] Extended attributes",
-         lambda: run(["getfattr", "-R", "-n", "security.capability", str(rootfs)],
-                     out_dir / "xattr_capabilities.txt")),
+         lambda: run(["getfattr", "-R", "-n", "security.capability", str(ctx.rootfs)],
+                     ctx.out_dir / "xattr_capabilities.txt")),
         ("[*] Scheduled tasks",
-         lambda: analyze_scheduled_tasks(rootfs, out_dir / "scheduled_tasks.txt")),
+         lambda: analyze_scheduled_tasks(ctx)),
         ("[*] Mount points and writable overlays",
-         lambda: analyze_mount_points(rootfs, out_dir / "mount_points.txt")),
+         lambda: analyze_mount_points(ctx)),
         ("[*] Firmware update mechanism",
-         lambda: analyze_firmware_update(rootfs, out_dir / "firmware_update.txt", all_configs)),
+         lambda: analyze_firmware_update(ctx)),
         ("[*] SSL/TLS certificates and keys",
-         lambda: analyze_certificates(rootfs, out_dir / "certificates_keys.txt")),
+         lambda: analyze_certificates(ctx)),
         ("[*] Unix sockets and IPC",
-         lambda: analyze_unix_sockets(rootfs, out_dir / "unix_sockets.txt")),
+         lambda: analyze_unix_sockets(ctx)),
         ("[*] Port / listen references",
-         lambda: run(["grep", "-E", "port|listen|bind"] + all_configs, out_dir / "ports_listen.txt")
-                 if all_configs else None),
+         lambda: run(["grep", "-E", "port|listen|bind"] + ctx.configs, ctx.out_dir / "ports_listen.txt")
+                 if ctx.configs else None),
         ("[*] HTTP server binaries",
-         lambda: run(["find", str(rootfs),
+         lambda: run(["find", str(ctx.rootfs),
                       "-name", "*httpd*", "-o", "-name", "*nginx*", "-o", "-name", "*boa*",
                       "-o", "-name", "*lighttpd*", "-o", "-name", "*uhttpd*"],
-                     out_dir / "httpd_binaries.txt")),
+                     ctx.out_dir / "httpd_binaries.txt")),
         ("[*] Debug artifacts",
-         lambda: analyze_debug_artifacts(rootfs, out_dir / "debug_artifacts.txt")),
+         lambda: analyze_debug_artifacts(ctx)),
         ("[*] DNS and routing",
-         lambda: analyze_dns_routing(rootfs, out_dir / "dns_routing.txt")),
+         lambda: analyze_dns_routing(ctx)),
         ("[*] Firewall rules",
-         lambda: analyze_firewall_rules(rootfs, out_dir / "firewall_rules.txt")),
+         lambda: analyze_firewall_rules(ctx)),
         ("[*] Strings on HTTP binaries",
-         lambda: _strings_http_binaries(rootfs, out_dir)),
+         lambda: _strings_http_binaries(ctx)),
     ]
 
     for label, fn in steps:
@@ -1602,14 +1645,14 @@ def main():
     print(f"[+] Analysis complete. Results in {out_dir}/")
 
 
-def _strings_http_binaries(rootfs: Path, out_dir: Path):
+def _strings_http_binaries(ctx: AnalysisContext):
     KEYWORDS = {"bind", "listen", "socket", "port", "http", "tcp", "udp", "accept"}
     patterns = ["*httpd*", "*nginx*", "*boa*", "*lighttpd*", "*uhttpd*", "*mini_httpd*"]
-    http_bins = [p for pat in patterns for p in rootfs.rglob(pat) if p.is_file()]
+    http_bins = [p for pat in patterns for p in ctx.rootfs.rglob(pat) if p.is_file()]
     for binary in http_bins:
         r = subprocess.run(["strings", str(binary)], capture_output=True, text=True)
         matches = [l for l in r.stdout.splitlines() if any(kw in l.lower() for kw in KEYWORDS)]
-        out_file = out_dir / f"strings_{binary.name}.txt"
+        out_file = ctx.out_dir / f"strings_{binary.name}.txt"
         out_file.write_text("\n".join(matches))
         print(f"  {out_file.name:45s}  {len(matches)} matching lines")
 

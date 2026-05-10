@@ -1,4 +1,4 @@
-# Firmware Analysis Pipeline
+# Firmware Analysis Inspector
 
 Static security analysis pipeline for router firmware images. Extracts firmware components inside Docker, runs 40+ security checks against the root filesystem, synthesizes an attack surface model, and builds a typed entity-relationship graph for attack path analysis.
 

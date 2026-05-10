@@ -1,6 +1,6 @@
 # Firmware Analysis Pipeline
 
-Static security analysis pipeline for router firmware images. Extracts firmware components inside Docker, runs 25+ security checks against the root filesystem, synthesizes an attack surface model, and builds a typed entity-relationship graph for attack path analysis.
+Static security analysis pipeline for router firmware images. Extracts firmware components inside Docker, runs 40+ security checks against the root filesystem, synthesizes an attack surface model, and builds a typed entity-relationship graph for attack path analysis.
 
 Developed and tested against TP-Link Archer A5 V6 (`Archer_A5V6.bin`).
 
@@ -127,13 +127,15 @@ Volumes:
 
 ## Analysis Checks (`analyze.py`)
 
-25+ checks run in parallel against the extracted root filesystem:
+40+ checks run in parallel against the extracted root filesystem:
 
 | Check | Output File |
 |---|---|
 | Services and init scripts | `services.txt`, `init_scripts.txt` |
+| Systemd services | `services.txt` |
 | Listening ports | `ports_listen.txt` |
 | Network-facing binaries | `network_binaries.txt`, `httpd_binaries.txt` |
+| Strings in HTTP server binaries | `strings_httpd.txt` |
 | SUID/SGID binaries | `setuid_binaries.txt` |
 | World-writable files | `world_writable.txt` |
 | Linux capabilities | `capabilities.txt`, `xattr_capabilities.txt` |
@@ -143,17 +145,29 @@ Volumes:
 | Weak cryptographic symbols | `weak_crypto.txt` |
 | Certificates and SSH keys | `certificates_keys.txt`, `ssh_keys.txt` |
 | CGI injection patterns | `cgi_injection.txt` |
+| PHP OS command injection | `php_cmdinject.txt` |
+| PHP code injection sinks | `php_codeinject.txt` |
+| PHP local file inclusion | `php_lfi.txt` |
+| PHP information disclosure | `php_infodisclosure.txt` |
 | Debug artifacts | `debug_artifacts.txt` |
 | Web interface and configs | `web_interface.txt`, `web_server_configs.txt` |
 | Config file contents | `config_files.txt`, `config_files_content.txt` |
 | Kernel modules | `kernel_modules.txt` |
 | Binary inventory | `binary_inventory.txt`, `busybox.txt` |
+| Architecture and endianness detection | `architecture.txt` |
+| Binary hardening (NX / PIE / RELRO / stack canary) | `hardening.json` |
+| ShellCheck static analysis | `shellcheck.json` |
+| Symlink map | `symlinks.txt` |
+| Linker configuration and library paths | `linker_config.txt` |
 | Library versions | `library_versions.txt` |
 | Unix sockets | `unix_sockets.txt` |
 | Interface binding | `interface_binding.txt` |
 | Firewall rules | `firewall_rules.txt` |
+| DNS and routing | `dns_routing.txt` |
 | NVRAM references | `nvram.txt` |
 | Scheduled tasks | `scheduled_tasks.txt` |
+| Mount points and writable overlays | `mount_points.txt` |
+| Firmware update mechanism | `firmware_update.txt` |
 | Protocols | `protocols.txt` |
 | Scripts | `scripts.txt`, `scripts_content.txt` |
 
@@ -231,7 +245,8 @@ WAN-reachable paths receive a higher zone weight than LAN-only paths.
 
 | File | Description |
 |---|---|
-| `analysis/<firmware>/*.txt` | Raw per-check findings |
+| `analysis/<firmware>/*.txt` | Raw per-check findings (text) |
+| `analysis/<firmware>/*.json` | Structured per-check findings (`hardening.json`, `shellcheck.json`) |
 | `<firmware>_attack_surface.json` | Structured attack surface model |
 | `<firmware>_graph.json` | Entity-relationship graph with derived attack paths |
 | `<firmware>_graph.dot` | Graphviz DOT for visualization (`--dot` flag) |

@@ -55,13 +55,13 @@ CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
 
---- usr/bin/openssl ---
-<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
-http://
-
 --- usr/bin/upnpd ---
 http://%s:%d/%s
 http://%d.%d.%d.%d:%d/
+
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
 
 --- usr/bin/dropbearmulti ---
 Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
@@ -70,13 +70,13 @@ Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 --- usr/bin/rt2860apd ---
  secret_len = %d, secret= %s
 
+--- usr/bin/rtinicapd ---
+ secret_len = %d, secret= %s
+
 --- usr/bin/httpd ---
 Location: https://%s:%d
 Location: https://%s
 http://
-
---- usr/bin/rtinicapd ---
- secret_len = %d, secret= %s
 
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/

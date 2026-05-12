@@ -1,0 +1,3917 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:70ab73fa-c81e-466d-8134-7569cf204538",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-05-12T18:03:42.091464+00:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "FirmwareAnalysis",
+          "version": "1.0"
+        }
+      ]
+    },
+    "component": {
+      "type": "firmware",
+      "bom-ref": "64c00103-d3e8-4763-ac59-790bc0c22513",
+      "name": "Archer_A5V6",
+      "description": "Router firmware image"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "9596f82d-a06f-41a4-a85c-5b115e830575",
+      "name": "ld-uClibc-0.9.33.2",
+      "purl": "pkg:generic/ld-uClibc-0.9.33.2",
+      "description": "lib/ld-uClibc-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8020f5d379801bc18c01f7850580557bd0d4d6eb59780e8fbbe5303b7e606e0a"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "0ccffc5c-e042-4233-bf6b-7199f7dec880",
+      "name": "libcJSON",
+      "purl": "pkg:generic/libcJSON",
+      "description": "lib/libcJSON.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a59690b4fc5ddc3e209bac15e6bc25a7b1965a4c2c1b1ac2cd17ecc82dbb423a"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "b3100486-687e-41b0-8ddf-bb7b187d503d",
+      "name": "libcmm",
+      "version": "1.0",
+      "purl": "pkg:generic/libcmm@1.0",
+      "description": "lib/libcmm.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "804533503a71e95553c63d508b47eda7b7083d3d5ac823b85b0437a7181c121d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:crypto_imports",
+          "value": "aes_cbc_decrypt_[...], aes_cbc_encrypt_[...]"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "098c9eed-dbd6-4c4c-a2d8-5443a0049c08",
+      "name": "libcrypt-0.9.33.2",
+      "purl": "pkg:generic/libcrypt-0.9.33.2",
+      "description": "lib/libcrypt-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6087b082920f4e16de6282da173573981239e0ec94977784e707570675c10959"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "84bb1452-f299-402f-b38f-85888d7c8ac9",
+      "name": "libcrypto",
+      "version": "1.0.0",
+      "purl": "pkg:generic/libcrypto@1.0.0",
+      "description": "lib/libcrypto.so.1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b0f327a58483d6ab40faa671af6e9d3fd4d0580c9478e87cdd573009b7ca3716"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "831c9bb9-c7a8-4785-98d1-0d7d1f43a0bd",
+      "name": "libcurl",
+      "version": "4.7.0",
+      "purl": "pkg:generic/libcurl@4.7.0",
+      "description": "lib/libcurl.so.4.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "659f0dc0015ce79588a957a134dce827b042cc1a72bfd1ac8bcada684d211d5e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:crypto_imports",
+          "value": "BN_num_bits, BN_print, EVP_DigestFinal_ex, EVP_DigestInit, EVP_DigestUpdate, EVP_MD_CTX_create, EVP_MD_CTX_destroy, EVP_PKEY_copy_pa[...], EVP_PKEY_free, EVP_PKEY_get1_RSA, EVP_cleanup, EVP_sha1, EVP_sha256, RAND_add, RAND_bytes, RAND_egd, RAND_file_name, RAND_load_file, RAND_status, RSA_flags"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libssl.so.1.0.0, libcrypto.so.1.0.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "e77453bf-4770-4fd3-a230-7ed4cae918a2",
+      "name": "libcutil",
+      "purl": "pkg:generic/libcutil",
+      "description": "lib/libcutil.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0cccf6723cf7355a3e7c14825afeba193f24c4a3398b88ced4d91a114f43a8b4"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "0ce52d05-191e-4e1a-a405-0d5726ba31ed",
+      "name": "libdl-0.9.33.2",
+      "purl": "pkg:generic/libdl-0.9.33.2",
+      "description": "lib/libdl-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1a99452966fb2b00ce99da5da1dafdd2b39cc47e5edc54849c966f83afb51e1f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0, ld-uClibc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "6bfd803e-b03a-4d44-9f12-4bc90368a9ca",
+      "name": "libgdpr",
+      "purl": "pkg:generic/libgdpr",
+      "description": "lib/libgdpr.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d50ac79424a09f63d2ef5bfec47dfbff350b9fec9be456076ca305d25b643b75"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:crypto_imports",
+          "value": "AES_cbc_encrypt, AES_set_decrypt_key, AES_set_encrypt_key, BN_bn2hex, BN_hex2bn, BN_new, RSA_free, RSA_generate_key, RSA_new, RSA_private_decrypt, RSA_public_encrypt, RSA_size"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "26816bb8-72e7-44d6-8594-7b7d6da5dd12",
+      "name": "libiw",
+      "version": "29",
+      "purl": "pkg:generic/libiw@29",
+      "description": "lib/libiw.so.29",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ce164773d65f5ead1ac0505733850db9cd6136b51c2fc1f36eff64d4a8e467d7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libm.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "05a0d267-0f71-45d7-a404-9d7b681e14be",
+      "name": "libixml",
+      "version": "1.0",
+      "purl": "pkg:generic/libixml@1.0",
+      "description": "lib/libixml.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "030bf91cd7b1b18756eb8925f8cd1bec58240c4931520f93590f4960d4f0d7cc"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "4346c102-98a7-4f95-bf25-162d16268e74",
+      "name": "libm-0.9.33.2",
+      "purl": "pkg:generic/libm-0.9.33.2",
+      "description": "lib/libm-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fe53dd908d753c4d7f390b42b281bff7315b7cc7d0cc8685f7e023392ed1f152"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "b245046b-06e2-47b6-82c6-1e65e70f96b5",
+      "name": "libnsl-0.9.33.2",
+      "purl": "pkg:generic/libnsl-0.9.33.2",
+      "description": "lib/libnsl-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bb26c4ca4a48e6355dcee1d873cdaa5703f4dbfb9152eb2036d639d2989dc8cb"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "cec9aa89-5227-412e-89ef-9d215b8efa7a",
+      "name": "libos",
+      "purl": "pkg:generic/libos",
+      "description": "lib/libos.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4d23a53cce4ffe88eacc87241d18ac54bebec01180a632fe3f4a04b0eb68f642"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "66e48228-f44b-4ea5-a3cf-cac7584814cf",
+      "name": "libpthread-0.9.33.2",
+      "purl": "pkg:generic/libpthread-0.9.33.2",
+      "description": "lib/libpthread-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e2de5477efef7f30516cdbe6bf858e1126e5207dc68d4fb2e600b1c62db2917f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0, ld-uClibc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "66905f02-dd78-48d2-ad29-31ae944c0f49",
+      "name": "libresolv-0.9.33.2",
+      "purl": "pkg:generic/libresolv-0.9.33.2",
+      "description": "lib/libresolv-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9487f5d8f69523a033149056d83419ab81ba25eb37ae6280ceff1b831433db24"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "9a15519f-ece5-4b6a-a7e7-9e9e10879a99",
+      "name": "librt-0.9.33.2",
+      "purl": "pkg:generic/librt-0.9.33.2",
+      "description": "lib/librt-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4990a47986a8e1d98b2f291fb54fcd8f1fba6e9eeeb3cab1c14d5389bf9a3fe4"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "bcfb2a7a-9e52-4441-9b83-2336ce91bd13",
+      "name": "libssl",
+      "version": "1.0.0",
+      "purl": "pkg:generic/libssl@1.0.0",
+      "description": "lib/libssl.so.1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "774b6c5b92913867deb53f855a15eaf23ee1b6b1a2f0d6680b778d224e70e947"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:crypto_imports",
+          "value": "BN_CTX_free, BN_CTX_new, BN_bin2bn, BN_bn2bin, BN_clear_free, BN_cmp, BN_copy, BN_dup, BN_free, BN_new, BN_num_bits, BN_sub_word, BN_ucmp, ECDSA_sign, ECDSA_verify, EVP_CIPHER_CTX_c[...], EVP_CIPHER_CTX_cipher, EVP_CIPHER_CTX_ctrl, EVP_CIPHER_CTX_flags, EVP_CIPHER_CTX_free"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcrypto.so.1.0.0, libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "21354365-912b-44ee-9ab6-70934d305f56",
+      "name": "libthreadutil",
+      "purl": "pkg:generic/libthreadutil",
+      "description": "lib/libthreadutil.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "149b2e72a77cd264105d2616f49c76ff7b50d52321d6ea39c3e8643fda54a000"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "6c612326-2003-427d-bfcd-f9bed3d16153",
+      "name": "libuClibc-0.9.33.2",
+      "purl": "pkg:generic/libuClibc-0.9.33.2",
+      "description": "lib/libuClibc-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8a512941a4b1ac45dffb48c1da17944d10e186632adbf4af55bd6b07ccc4912d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "ld-uClibc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "9a20f84b-3000-4e2e-846a-361e4b097461",
+      "name": "libupnp",
+      "purl": "pkg:generic/libupnp",
+      "description": "lib/libupnp.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3e87374d2362d1b6ecca8e1b9bda33ca16b56f30cc9dbe1252895a0cd99d8fd4"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "203979a5-2f35-48f2-8f3f-b00d06d5b4c7",
+      "name": "libutil-0.9.33.2",
+      "purl": "pkg:generic/libutil-0.9.33.2",
+      "description": "lib/libutil-0.9.33.2.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "9535c2c3cd67c88206320e592ffb0a39a12431953263a40492432b8fc3fb80c9"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "8185589b-85b7-4bb3-bf19-b307d877c94a",
+      "name": "libxml",
+      "purl": "pkg:generic/libxml",
+      "description": "lib/libxml.so",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6a42e4c952b67b536bc7729284cf78871896614a8e1e2109749dfc681cf1a31d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "f3afd53d-2018-4927-87a2-b5fafe983468",
+      "name": "afc.ko",
+      "purl": "pkg:generic/afc.ko",
+      "description": "lib/modules/afc.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f6be3cc92094ac10f5cd3001c40867be6e02f889193638b6c0481d44a5749385"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/afc.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "870b9b71-2e86-411d-bc2f-de2dae4295c7",
+      "name": "ipt_STAT.ko",
+      "purl": "pkg:generic/ipt_STAT.ko",
+      "description": "lib/modules/ipt_STAT.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1f6ba612df331d2a261c4833e29cdfaa92b7045c4473d878a68d45f9d0cb53e7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/ipt_STAT.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "d485a022-6711-42d9-a983-2e520220cc86",
+      "name": "ipv6_pass_through.ko",
+      "purl": "pkg:generic/ipv6_pass_through.ko",
+      "description": "lib/modules/ipv6_pass_through.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8ee29ab8ba92c133dffb4b668a4828c6f1e432ed8e4c15cc3cd8bb5236f123b0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/ipv6_pass_through.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "fc09d980-eefc-42ab-88aa-35d2bb30f0d2",
+      "name": "raeth.ko",
+      "purl": "pkg:generic/raeth.ko",
+      "description": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "087bcded39e48c6581c4b60296378fccb077db8aa172c5d150157fbc43b29356"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "10022a49-e662-4c70-b09b-ed8a5ab3e163",
+      "name": "rt_rdm.ko",
+      "purl": "pkg:generic/rt_rdm.ko",
+      "description": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "833c5ee4f18f108d4e4d5fadd84af496c12c02145390770c5a30181cdc371bff"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "a9a05c6d-9c3f-4b2e-b843-fc3a75145620",
+      "name": "MT7613_ap.ko",
+      "version": "1.0",
+      "purl": "pkg:generic/MT7613_ap.ko@1.0",
+      "description": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ada6c07c0bd31f975a4b45284469cec6742ad8e08f3ee64b2c933c04025ffbfd"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "0921ff4b-588f-4094-b368-3cb12d2e78e9",
+      "name": "mt_wifi.ko",
+      "version": "1.0",
+      "purl": "pkg:generic/mt_wifi.ko@1.0",
+      "description": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1d8e20b245c35edc98c1b21d4e7e4322dbb0a3af16dd6e7678966035ffd4910b"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "885571e6-b814-4b3a-b8aa-a71b1573bc66",
+      "name": "nf_nat_ftp.ko",
+      "purl": "pkg:generic/nf_nat_ftp.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "82fba59b6202a8acaeb64d91a0c9cc63b25a9b3dde10c677f9fba73ca1e04f99"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "af0c028d-f9e1-46a2-872c-53243c801e91",
+      "name": "nf_nat_h323.ko",
+      "purl": "pkg:generic/nf_nat_h323.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b73f3497d582ddac15832fa5b63eea04af76d6d967af89e5035184f8d99538d8"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "cc910a82-1c56-41cc-9a35-01efd6b3ea1c",
+      "name": "nf_nat_pptp.ko",
+      "purl": "pkg:generic/nf_nat_pptp.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c10d0574fcd7ce86f18fd561f927422a29f6f7c5191ebbf171738b3365237781"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "f019081f-c313-4c8d-9e31-0438258e3f9c",
+      "name": "nf_nat_proto_gre.ko",
+      "purl": "pkg:generic/nf_nat_proto_gre.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f46c670edbe9df79a13f7fa69bb843c950a6010b490b76acaf5749130ba6afb2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "4c86ce54-b49d-4d62-8f3c-fc1f15cd78a6",
+      "name": "nf_nat_rtsp.ko",
+      "version": "6.21",
+      "purl": "pkg:generic/nf_nat_rtsp.ko@6.21",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eb8582bf040a9c7e0407f9f31ca0af0d5d9879ebc4db577dcbe561abfa31f7ae"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "b8ca241a-ea48-444b-8c3c-4797a9a7d08d",
+      "name": "nf_nat_sip.ko",
+      "purl": "pkg:generic/nf_nat_sip.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6a1837ea2843e1621e0d24f987afc6d57c7211d24c8d86fce03d825d150bbf35"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "625b86c7-1513-4361-a064-77535e25343e",
+      "name": "nf_nat_tftp.ko",
+      "purl": "pkg:generic/nf_nat_tftp.ko",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b693fe499a3a61aee055019f2ba47490cf38b172c2e7df36e09588e85a91b3d7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "a82bf79c-eef6-4052-89ba-d37ad5477e1b",
+      "name": "nf_conntrack_ftp.ko",
+      "purl": "pkg:generic/nf_conntrack_ftp.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae536ec4fa8859dfbe181914acecf878a1b5cee42323fa00441e8d9cc0121a91"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "ec797ea3-33b7-4b2c-ab58-ee98a5a19146",
+      "name": "nf_conntrack_h323.ko",
+      "purl": "pkg:generic/nf_conntrack_h323.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56ca22aa12bfee4f333476a3565f5ebad5b1ae05d215b1d99577a9bd0142a390"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "0fbd211f-4579-45d3-a448-736f8b8fae42",
+      "name": "nf_conntrack_pptp.ko",
+      "purl": "pkg:generic/nf_conntrack_pptp.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "03448bc3088ff9f42b48971b3fe66135c640f69eb2a7aeecb71ddc6775d4a3a2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "672954b9-fdf2-4a9c-8aad-5089f5cfbff9",
+      "name": "nf_conntrack_proto_gre.ko",
+      "purl": "pkg:generic/nf_conntrack_proto_gre.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "58daf3b2510d6cb169d9d984805ba4c557754640007ea37a2bf3ae2bbceb56c1"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "ae095e50-526e-4e62-b932-33d452f361b6",
+      "name": "nf_conntrack_rtsp.ko",
+      "purl": "pkg:generic/nf_conntrack_rtsp.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a0b899fcd1b4286a6af457bdc673e896f9758a15dc0f59dcdd7472180a2b476e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "6c72cbae-e105-491c-b20f-1c96ef26aa93",
+      "name": "nf_conntrack_sip.ko",
+      "purl": "pkg:generic/nf_conntrack_sip.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fbeaf13e85ba7b365271eb39ed6a93df4745f1dac4ec67ddec3af74d184e14b0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "4372a99c-9df7-4551-9d0f-2e2bf26cc049",
+      "name": "nf_conntrack_tftp.ko",
+      "purl": "pkg:generic/nf_conntrack_tftp.ko",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e012964228095220b0973b5245924f93985294ba540fa06ab9301a1b85472be5"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "942a5108-ae10-4c62-ae35-60b1ff43ee37",
+      "name": "shortcut-fe-cm.ko",
+      "purl": "pkg:generic/shortcut-fe-cm.ko",
+      "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c15aaab82a4d2a3f5d8e0b5f24903c4d2dc2e295779936f2c13dddfc058a50ea"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "d867a3ca-0f64-4f5f-bed4-146a971f612e",
+      "name": "shortcut-fe.ko",
+      "purl": "pkg:generic/shortcut-fe.ko",
+      "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dfa4defdeb5cbb7cc83990c0d10dd1a82bb4f4e9e647e9f25725f27b5a6ca208"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "b77657d3-c6a2-418b-bb34-d65e2a73582f",
+      "name": "l2tp_ppp.ko",
+      "purl": "pkg:generic/l2tp_ppp.ko",
+      "description": "lib/modules/l2tp_ppp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "20b853b59ad8ceab095d4521c681a1895d8a1356a594158fdc923780cba40c0e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/l2tp_ppp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "35c6a455-be23-4edd-bf2d-fcb58a1f6308",
+      "name": "pppol2tp.ko",
+      "purl": "pkg:generic/pppol2tp.ko",
+      "description": "lib/modules/pppol2tp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56e0c648ac5c7283af8e4bd03751419e2b8898d0ca69de14ac9c6c39ee96a0ad"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/pppol2tp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "5c0a10d8-ba10-445b-8c14-6a4f2c150562",
+      "name": "pptp.ko",
+      "version": "0.8.5",
+      "purl": "pkg:generic/pptp.ko@0.8.5",
+      "description": "lib/modules/pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4e40a6dc3154ee3eb6cdc05a13a7d04defc4bbfd336698e0b14b3084c8cb94df"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/pptp.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "52c70763-5fa2-4319-90aa-daec7d2ee2dd",
+      "name": "tp_domain.ko",
+      "purl": "pkg:generic/tp_domain.ko",
+      "description": "lib/modules/tp_domain.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ca720ccaff5f2ea040d0c2e97141b30cc2429a3bfba55e6dffc16b259cd185ce"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/tp_domain.ko"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "None"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "unknown"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "d8e77e27-504d-48c1-8580-3171b2c4fe3e",
+      "name": "mii_mgr",
+      "purl": "pkg:generic/mii_mgr",
+      "description": "sbin/mii_mgr",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "37783050110029eb20cfbe8c66c1a2a5b5f68c3c580c14762bbbbc973b312f09"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "sbin/mii_mgr"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "24749400-880e-4913-be2d-43a15a1419fe",
+      "name": "mii_mgr_cl45",
+      "purl": "pkg:generic/mii_mgr_cl45",
+      "description": "sbin/mii_mgr_cl45",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a8d3c04660425c494beefd556c5ef5b3754341de663a7e160ec56764abf3c30f"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "sbin/mii_mgr_cl45"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "4e319f21-86d6-4225-bf30-adf5e7ab0218",
+      "name": "switch",
+      "purl": "pkg:generic/switch",
+      "description": "sbin/switch",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "efa53e22a14237dfdcee9d00b663f13ed2141f059e7553b99eb4acbea21a82f2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "sbin/switch"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "cb73deac-0d29-469f-84e4-2b61732909cd",
+      "name": "afcd",
+      "purl": "pkg:generic/afcd",
+      "description": "usr/bin/afcd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d5ca48f757726e3777fa2e5d0d7180324edab363a23b34f5f4bb2091cf190426"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/afcd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "8a533439-b0f6-4a0c-b50a-f25faf60723a",
+      "name": "ated_tp",
+      "purl": "pkg:generic/ated_tp",
+      "description": "usr/bin/ated_tp",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aeb12f5d574a2daed452610bac2262fbb822bb0d2e9f070bd35d683bdc615a44"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/ated_tp"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, librt.so.0, libiw.so.29, libm.so.0, libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "66886d6a-360d-4b38-8a93-3495f7430594",
+      "name": "cloud_https",
+      "purl": "pkg:generic/cloud_https",
+      "description": "usr/bin/cloud_https",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8fc6d9c25d6cbb5cf825383f1afc674470ff6806bb6e7709016e12599a79d935"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/cloud_https"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libcurl.so.4, libcJSON.so, libm.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "6d22e341-6e7c-4d8d-8323-0d7cedfee490",
+      "name": "cmxdns",
+      "purl": "pkg:generic/cmxdns",
+      "description": "usr/bin/cmxdns",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4947a011439ffda289c43a4d55af3f20016470b357b99efab36e758803582bb3"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/cmxdns"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "2748ab12-7b7d-4aa8-b6bc-fb5622a009d8",
+      "name": "cos",
+      "purl": "pkg:generic/cos",
+      "description": "usr/bin/cos",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d2ddf34b31120c9a70bfb94adf9dc7df47f30bfc6343e9effcbdc1eb4b116ff1"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/cos"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "f5d1cbf5-590f-4c50-aca1-e8b3a1fde608",
+      "name": "curl",
+      "version": "7.79.0",
+      "purl": "pkg:generic/curl@7.79.0",
+      "description": "usr/bin/curl",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e538459fbecee407740d5d565dcdecee64a6dc9c15cd24788bcbf9a86db7fb60"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/curl"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcurl.so.4, libssl.so.1.0.0, libcrypto.so.1.0.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "9a474441-2648-4783-9f8c-d1cc384a2869",
+      "name": "dhcpc",
+      "purl": "pkg:generic/dhcpc",
+      "description": "usr/bin/dhcpc",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "81ac1c9ab1d061dc5f5afa1982402597da74a353fd3850234a178c42faa73331"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/dhcpc"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "95ced115-6c0c-46e0-93c4-7c6581bd809b",
+      "name": "dhcpd",
+      "purl": "pkg:generic/dhcpd",
+      "description": "usr/bin/dhcpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "812f70264c7c30305c904402a62f63c3f716cf29a82c461542d61db915667974"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/dhcpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "04f925fd-a985-4b9c-b79f-4d29fd7fcd1e",
+      "name": "dnsProxy",
+      "purl": "pkg:generic/dnsProxy",
+      "description": "usr/bin/dnsProxy",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cd7722d7b935f2f2ea4f119a9dd8a4a96083fb5cce3fbb81d61bebadc07573c1"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/dnsProxy"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "b60a5131-77f1-4eef-91fa-cdcba76aa6d8",
+      "name": "dropbearmulti",
+      "purl": "pkg:generic/dropbearmulti",
+      "description": "usr/bin/dropbearmulti",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a400404e4d98af6945709d2c6bf42db6b00caf91cccfca8c27dbc891740e8495"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/dropbearmulti"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "12966451-e17d-4d2a-b4bb-ce248ec47633",
+      "name": "dyndns",
+      "purl": "pkg:generic/dyndns",
+      "description": "usr/bin/dyndns",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aaf9121467fe34575e4f6ce9de8bfd95654e7a6caa58db3f745742a3f162b273"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/dyndns"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "daa3f545-5bbd-491d-a6dc-be585593f7aa",
+      "name": "ebtables",
+      "version": "802.3",
+      "purl": "pkg:generic/ebtables@802.3",
+      "description": "usr/bin/ebtables",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dc5a8e9a6b3e35ad039ebfd2547232761ba168270f357433b94dfffc6160efc1"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/ebtables"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "c0a2c49d-74b5-4ff9-a6f8-5daef867cae9",
+      "name": "httpd",
+      "purl": "pkg:generic/httpd",
+      "description": "usr/bin/httpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ce7da8d45c446a1a5371996d34ae1eff85b7b528033c278738be8bdf11df7a2d"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/httpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "True"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "full"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "dfc05645-3e6d-4748-b9b4-cd6870ab6d4f",
+      "name": "igmpd",
+      "purl": "pkg:generic/igmpd",
+      "description": "usr/bin/igmpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "7eebf614b1dc5cde6b7cb504e36d631634d9e0f13d471d2d9ffe58f68a9d1372"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/igmpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "0ba9e3a9-5aea-4358-9d50-3eed9b046795",
+      "name": "ip",
+      "purl": "pkg:generic/ip",
+      "description": "usr/bin/ip",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2afdd59eb1cb2bcc2b496e70d28d9a0b885b55db1fb83c6de9b3e5abd39eea83"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/ip"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libresolv.so.0, libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "2da2962b-db6e-4922-bf64-ba0f25d5f88e",
+      "name": "ipping",
+      "purl": "pkg:generic/ipping",
+      "description": "usr/bin/ipping",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "39a522b5cac411cdfa68e85837c4815bd492ff9507239b786481c8e6cfd5ec66"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/ipping"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "193fa9fd-6e24-4a39-a3ed-89f6fa736991",
+      "name": "iwconfig",
+      "purl": "pkg:generic/iwconfig",
+      "description": "usr/bin/iwconfig",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c55196dcb5768e7ed5b82fae32ae177dfe38c21b7ceee06eb6ed8f5dd2f72d95"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/iwconfig"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, librt.so.0, libiw.so.29, libm.so.0, libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "b1e8dc01-3c3d-4813-ba9c-e1bf557e3a29",
+      "name": "iwpriv",
+      "purl": "pkg:generic/iwpriv",
+      "description": "usr/bin/iwpriv",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "336822e7aff4c26d6fd0f238783b0860e27f5957debd205afebbb194acce9fb5"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/iwpriv"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, librt.so.0, libiw.so.29, libm.so.0, libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "8ad90ff5-e2d8-4dac-ac40-8c8b6f9d5fad",
+      "name": "mldProxy",
+      "purl": "pkg:generic/mldProxy",
+      "description": "usr/bin/mldProxy",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0ca0df9798d12335006523f3452968798cac70c8430a0c3e391aa38c7fb4cb82"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/mldProxy"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "0772f814-283d-4d19-8175-43be02da98f0",
+      "name": "noipdns",
+      "purl": "pkg:generic/noipdns",
+      "description": "usr/bin/noipdns",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c4dd4ab7038b369253bc22e60a3958127a49ad1c54f66925b32c5543fb9e6c52"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/noipdns"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "3ce4811e-a4ba-4976-8b3d-3a8c3ed5e82c",
+      "name": "ntpc",
+      "purl": "pkg:generic/ntpc",
+      "description": "usr/bin/ntpc",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0c168be68bb4081ef12e6cae4d01b91c23cf379f47ff7ab0f6ab32e4574a1914"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/ntpc"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "f54f1663-12f4-4589-9188-0adfc1e0f6d9",
+      "name": "openssl",
+      "version": "1.0",
+      "purl": "pkg:generic/openssl@1.0",
+      "description": "usr/bin/openssl",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b1dc6bf629e2b274ffb728c2d2747becac77a6cb9c581767d224fb51de2e94ad"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/openssl"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libssl.so.1.0.0, libcrypto.so.1.0.0, libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "abb1ca14-77f9-42c4-838c-df1729f66c60",
+      "name": "rt2860apd",
+      "purl": "pkg:generic/rt2860apd",
+      "description": "usr/bin/rt2860apd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8efe8b68d72adbb20ab320ec162be27b0f0f40ca612fbc03628f5b8113c7bca6"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/rt2860apd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "bf53fcc4-ba51-4a01-8f3d-311a6162e64e",
+      "name": "rtinicapd",
+      "purl": "pkg:generic/rtinicapd",
+      "description": "usr/bin/rtinicapd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3f4d36a961f17a7d6e4ba6f2e83f5f96d9665ec31d0769a5a8f6acafe6c0a7fb"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/rtinicapd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "fb48062b-082f-4239-be18-66122e73765c",
+      "name": "tc",
+      "purl": "pkg:generic/tc",
+      "description": "usr/bin/tc",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "348f338a004acfc95cb15aad8e91b04552dd94194aec6904e7462e9ceee78122"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/tc"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libresolv.so.0, libm.so.0, libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "98c0574b-87ba-4c40-b905-0e103a0261b1",
+      "name": "tddp",
+      "purl": "pkg:generic/tddp",
+      "description": "usr/bin/tddp",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "98362c5c921a992516f66c64dec2d27c7d23b6531ff61edecd1e0dc9e4dee2f0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/tddp"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "f31183aa-9ccf-4de5-b9c5-9c03f45f8ac1",
+      "name": "tdpd",
+      "purl": "pkg:generic/tdpd",
+      "description": "usr/bin/tdpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "804be8a2a66824c949dddf149ccacc913eb5b68934bd34b79985c3fc3fbc8284"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/tdpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "08a00bf1-785b-4f48-95e2-24d97687bfcb",
+      "name": "tmpd",
+      "purl": "pkg:generic/tmpd",
+      "description": "usr/bin/tmpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "707b50f5e0e6ab70835d7815b03527b5700bbd40da82ce459be01dc13890d346"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/tmpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libcJSON.so, libm.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "d1157ac3-f7d9-4093-ac1d-970cf239cb14",
+      "name": "traceroute",
+      "version": "5.0",
+      "purl": "pkg:generic/traceroute@5.0",
+      "description": "usr/bin/traceroute",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "50813c6c046c6e847f6269a807d1701fd1c88001d4d1bbaffc35c9ea37eff506"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/traceroute"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libm.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "e29cecb9-3997-4d48-9002-c634a6f74335",
+      "name": "upnpd",
+      "version": "1.0",
+      "purl": "pkg:generic/upnpd@1.0",
+      "description": "usr/bin/upnpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e98afafc71971d85d65076a0bb71764f2e5cbd68152581fa09506aad6fd06b34"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/upnpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libupnp.so, libixml.so, libthreadutil.so, librt.so.0, libos.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "74fde8a9-d383-424e-a05f-515ac6bfa741",
+      "name": "wanType",
+      "purl": "pkg:generic/wanType",
+      "description": "usr/bin/wanType",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ddda72894b6a52bed7ee203bd978ab94d8ca65d1784ef30a7ff7ddec8d4de73c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/wanType"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "6086fdf5-15e1-4453-9534-8fb482c6693e",
+      "name": "wlNetlinkTool",
+      "purl": "pkg:generic/wlNetlinkTool",
+      "description": "usr/bin/wlNetlinkTool",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "0f86a6ba87484b78d096477ebf2321bda96e50a3f81e94abc94e633e584fb619"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/wlNetlinkTool"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, librt.so.0, libiw.so.29, libm.so.0, libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "b4ad5455-a779-4a31-9d08-b8784a57e41d",
+      "name": "wol",
+      "purl": "pkg:generic/wol",
+      "description": "usr/bin/wol",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8845fe80422bf53f03697de431ee9333f4dc0a8bfbc03264c8dcd52e93c61064"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/wol"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libcutil.so, libos.so, libcmm.so, libxml.so, libpthread.so.0, librt.so.0, libcrypto.so.1.0.0, libssl.so.1.0.0, libgdpr.so, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "452c033c-e085-4579-8609-fdf3a7329464",
+      "name": "wscd",
+      "version": "1.0",
+      "purl": "pkg:generic/wscd@1.0",
+      "description": "usr/bin/wscd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "19445bf6a40be3226420c24def6db9d224f8fab96b843708c39f2c05664eb22a"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/wscd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "1c0717c1-d59a-4893-aa77-4ccb3b105ee2",
+      "name": "wscd_5G",
+      "version": "1.0",
+      "purl": "pkg:generic/wscd_5G@1.0",
+      "description": "usr/bin/wscd_5G",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "19445bf6a40be3226420c24def6db9d224f8fab96b843708c39f2c05664eb22a"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/wscd_5G"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libpthread.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "71586b96-7b0b-430e-a59c-80681d46cb27",
+      "name": "xtables-multi",
+      "version": "1.0",
+      "purl": "pkg:generic/xtables-multi@1.0",
+      "description": "usr/bin/xtables-multi",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "06ade404ab29b455b2ee1a8047f34da1fa9c9b4c7ee2a83a1829c649098c8a0c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/bin/xtables-multi"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libm.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "4f8a9d8b-f9ed-4e81-9382-baeda37389b1",
+      "name": "bpalogin",
+      "version": "0.2",
+      "purl": "pkg:generic/bpalogin@0.2",
+      "description": "usr/sbin/bpalogin",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f9a11d3eba5ab37b479b08a8b01ff67beb9a82bb1c870541ddb5aebdc6823552"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/bpalogin"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "175be53f-b8b2-4e00-a10b-8b993e6a5126",
+      "name": "dhcp6c",
+      "purl": "pkg:generic/dhcp6c",
+      "description": "usr/sbin/dhcp6c",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a9d40f4de5457718c0d55fb41af9879c1ed9d4c2c81c7dbb3a6202c1b87c623e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/dhcp6c"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "4249c529-a893-4c24-b869-3dccdc442313",
+      "name": "dhcp6s",
+      "purl": "pkg:generic/dhcp6s",
+      "description": "usr/sbin/dhcp6s",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2946b0fc901cb42d64679f814fbaa3cef8ce8f023f3f592d620f606e545e097c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/dhcp6s"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "3ff3d268-03ca-4859-9581-10f168487817",
+      "name": "pppd",
+      "version": "2.4.5",
+      "purl": "pkg:generic/pppd@2.4.5",
+      "description": "usr/sbin/pppd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d8380ef8039709ac79079eadb93208cfa35693c825548f12071b97a184474901"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/pppd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libos.so, libpthread.so.0, librt.so.0, libcrypt.so.0, libdl.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "5affd937-221d-4171-ac92-31ee5d70fd09",
+      "name": "radvd",
+      "purl": "pkg:generic/radvd",
+      "description": "usr/sbin/radvd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "d595c86e8f85adaf9a82d5c919589f0f431d3a56ccaf386b8513fe2246386b27"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/radvd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "554e0080-a18a-4e1f-8898-93fc27f89618",
+      "name": "ripd",
+      "purl": "pkg:generic/ripd",
+      "description": "usr/sbin/ripd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f81053fc3aa63f764c8c82a5d1eeb7f991e77b9c37b3c2acbef83c791d988d09"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/ripd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libm.so.0, libcrypt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "d744c13a-eab9-4eaf-ba6a-975d3ad0b9ee",
+      "name": "xl2tpd",
+      "version": "1.1.12",
+      "purl": "pkg:generic/xl2tpd@1.1.12",
+      "description": "usr/sbin/xl2tpd",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "54c81b3950b1d0a51cb67d9feeb8f314b00c986881c7c1bc0b3de3a7e0ca70c3"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/xl2tpd"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "7f474021-f03b-4ee5-9cd9-505ed34c6897",
+      "name": "zebra",
+      "purl": "pkg:generic/zebra",
+      "description": "usr/sbin/zebra",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "133b996b2ee617d60ff0056f0cd94ca5692d518f40f138b1f1529e2dea0189b7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "usr/sbin/zebra"
+        },
+        {
+          "name": "firmware:nx",
+          "value": "False"
+        },
+        {
+          "name": "firmware:pie",
+          "value": "no"
+        },
+        {
+          "name": "firmware:relro",
+          "value": "none"
+        },
+        {
+          "name": "firmware:canary",
+          "value": "False"
+        },
+        {
+          "name": "firmware:needed_libs",
+          "value": "libm.so.0, libcrypt.so.0, libc.so.0"
+        }
+      ]
+    },
+    {
+      "type": "application",
+      "bom-ref": "8b70975b-1051-4658-b90d-55c6ef048abc",
+      "name": "busybox",
+      "version": "1.19.2",
+      "purl": "pkg:generic/busybox@1.19.2",
+      "description": "bin/busybox",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2c31adb9e53ef5924352acbfe41728a0deb6531b5391433ac582725fe776e299"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "bin/busybox"
+        },
+        {
+          "name": "firmware:busybox_applet_count",
+          "value": "47"
+        },
+        {
+          "name": "firmware:busybox_applets",
+          "value": "arping, ash, awk, brctl, cat, chmod, cp, date, df, dmesg, echo, free, getty, grep, halt, ifconfig, init, insmod, ipcrm, ipcs, kill, killall, linuxrc, login, ls, lsmod, mkdir, mount, netstat, pgrep, pidof, ping, ping6, poweroff, ps, reboot, rm, rmmod, route, sed, sh, sleep, taskset, tftp, top, umount, vconfig"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "5da539cb-933f-4b1f-a1ca-2b9c2885a766",
+      "name": "afc",
+      "purl": "pkg:generic/afc",
+      "description": "lib/modules/afc.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f6be3cc92094ac10f5cd3001c40867be6e02f889193638b6c0481d44a5749385"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/afc.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "0e068d35-2b61-4175-bcb8-1ce1ba1c8103",
+      "name": "ipt_STAT",
+      "purl": "pkg:generic/ipt_STAT",
+      "description": "lib/modules/ipt_STAT.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1f6ba612df331d2a261c4833e29cdfaa92b7045c4473d878a68d45f9d0cb53e7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/ipt_STAT.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "8cedb492-a41d-4ccb-9f06-9faa9a9b74e8",
+      "name": "ipv6_pass_through",
+      "purl": "pkg:generic/ipv6_pass_through",
+      "description": "lib/modules/ipv6_pass_through.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "8ee29ab8ba92c133dffb4b668a4828c6f1e432ed8e4c15cc3cd8bb5236f123b0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/ipv6_pass_through.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "e19b511d-15ab-47f5-8904-35e936259ec8",
+      "name": "raeth",
+      "purl": "pkg:generic/raeth",
+      "description": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "087bcded39e48c6581c4b60296378fccb077db8aa172c5d150157fbc43b29356"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "78c949b5-0dae-4a38-8319-2a3db4925c07",
+      "name": "rt_rdm",
+      "purl": "pkg:generic/rt_rdm",
+      "description": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "833c5ee4f18f108d4e4d5fadd84af496c12c02145390770c5a30181cdc371bff"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "d56e278d-aa7e-45ea-bb0d-854725f2ccb6",
+      "name": "MT7613_ap",
+      "purl": "pkg:generic/MT7613_ap",
+      "description": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ada6c07c0bd31f975a4b45284469cec6742ad8e08f3ee64b2c933c04025ffbfd"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "81b255da-3f9b-46a4-8703-7d8f74c44f83",
+      "name": "mt_wifi",
+      "purl": "pkg:generic/mt_wifi",
+      "description": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "1d8e20b245c35edc98c1b21d4e7e4322dbb0a3af16dd6e7678966035ffd4910b"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "a7bd40e2-8492-4e3d-a9b2-ba4b59fbc7ad",
+      "name": "nf_nat_ftp",
+      "purl": "pkg:generic/nf_nat_ftp",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "82fba59b6202a8acaeb64d91a0c9cc63b25a9b3dde10c677f9fba73ca1e04f99"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "eb82adc3-c994-468b-9937-2188f2c57fb5",
+      "name": "nf_nat_h323",
+      "purl": "pkg:generic/nf_nat_h323",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b73f3497d582ddac15832fa5b63eea04af76d6d967af89e5035184f8d99538d8"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "a65b2a1e-7e27-4265-b938-e5fc3cb8d0d5",
+      "name": "nf_nat_pptp",
+      "purl": "pkg:generic/nf_nat_pptp",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c10d0574fcd7ce86f18fd561f927422a29f6f7c5191ebbf171738b3365237781"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "5cec7d60-8b99-4385-b56b-adf960525ab7",
+      "name": "nf_nat_proto_gre",
+      "purl": "pkg:generic/nf_nat_proto_gre",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f46c670edbe9df79a13f7fa69bb843c950a6010b490b76acaf5749130ba6afb2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "77bca100-c5d7-4073-8990-d0d31cfb8372",
+      "name": "nf_nat_rtsp",
+      "purl": "pkg:generic/nf_nat_rtsp",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "eb8582bf040a9c7e0407f9f31ca0af0d5d9879ebc4db577dcbe561abfa31f7ae"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "9b8b2112-bd17-4204-954d-433a0c4ceab4",
+      "name": "nf_nat_sip",
+      "purl": "pkg:generic/nf_nat_sip",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6a1837ea2843e1621e0d24f987afc6d57c7211d24c8d86fce03d825d150bbf35"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "c37fc9e4-6f54-46d3-bcd5-09015d05b565",
+      "name": "nf_nat_tftp",
+      "purl": "pkg:generic/nf_nat_tftp",
+      "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b693fe499a3a61aee055019f2ba47490cf38b172c2e7df36e09588e85a91b3d7"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "33f02fe5-c2a0-42df-b0e2-75754ff97deb",
+      "name": "nf_conntrack_ftp",
+      "purl": "pkg:generic/nf_conntrack_ftp",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ae536ec4fa8859dfbe181914acecf878a1b5cee42323fa00441e8d9cc0121a91"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "a0a636fe-400c-4dfa-b1a3-2c1886b13088",
+      "name": "nf_conntrack_h323",
+      "purl": "pkg:generic/nf_conntrack_h323",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56ca22aa12bfee4f333476a3565f5ebad5b1ae05d215b1d99577a9bd0142a390"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "2d780df3-39a5-4de1-8ddd-ff0a017e9aed",
+      "name": "nf_conntrack_pptp",
+      "purl": "pkg:generic/nf_conntrack_pptp",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "03448bc3088ff9f42b48971b3fe66135c640f69eb2a7aeecb71ddc6775d4a3a2"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "c4ac22a6-f284-4eda-a210-6a1b95f00136",
+      "name": "nf_conntrack_proto_gre",
+      "purl": "pkg:generic/nf_conntrack_proto_gre",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "58daf3b2510d6cb169d9d984805ba4c557754640007ea37a2bf3ae2bbceb56c1"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "c90e6151-6ea3-4b1b-8053-fd1c4cdafaa4",
+      "name": "nf_conntrack_rtsp",
+      "purl": "pkg:generic/nf_conntrack_rtsp",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a0b899fcd1b4286a6af457bdc673e896f9758a15dc0f59dcdd7472180a2b476e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "68a47f69-df92-4647-b30a-a852bc857b35",
+      "name": "nf_conntrack_sip",
+      "purl": "pkg:generic/nf_conntrack_sip",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fbeaf13e85ba7b365271eb39ed6a93df4745f1dac4ec67ddec3af74d184e14b0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "9ef4e08d-7e80-4780-baf1-16e998e5d658",
+      "name": "nf_conntrack_tftp",
+      "purl": "pkg:generic/nf_conntrack_tftp",
+      "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "e012964228095220b0973b5245924f93985294ba540fa06ab9301a1b85472be5"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "1405b40b-1151-456a-b798-1c26782b1e65",
+      "name": "shortcut-fe-cm",
+      "purl": "pkg:generic/shortcut-fe-cm",
+      "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "c15aaab82a4d2a3f5d8e0b5f24903c4d2dc2e295779936f2c13dddfc058a50ea"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "1f1ffd6a-e6f1-48bc-8e79-140122d69987",
+      "name": "shortcut-fe",
+      "purl": "pkg:generic/shortcut-fe",
+      "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "dfa4defdeb5cbb7cc83990c0d10dd1a82bb4f4e9e647e9f25725f27b5a6ca208"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "f9a67c93-13f1-492d-9f3c-88fb06b57625",
+      "name": "l2tp_ppp",
+      "purl": "pkg:generic/l2tp_ppp",
+      "description": "lib/modules/l2tp_ppp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "20b853b59ad8ceab095d4521c681a1895d8a1356a594158fdc923780cba40c0e"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/l2tp_ppp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "d1d5d3ba-e57f-4e5e-befc-0ab89721842a",
+      "name": "pppol2tp",
+      "purl": "pkg:generic/pppol2tp",
+      "description": "lib/modules/pppol2tp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "56e0c648ac5c7283af8e4bd03751419e2b8898d0ca69de14ac9c6c39ee96a0ad"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/pppol2tp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "c332bccf-6a23-45ee-9aa1-d8112d5962b0",
+      "name": "pptp",
+      "purl": "pkg:generic/pptp",
+      "description": "lib/modules/pptp.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "4e40a6dc3154ee3eb6cdc05a13a7d04defc4bbfd336698e0b14b3084c8cb94df"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/pptp.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    },
+    {
+      "type": "firmware",
+      "bom-ref": "451b5b92-d7ed-4420-a7cd-eced6908b501",
+      "name": "tp_domain",
+      "purl": "pkg:generic/tp_domain",
+      "description": "lib/modules/tp_domain.ko",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "ca720ccaff5f2ea040d0c2e97141b30cc2429a3bfba55e6dffc16b259cd185ce"
+        }
+      ],
+      "properties": [
+        {
+          "name": "firmware:path",
+          "value": "lib/modules/tp_domain.ko"
+        },
+        {
+          "name": "firmware:subtype",
+          "value": "kernel-module"
+        }
+      ]
+    }
+  ]
+}

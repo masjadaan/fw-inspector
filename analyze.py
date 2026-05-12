@@ -49,6 +49,7 @@ from analyzers.system import (
     analyze_users_groups,
     analyze_world_writable,
 )
+from analyzers.sbom import generate_sbom
 from analyzers.web import (
     analyze_cgi_injection,
     analyze_php_cmdinject,
@@ -225,6 +226,11 @@ def main():
 
     # Phase 3: all ELF-dependent steps in parallel.
     _run_parallel(post_steps, ctx)
+
+    # Phase 4: SBOM finalization — synthesizes all prior phase data into CycloneDX 1.5.
+    print("[*] SBOM generation  (CycloneDX 1.5)")
+    generate_sbom(ctx)
+    print()
 
     print(f"[+] Analysis complete. Results in {out_dir}/")
 

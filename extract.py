@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -39,6 +40,7 @@ def run_extraction(firmware_path: Path, analysis_output: Path):
 
     subprocess.run([
         "docker", "run", "--rm", "-it",
+        "--user", f"{os.getuid()}:{os.getgid()}",
         "-v", f"{input_dir}:/input:ro",
         "-v", f"{analysis_output}:/output/analysis",
         IMAGE_NAME,

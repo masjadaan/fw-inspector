@@ -1,0 +1,15 @@
+{
+  "firmware": "Archer_A5V6",
+  "sbom": "/home/msbit/MyGithub/FirmwareAnalysis/analysis/Archer_A5V6/sbom.cdx.json",
+  "total_vulnerabilities": 0,
+  "escalated": 0,
+  "by_adjusted_severity": {
+    "none": 0,
+    "info": 0,
+    "low": 0,
+    "medium": 0,
+    "high": 0,
+    "critical": 0
+  },
+  "vulnerabilities": []
+}

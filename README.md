@@ -15,10 +15,10 @@ firmware.bin
 [1] extract.py          ← orchestrates Docker build + run
     │
     ├─ carve.py         ← binwalk scan → carve bootloader / kernel / rootfs
-    └─ analyze.py       ← 25+ checks against extracted rootfs
-    │
+    └─ analyze.py       ← 40+ checks against extracted rootfs
+    │                      Phase 4: generates sbom.cdx.json (CycloneDX 1.5)
     ▼
-analysis/<firmware>/    ← raw findings (txt files, one per check)
+analysis/<firmware>/    ← raw findings (txt, json) + sbom.cdx.json
     │
     ▼
 [2] surface.py          ← synthesize structured attack surface model
@@ -32,6 +32,13 @@ analysis/<firmware>/    ← raw findings (txt files, one per check)
     ▼
 <firmware>_graph.json   ← nodes, edges, derived attack paths
 <firmware>_graph.dot    ← Graphviz visualization (optional)
+    │
+    ▼
+[4] cve.py              ← CVE enrichment (host-side, requires grype)
+    │                      cross-references CVEs with hardening flags
+    │                      and network reachability from attack surface
+    ▼
+analysis/<firmware>/cve_report.json
 ```
 
 ---
@@ -90,6 +97,45 @@ optional:
 python3 graph.py Archer_A5V6_attack_surface.json
 python3 graph.py Archer_A5V6_attack_surface.json --dot
 ```
+
+### Step 4 — CVE Enrichment (host-side)
+
+Requires [grype](https://github.com/anchore/grype) on the host:
+
+```bash
+# Install grype (once)
+curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh
+
+# Run CVE enrichment
+python3 cve.py analysis/Archer_A5V6/
+```
+
+The attack surface JSON is auto-detected if present in the working directory. You can also pass it explicitly:
+
+```bash
+python3 cve.py analysis/Archer_A5V6/ --attack-surface Archer_A5V6_attack_surface.json
+```
+
+Options:
+
+```
+positional:
+  analysis_dir          Directory produced by analyze.py (must contain sbom.cdx.json)
+
+optional:
+  --attack-surface, -a  Attack surface JSON for network-reachability cross-referencing
+  --output, -o          Output path for CVE report JSON (default: <analysis_dir>/cve_report.json)
+```
+
+CVE severity is adjusted beyond the base CVSS score using two firmware-specific signals:
+
+| Signal | Escalation |
+|---|---|
+| Library linked by a network-reachable binary (httpd, dropbear) | +2 levels |
+| NX disabled | +1 level |
+| No PIE | +1 level |
+| No RELRO | +1 level |
+| No stack canary | +1 level |
 
 Builds a typed property graph from the attack surface JSON. Attack paths are derived algorithmically via BFS traversal — never hand-authored.
 
@@ -246,7 +292,10 @@ WAN-reachable paths receive a higher zone weight than LAN-only paths.
 | File | Description |
 |---|---|
 | `analysis/<firmware>/*.txt` | Raw per-check findings (text) |
-| `analysis/<firmware>/*.json` | Structured per-check findings (`hardening.json`, `shellcheck.json`) |
+| `analysis/<firmware>/hardening.json` | Binary hardening flags (NX / PIE / RELRO / canary) |
+| `analysis/<firmware>/shellcheck.json` | ShellCheck static analysis findings |
+| `analysis/<firmware>/sbom.cdx.json` | CycloneDX 1.5 SBOM — libraries, executables, kernel modules |
+| `analysis/<firmware>/cve_report.json` | CVE findings enriched with hardening and reachability context |
 | `<firmware>_attack_surface.json` | Structured attack surface model |
 | `<firmware>_graph.json` | Entity-relationship graph with derived attack paths |
 | `<firmware>_graph.dot` | Graphviz DOT for visualization (`--dot` flag) |

@@ -32,6 +32,55 @@ from .context import AnalysisContext
 _VER_PAT = re.compile(r'\b(\d+\.\d+(?:\.\d+){0,3}(?:[-+][a-zA-Z0-9._-]+)?)\b')
 _SONAME_VER_PAT = re.compile(r'\.so\.(\d[\d.]+)')
 _BUSYBOX_VER_PAT = re.compile(r'BusyBox\s+v?(\d+\.\d+[\d.]*)', re.IGNORECASE)
+_NAME_VER_PAT = re.compile(r'-(\d+\.\d+[\d.]*)')   # libcrypt-0.9.33.2 → 0.9.33.2
+
+
+# ── CPE mapping ───────────────────────────────────────────────────────────────
+# Maps a regex matched against the canonical component name to (vendor, product).
+# CPE format: cpe:2.3:a:<vendor>:<product>:<version>:*:*:*:*:*:*:*
+# Only components with a known vendor/product AND a resolved version get a CPE.
+
+_CPE_MAP: list[tuple[re.Pattern, str, str]] = [
+    # OpenSSL — covers both the libraries and the CLI binary
+    (re.compile(r'^lib(ssl|crypto)$',      re.I), 'openssl',          'openssl'),
+    (re.compile(r'^openssl$',              re.I), 'openssl',          'openssl'),
+    # cURL
+    (re.compile(r'^libcurl$',             re.I), 'haxx',             'libcurl'),
+    (re.compile(r'^curl$',                re.I), 'haxx',             'curl'),
+    # BusyBox
+    (re.compile(r'^busybox$',             re.I), 'busybox',          'busybox'),
+    # Dropbear SSH (binary ships as dropbearmulti)
+    (re.compile(r'^dropbear(multi)?$',    re.I), 'matt_johnston',    'dropbear_ssh_server'),
+    # uClibc family — libc, libm, libdl, libpthread, libresolv, librt,
+    #                 libutil, libnsl, libcrypt, ld-uClibc, libuClibc
+    (re.compile(r'^(ld-uclibc|libuClibc|libc|libm|libdl|libpthread'
+                r'|libresolv|librt|libutil|libnsl|libcrypt)(-\S+)?$',
+                re.I), 'uclibc',           'uclibc'),
+    # libupnp (Portable SDK for UPnP)
+    (re.compile(r'^libupnp$',             re.I), 'libupnp_project',  'libupnp'),
+    # libxml2
+    (re.compile(r'^libxml2?$',            re.I), 'xmlsoft',          'libxml2'),
+    # cJSON
+    (re.compile(r'^libcjson$',            re.I), 'cjson_project',    'cjson'),
+    # zlib
+    (re.compile(r'^libz$',               re.I), 'zlib',             'zlib'),
+    # PPP daemon
+    (re.compile(r'^pppd$',               re.I), 'ppp_project',      'ppp'),
+    # xl2tpd
+    (re.compile(r'^xl2tpd$',             re.I), 'xl2tpd',           'xl2tpd'),
+    # Zebra / Quagga routing daemon
+    (re.compile(r'^zebra$',              re.I), 'quagga',           'quagga'),
+    # radvd
+    (re.compile(r'^radvd$',              re.I), 'radvd',            'radvd'),
+    # ebtables
+    (re.compile(r'^ebtables$',           re.I), 'ebtables',         'ebtables'),
+    # iptables (ships as xtables-multi in BusyBox-style firmware)
+    (re.compile(r'^(xtables-multi|iptables)$', re.I), 'netfilter',  'iptables'),
+    # miniupnpd
+    (re.compile(r'^upnpd$',              re.I), 'miniupnp_project', 'miniupnpd'),
+    # dhcpd / ISC DHCP
+    (re.compile(r'^dhcpd$',              re.I), 'isc',              'dhcp'),
+]
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -50,6 +99,24 @@ def _sha256(path: Path) -> str:
 def _ver_from_soname(filename: str) -> str:
     m = _SONAME_VER_PAT.search(filename)
     return m.group(1) if m else ""
+
+
+def _ver_from_name(name: str) -> str:
+    """Extract version embedded in component name: libcrypt-0.9.33.2 → 0.9.33.2."""
+    m = _NAME_VER_PAT.search(name)
+    return m.group(1) if m else ""
+
+
+def _cpe(name: str, version: str) -> str:
+    """Return a CPE 2.3 string for a known component, or '' if unknown/versionless."""
+    ver = version or _ver_from_name(name)
+    if not ver:
+        return ""
+    ver_safe = ver.replace(":", "_").replace("/", "_")
+    for pat, vendor, product in _CPE_MAP:
+        if pat.match(name):
+            return f"cpe:2.3:a:{vendor}:{product}:{ver_safe}:*:*:*:*:*:*:*"
+    return ""
 
 
 def _ver_from_strings(strings_lines: list[str], hint: str) -> str:
@@ -92,6 +159,10 @@ def _component(
         comp["purl"] = f"pkg:generic/{name}@{version}"
     else:
         comp["purl"] = f"pkg:generic/{name}"
+
+    cpe_str = _cpe(name, version)
+    if cpe_str:
+        comp["cpe"] = cpe_str
 
     comp["description"] = rel_path
 

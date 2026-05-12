@@ -51,6 +51,11 @@ COPY analyzers/  /opt/analyzers/
 
 WORKDIR /workspace
 
+# Pre-create output subdirectories with open permissions so the container can
+# run as any user (--user flag in docker run) without permission errors.
+RUN mkdir -p /input /output/carved /output/extracted /output/analysis \
+    && chmod -R 777 /input /output
+
 # /input  — mount your firmware directory here (read-only recommended)
 # /output — mount your extraction target here
 VOLUME ["/input", "/output"]

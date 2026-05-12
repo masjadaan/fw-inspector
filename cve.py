@@ -170,6 +170,25 @@ def _run_grype(sbom_path: Path) -> list[dict]:
 
 # ── Report building ────────────────────────────────────────────────────────────
 
+def _resolve_meta(ref: str, ref_to_meta: dict) -> dict:
+    """Resolve a grype affect ref to a component metadata dict.
+
+    Grype uses two ref formats:
+      - bare bom-ref UUID  (our format)
+      - pkg:generic/<name>@<ver>?package-id=<bom-ref-uuid>  (grype's format)
+    Try both so the lookup always succeeds.
+    """
+    meta = ref_to_meta.get(ref)
+    if meta:
+        return meta
+    if "package-id=" in ref:
+        uuid_part = ref.split("package-id=")[-1]
+        meta = ref_to_meta.get(uuid_part)
+        if meta:
+            return meta
+    return {}
+
+
 def _build_report(
     vulnerabilities: list[dict],
     ref_to_meta: dict,
@@ -187,7 +206,7 @@ def _build_report(
 
         for affect in vuln.get("affects", []):
             ref  = affect.get("ref", "")
-            meta = ref_to_meta.get(ref, {})
+            meta = _resolve_meta(ref, ref_to_meta)
             name = meta.get("name", ref)
 
             is_reachable = name in reachable

@@ -1,5 +1,5 @@
 ============================================================
-  Valid Symlinks  (69)
+  Valid Symlinks  (66)
 ============================================================
 bin/ash -> busybox
 bin/cat -> busybox
@@ -25,9 +25,6 @@ bin/sed -> busybox
 bin/sh -> busybox
 bin/sleep -> busybox
 bin/umount -> busybox
-etc/TZ -> /dev/null
-etc/passwd -> /dev/null
-etc/resolv.conf -> /dev/null
 lib/ld-uClibc.so.0 -> ld-uClibc-0.9.33.2.so
 lib/libc.so.0 -> libuClibc-0.9.33.2.so
 lib/libcrypt.so.0 -> libcrypt-0.9.33.2.so
@@ -72,7 +69,9 @@ usr/bin/top -> ../../bin/busybox
 usr/sbin/brctl -> ../../bin/busybox
 
 ============================================================
-  Broken Symlinks  (0)
+  Broken Symlinks  (3)
 ============================================================
-(none)
+etc/TZ -> /dev/null
+etc/passwd -> /dev/null
+etc/resolv.conf -> /dev/null
 

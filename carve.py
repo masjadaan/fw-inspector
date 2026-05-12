@@ -15,7 +15,7 @@ from pathlib import Path
 
 def scan(firmware_path: Path) -> list:
     result = subprocess.run(
-        ["binwalk", "--run-as=root", str(firmware_path)],
+        ["binwalk", str(firmware_path)],
         capture_output=True,
         text=True,
     )
@@ -73,7 +73,7 @@ def extract_kernel(carved_dir: Path, extracted_dir: Path):
     out = extracted_dir / "kernel"
     out.mkdir(parents=True, exist_ok=True)
     subprocess.run([
-        "binwalk", "-e", "--run-as=root",
+        "binwalk", "-e",
         str(carved_dir / "kernel.lzma"),
         "--directory", str(out),
     ])
@@ -88,7 +88,7 @@ def extract_rootfs(carved_dir: Path, extracted_dir: Path):
     out = extracted_dir / "rootfs"
     out.mkdir(parents=True, exist_ok=True)
     subprocess.run([
-        "binwalk", "-e", "--run-as=root",
+        "binwalk", "-e",
         str(carved_dir / "rootfs.squashfs"),
         "--directory", str(out),
     ])

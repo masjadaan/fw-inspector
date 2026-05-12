@@ -4,6 +4,7 @@ import argparse
 import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 IMAGE_NAME = "firmware-analysis"
@@ -19,6 +20,14 @@ def build_image():
         print("[!] Docker build failed.")
         sys.exit(result.returncode)
     print("[+] Image built successfully.\n")
+
+
+def _write_temp(content: str, suffix: str) -> str:
+    """Write content to a named temp file and return its path."""
+    f = tempfile.NamedTemporaryFile(mode="w", suffix=suffix, delete=False)
+    f.write(content)
+    f.close()
+    return f.name
 
 
 def run_extraction(firmware_path: Path, analysis_output: Path):
@@ -38,14 +47,30 @@ def run_extraction(firmware_path: Path, analysis_output: Path):
     print(f"[*] Firmware        : {firmware_path}")
     print(f"[*] Analysis output : {analysis_output}\n")
 
-    subprocess.run([
-        "docker", "run", "--rm", "-it",
-        "--user", f"{os.getuid()}:{os.getgid()}",
-        "-v", f"{input_dir}:/input:ro",
-        "-v", f"{analysis_output}:/output/analysis",
-        IMAGE_NAME,
-        "bash", "-c", binwalk_cmd,
-    ])
+    uid, gid = os.getuid(), os.getgid()
+    passwd = _write_temp(
+        f"root:x:0:0:root:/root:/bin/bash\nuser:x:{uid}:{gid}::/tmp:/bin/bash\n",
+        ".passwd",
+    )
+    group = _write_temp(
+        f"root:x:0:\nuser:x:{gid}:\n",
+        ".group",
+    )
+    try:
+        subprocess.run([
+            "docker", "run", "--rm", "-it",
+            "--user", f"{uid}:{gid}",
+            "--env", "HOME=/tmp",
+            "-v", f"{passwd}:/etc/passwd:ro",
+            "-v", f"{group}:/etc/group:ro",
+            "-v", f"{input_dir}:/input:ro",
+            "-v", f"{analysis_output}:/output/analysis",
+            IMAGE_NAME,
+            "bash", "-c", binwalk_cmd,
+        ])
+    finally:
+        os.unlink(passwd)
+        os.unlink(group)
 
 
 def main():

@@ -45,9 +45,9 @@ RUN uv venv /opt/venv && \
     jefferson \
     ubi_reader
 
-COPY carve.py    /opt/carve.py
-COPY analyze.py  /opt/analyze.py
-COPY analyzers/  /opt/analyzers/
+COPY firmware_analysis/extraction/carve.py   /opt/carve.py
+COPY firmware_analysis/analysis/analyze.py   /opt/analyze.py
+COPY firmware_analysis/analysis/analyzers/   /opt/analyzers/
 
 WORKDIR /workspace
 

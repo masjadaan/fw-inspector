@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 
 IMAGE_NAME = "firmware-analysis"
-DOCKERFILE_DIR = Path(__file__).parent
+DOCKERFILE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 def build_image():

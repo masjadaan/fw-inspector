@@ -75,20 +75,20 @@ def main() -> None:
     here = Path(__file__).parent
 
     # ── Stage 1: Extract + Analyse ────────────────────────────────────────────
-    extract_cmd = [py, str(here / "extract.py"), str(firmware), "--output", str(output_dir)]
+    extract_cmd = [py, str(here / "firmware_analysis/extraction/extract.py"), str(firmware), "--output", str(output_dir)]
     if args.skip_build:
         extract_cmd.append("--skip-build")
     _run("Stage 1 — Extract & Analyse", extract_cmd)
 
     # ── Stage 2: Attack Surface ───────────────────────────────────────────────
     _run("Stage 2 — Attack Surface", [
-        py, str(here / "surface.py"), str(analysis_dir),
+        py, str(here / "firmware_analysis/surface/surface.py"), str(analysis_dir),
     ])
 
     # ── Stage 3: Entity-Relationship Graph ────────────────────────────────────
     attack_surface_json = analysis_dir / "attack_surface" / "attack_surface.json"
     _run("Stage 3 — Entity-Relationship Graph", [
-        py, str(here / "graph.py"), str(attack_surface_json), "--dot",
+        py, str(here / "firmware_analysis/graph/graph.py"), str(attack_surface_json), "--dot",
     ])
 
     # ── Stage 4: Render graph to SVG ─────────────────────────────────────────
@@ -106,12 +106,12 @@ def main() -> None:
         print("[*] Skipped (--skip-cve).")
     else:
         _run("Stage 5 — CVE Enrichment", [
-            py, str(here / "cve.py"), str(analysis_dir),
+            py, str(here / "firmware_analysis/cve/cve.py"), str(analysis_dir),
         ])
 
         # ── Stage 6: Heatmap ──────────────────────────────────────────────────
         _run("Stage 6 — CVE Severity Heatmap", [
-            py, str(here / "heatmap.py"), str(analysis_dir),
+            py, str(here / "firmware_analysis/reporting/heatmap.py"), str(analysis_dir),
         ])
 
     # ── Summary ───────────────────────────────────────────────────────────────

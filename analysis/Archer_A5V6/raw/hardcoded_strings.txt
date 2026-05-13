@@ -4,6 +4,9 @@ Bearer Type
 %s: bearer capabilities not appropriate for message %s.  Ignoring.
 Bearer Capabilities
 
+--- usr/bin/cloud_https ---
+https://%s%s?deviceId=%s&user=&model=%s&hwId=%s&hwVer=%s&oemId=%s&fwVer=%s&deviceType=%s
+
 --- usr/bin/wscd_5G ---
 http://%s:%d/description.xml
 http://
@@ -24,9 +27,6 @@ CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
 
---- usr/bin/cloud_https ---
-https://%s%s?deviceId=%s&user=&model=%s&hwId=%s&hwVer=%s&oemId=%s&fwVer=%s&deviceType=%s
-
 --- usr/bin/curl ---
  * https://curl.se/libcurl/c/curl_easy_setopt.html
     --oauth2-bearer <token>
@@ -34,6 +34,10 @@ OAuth 2 Bearer Token
 More details here: https://curl.se/docs/sslcerts.html
 @http://
 https://
+
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
 
 --- usr/bin/wscd ---
 http://%s:%d/description.xml
@@ -55,20 +59,13 @@ CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
 
---- usr/bin/openssl ---
-<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
-http://
-
---- usr/bin/dropbearmulti ---
-Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
-Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
-
 --- usr/bin/upnpd ---
 http://%s:%d/%s
 http://%d.%d.%d.%d:%d/
 
---- usr/bin/rt2860apd ---
- secret_len = %d, secret= %s
+--- usr/bin/dropbearmulti ---
+Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
+Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 
 --- usr/bin/rtinicapd ---
  secret_len = %d, secret= %s
@@ -78,8 +75,15 @@ Location: https://%s:%d
 Location: https://%s
 http://
 
+--- usr/bin/rt2860apd ---
+ secret_len = %d, secret= %s
+
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/
+
+--- lib/libixml.so ---
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
 
 --- lib/libcurl.so.4.7.0 ---
 # Your alt-svc cache. https://curl.se/docs/alt-svc.html
@@ -89,10 +93,6 @@ Authorization: Bearer %s
 auth=Bearer %s
 auth=Bearer %s
 auth=Bearer %s
-
---- lib/libixml.so ---
-http://www.w3.org/XML/1998/namespace
-http://www.w3.org/2000/xmlns/
 
 --- lib/libupnp.so ---
 http://schemas.xmlsoap.org/soap/envelope/

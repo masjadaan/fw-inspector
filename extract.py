@@ -41,7 +41,6 @@ def run_extraction(firmware_path: Path, analysis_output: Path):
         f"python3 /opt/carve.py {container_firmware} --output /output"
         f" && python3 /opt/analyze.py /output/extracted/rootfs/squashfs-root/"
         f" --firmware {container_firmware}"
-        f" && exec bash"
     )
 
     print(f"[*] Firmware        : {firmware_path}")

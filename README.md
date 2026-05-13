@@ -60,13 +60,37 @@ No Python dependencies are required on the host. All extraction tooling runs ins
 
 ## Usage
 
-### Step 1 — Extract and Analyze
+### Run the full pipeline (recommended)
+
+```bash
+python3 pipeline.py input/TP-Link/Archer_A5_v6.20/Archer_A5V6.bin
+```
+
+Runs all six stages in sequence and prints a summary at the end.
+
+Options:
+
+```
+positional:
+  firmware          Path to firmware binary
+
+optional:
+  --output, -o      Host directory for all output (default: ./analysis)
+  --skip-build      Skip Docker image rebuild
+  --skip-cve        Skip CVE enrichment (grype not required)
+```
+
+---
+
+### Individual stages
+
+#### Step 1 — Extract and Analyze
 
 ```bash
 python3 extract.py input/TP-Link/Archer_A5_v6.20/Archer_A5V6.bin
 ```
 
-This builds the Docker image (first run only), then runs `carve.py` and `analyze.py` inside the container against the firmware. Analysis output lands in `./analysis/<firmware_name>/`.
+Builds the Docker image (first run only), then runs `carve.py` and `analyze.py` inside the container. Analysis output lands in `./analysis/<firmware_name>/raw/` and `./analysis/<firmware_name>/sbom/`.
 
 Options:
 

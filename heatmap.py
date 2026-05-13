@@ -44,7 +44,7 @@ _COL_CMAPS = {
 
 
 def _load_report(analysis_dir: Path) -> dict:
-    path = analysis_dir / "cve_report.json"
+    path = analysis_dir / "sbom" / "cve_report.json"
     if not path.exists():
         print(f"[!] {path} not found.  Run cve.py first.")
         sys.exit(1)
@@ -163,7 +163,7 @@ def main() -> None:
 
     components, matrix = _build_matrix(vulns, args.top)
 
-    out_path = args.output or analysis_dir / "cve_heatmap.png"
+    out_path = args.output or analysis_dir / "sbom" / "cve_heatmap.png"
     _draw(components, matrix, firmware_id, out_path)
 
     print(f"[+] Heatmap written → {out_path}")

@@ -1,6 +1,6 @@
 {
   "firmware": "Archer_A5V6",
-  "sbom": "/home/msbit/MyGithub/FirmwareAnalysis/analysis/Archer_A5V6/sbom.cdx.json",
+  "sbom": "/home/msbit/MyGithub/FirmwareAnalysis/analysis/Archer_A5V6/sbom/sbom.cdx.json",
   "total_vulnerabilities": 349,
   "escalated": 248,
   "by_adjusted_severity": {
@@ -645,30 +645,6 @@
       "recommendation": ""
     },
     {
-      "cve": "CVE-2023-23914",
-      "component": "curl",
-      "version": "7.79.0",
-      "base_severity": "critical",
-      "adjusted_severity": "critical",
-      "cvss_score": 9.1,
-      "escalated": false,
-      "escalation_reasons": [
-        "NX disabled",
-        "no PIE",
-        "no RELRO",
-        "no stack canary"
-      ],
-      "network_reachable": false,
-      "hardening": {
-        "nx": "False",
-        "pie": "no",
-        "relro": "none",
-        "canary": "False"
-      },
-      "description": "A cleartext transmission of sensitive information vulnerability exists in curl <v7.88.0 that could cause HSTS functionality fail when multiple URLs are requested serially. Using its HSTS support, curl can be instructed to use HTTPS instead of usingan insecure clear-text HTTP step even when HTTP is provided in the URL. ThisHSTS mechanism would however surprisingly be ignored by subsequent transferswhen done on the same command line because the state would not be properlycarried on.",
-      "recommendation": ""
-    },
-    {
       "cve": "CVE-2026-5720",
       "component": "upnpd",
       "version": "1.0",
@@ -690,6 +666,30 @@
         "canary": "False"
       },
       "description": "miniupnpd contains an integer underflow vulnerability in SOAPAction header parsing that allows remote attackers to cause a denial of service or information disclosure by sending a malformed SOAPAction header with a single quote. Attackers can trigger an out-of-bounds memory read by exploiting improper length validation in ParseHttpHeaders(), where the parsed length underflows to a large unsigned value when passed to memchr(), causing the process to scan memory far beyond the allocated HTTP request buffer.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2023-23914",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "critical",
+      "adjusted_severity": "critical",
+      "cvss_score": 9.1,
+      "escalated": false,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "A cleartext transmission of sensitive information vulnerability exists in curl <v7.88.0 that could cause HSTS functionality fail when multiple URLs are requested serially. Using its HSTS support, curl can be instructed to use HTTPS instead of usingan insecure clear-text HTTP step even when HTTP is provided in the URL. ThisHSTS mechanism would however surprisingly be ignored by subsequent transferswhen done on the same command line because the state would not be properlycarried on.",
       "recommendation": ""
     },
     {

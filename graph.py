@@ -1024,7 +1024,7 @@ def main() -> None:
     print(f"[*] Building entity-relationship graph — {firmware_id}")
     g, attack_paths = build(surface, firmware_id)
 
-    out_path = args.output or Path(f"{firmware_id}_graph.json")
+    out_path = args.output or surface_path.parent / "graph.json"
     result   = to_dict(g, attack_paths, firmware_id)
     out_path.write_text(json.dumps(result, indent=2))
 

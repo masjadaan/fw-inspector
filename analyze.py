@@ -184,7 +184,7 @@ def main():
     else:
         firmware_id = rootfs.parent.name
 
-    out_dir = args.output / firmware_id
+    out_dir = args.output / firmware_id / "raw"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"[*] Rootfs : {rootfs}")

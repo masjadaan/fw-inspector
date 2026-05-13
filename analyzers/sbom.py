@@ -383,11 +383,13 @@ def generate_sbom(ctx: AnalysisContext) -> None:
         "components": components,
     }
 
-    out_file = ctx.out_dir / "sbom.cdx.json"
+    sbom_dir = ctx.out_dir.parent / "sbom"
+    sbom_dir.mkdir(exist_ok=True)
+    out_file = sbom_dir / "sbom.cdx.json"
     out_file.write_text(json.dumps(bom, indent=2))
 
     n_lib = sum(1 for c in components if c["type"] == "library")
     n_app = sum(1 for c in components if c["type"] == "application")
     n_fw  = sum(1 for c in components if c["type"] == "firmware")
-    print(f"  {'sbom.cdx.json':45s}  {len(components)} components  "
+    print(f"  {'sbom/sbom.cdx.json':45s}  {len(components)} components  "
           f"({n_lib} libraries, {n_app} applications, {n_fw} kernel modules)")

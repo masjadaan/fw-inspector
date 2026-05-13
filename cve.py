@@ -300,7 +300,7 @@ def main() -> None:
     args = parser.parse_args()
 
     analysis_dir = args.analysis_dir.resolve()
-    sbom_path    = analysis_dir / "sbom.cdx.json"
+    sbom_path    = analysis_dir / "sbom" / "sbom.cdx.json"
     firmware_id  = analysis_dir.name
 
     if not sbom_path.exists():
@@ -311,7 +311,7 @@ def main() -> None:
     # Auto-detect attack surface JSON if not provided
     attack_surface = args.attack_surface
     if not attack_surface:
-        candidate = analysis_dir.parent / f"{firmware_id}_attack_surface.json"
+        candidate = analysis_dir / "attack_surface" / "attack_surface.json"
         if candidate.exists():
             attack_surface = candidate
             print(f"[*] Auto-detected attack surface: {candidate.name}")
@@ -327,7 +327,7 @@ def main() -> None:
 
     vulnerabilities = _run_grype(sbom_path)
 
-    out_path = args.output or analysis_dir / "cve_report.json"
+    out_path = args.output or analysis_dir / "sbom" / "cve_report.json"
     report   = _build_report(vulnerabilities, ref_to_meta, reachable, firmware_id, sbom_path)
     out_path.write_text(json.dumps(report, indent=2))
 

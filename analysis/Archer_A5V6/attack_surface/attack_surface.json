@@ -11,12 +11,12 @@
   },
   "summary": {
     "entry_points_count": 2,
-    "attack_paths_count": 6,
+    "attack_paths_count": 5,
     "critical_paths": 0,
     "high_paths": 3,
     "users_with_password": 0,
     "setuid_binaries_count": 0,
-    "world_writable_count": 1
+    "world_writable_count": 0
   },
   "entry_points": [
     {
@@ -41,9 +41,7 @@
     "setuid_binaries": [],
     "capabilities": [],
     "world_writable": {
-      "files": [
-        "/output/extracted/rootfs/squashfs-root/usr/sbin/bpalogin"
-      ],
+      "files": [],
       "dirs": [],
       "setgid": []
     }
@@ -812,21 +810,6 @@
       "evidence": [
         "init_scripts.txt: hardcoded credential patterns in init scripts",
         "default_credentials.txt: 20 default credential references"
-      ]
-    },
-    {
-      "id": "ap-world-writable",
-      "title": "Privilege Escalation via World-Writable Path",
-      "severity": "medium",
-      "description": "World-writable files or directories allow a low-privilege process to inject content that a privileged process later reads or executes.",
-      "entry_point": "local \u2014 requires initial code execution",
-      "steps": [
-        "Gain low-privilege code execution",
-        "Write malicious payload to world-writable file or directory",
-        "Wait for privileged daemon to execute or read the modified path"
-      ],
-      "evidence": [
-        "world_writable.txt: 1 world-writable files/directories"
       ]
     },
     {

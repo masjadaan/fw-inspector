@@ -12,33 +12,39 @@ Developed and tested against TP-Link Archer A5 V6 (`Archer_A5V6.bin`).
 firmware.bin
     │
     ▼
-[1] extract.py          ← orchestrates Docker build + run
+[1] extract.py                      ← orchestrates Docker build + run
     │
-    ├─ carve.py         ← binwalk scan → carve bootloader / kernel / rootfs
-    └─ analyze.py       ← 40+ checks against extracted rootfs
-    │                      Phase 4: generates sbom.cdx.json (CycloneDX 1.5)
+    ├─ carve.py                     ← binwalk scan → carve bootloader / kernel / rootfs
+    └─ analyze.py                   ← 40+ checks against extracted rootfs
+    │                                  Phase 4: generates sbom/sbom.cdx.json (CycloneDX 1.5)
     ▼
-analysis/<firmware>/    ← raw findings (txt, json) + sbom.cdx.json
-    │
-    ▼
-[2] surface.py          ← synthesize structured attack surface model
+analysis/<firmware>/raw/            ← raw findings (txt, json)
+analysis/<firmware>/sbom/           ← sbom.cdx.json
     │
     ▼
-<firmware>_attack_surface.json
+[2] surface.py                      ← synthesize structured attack surface model
     │
     ▼
-[3] graph.py            ← build typed entity-relationship graph
+analysis/<firmware>/attack_surface/attack_surface.json
     │
     ▼
-<firmware>_graph.json   ← nodes, edges, derived attack paths
-<firmware>_graph.dot    ← Graphviz visualization (optional)
+[3] graph.py                        ← build typed entity-relationship graph
     │
     ▼
-[4] cve.py              ← CVE enrichment (host-side, requires grype)
-    │                      cross-references CVEs with hardening flags
-    │                      and network reachability from attack surface
+analysis/<firmware>/attack_surface/graph.json
+analysis/<firmware>/attack_surface/graph.dot  (optional --dot flag)
+    │
     ▼
-analysis/<firmware>/cve_report.json
+[4] cve.py                          ← CVE enrichment (host-side, requires grype)
+    │                                  cross-references CVEs with hardening flags
+    │                                  and network reachability from attack surface
+    ▼
+analysis/<firmware>/sbom/cve_report.json
+    │
+    ▼
+[5] heatmap.py                      ← CVE severity heatmap (requires matplotlib)
+    ▼
+analysis/<firmware>/sbom/cve_heatmap.png
 ```
 
 ---
@@ -76,26 +82,39 @@ optional:
 ### Step 2 — Synthesize Attack Surface
 
 ```bash
-python3 surface.py ./analysis/Archer_A5V6/
+python3 surface.py analysis/Archer_A5V6/
 ```
 
-Reads all analysis text files and produces `<firmware>_attack_surface.json` — a structured summary covering entry points, credentials, weak crypto, debug artifacts, certificates, IPC, and more.
+Reads analysis files from `raw/` and writes `analysis/<firmware>/attack_surface/attack_surface.json` — a structured summary covering entry points, credentials, weak crypto, debug artifacts, certificates, IPC, and more.
 
 Options:
 
 ```
 positional:
-  analysis_dir      Directory produced by analyze.py
+  analysis_dir      Firmware directory (e.g. analysis/Archer_A5V6/)
 
 optional:
-  --output, -o      Output directory (default: current directory)
+  --output, -o      Override output path for attack_surface.json
 ```
 
 ### Step 3 — Build Entity-Relationship Graph
 
 ```bash
-python3 graph.py Archer_A5V6_attack_surface.json
-python3 graph.py Archer_A5V6_attack_surface.json --dot
+python3 graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json
+python3 graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json --dot
+```
+
+Graph files are written alongside the input in `attack_surface/`.
+
+Options:
+
+```
+positional:
+  surface_json      attack_surface.json produced by surface.py
+
+optional:
+  --output, -o      Override output path for graph.json
+  --dot             Also write a Graphviz DOT file for visualization
 ```
 
 ### Step 4 — CVE Enrichment (host-side)
@@ -106,25 +125,36 @@ Requires [grype](https://github.com/anchore/grype) on the host:
 # Install grype (once)
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh
 
-# Run CVE enrichment
+# Run CVE enrichment (attack surface auto-detected from attack_surface/)
 python3 cve.py analysis/Archer_A5V6/
-```
-
-The attack surface JSON is auto-detected if present in the working directory. You can also pass it explicitly:
-
-```bash
-python3 cve.py analysis/Archer_A5V6/ --attack-surface Archer_A5V6_attack_surface.json
 ```
 
 Options:
 
 ```
 positional:
-  analysis_dir          Directory produced by analyze.py (must contain sbom.cdx.json)
+  analysis_dir          Firmware directory (e.g. analysis/Archer_A5V6/)
 
 optional:
-  --attack-surface, -a  Attack surface JSON for network-reachability cross-referencing
-  --output, -o          Output path for CVE report JSON (default: <analysis_dir>/cve_report.json)
+  --attack-surface, -a  Override attack surface JSON path
+  --output, -o          Override output path for cve_report.json
+```
+
+### Step 5 — CVE Severity Heatmap
+
+```bash
+python3 heatmap.py analysis/Archer_A5V6/
+```
+
+Options:
+
+```
+positional:
+  analysis_dir      Firmware directory (e.g. analysis/Archer_A5V6/)
+
+optional:
+  --top, -n         Max components to show (default: 40, worst-first)
+  --output, -o      Override output path for cve_heatmap.png
 ```
 
 CVE severity is adjusted beyond the base CVSS score using two firmware-specific signals:
@@ -136,19 +166,6 @@ CVE severity is adjusted beyond the base CVSS score using two firmware-specific 
 | No PIE | +1 level |
 | No RELRO | +1 level |
 | No stack canary | +1 level |
-
-Builds a typed property graph from the attack surface JSON. Attack paths are derived algorithmically via BFS traversal — never hand-authored.
-
-Options:
-
-```
-positional:
-  surface_json      attack_surface.json produced by surface.py
-
-optional:
-  --output, -o      Output path for graph JSON
-  --dot             Also write a Graphviz DOT file for visualization
-```
 
 ---
 
@@ -289,16 +306,21 @@ WAN-reachable paths receive a higher zone weight than LAN-only paths.
 
 ## Output Files
 
-| File | Description |
-|---|---|
-| `analysis/<firmware>/*.txt` | Raw per-check findings (text) |
-| `analysis/<firmware>/hardening.json` | Binary hardening flags (NX / PIE / RELRO / canary) |
-| `analysis/<firmware>/shellcheck.json` | ShellCheck static analysis findings |
-| `analysis/<firmware>/sbom.cdx.json` | CycloneDX 1.5 SBOM — libraries, executables, kernel modules |
-| `analysis/<firmware>/cve_report.json` | CVE findings enriched with hardening and reachability context |
-| `<firmware>_attack_surface.json` | Structured attack surface model |
-| `<firmware>_graph.json` | Entity-relationship graph with derived attack paths |
-| `<firmware>_graph.dot` | Graphviz DOT for visualization (`--dot` flag) |
+```
+analysis/<firmware>/
+  raw/                          ← per-check findings from analyze.py
+    *.txt                       ← text findings (one file per check)
+    hardening.json              ← binary hardening flags (NX / PIE / RELRO / canary)
+    shellcheck.json             ← ShellCheck static analysis findings
+  sbom/
+    sbom.cdx.json               ← CycloneDX 1.5 SBOM (libraries, executables, kernel modules)
+    cve_report.json             ← CVE findings enriched with hardening and reachability context
+    cve_heatmap.png             ← severity heatmap (components × severity levels)
+  attack_surface/
+    attack_surface.json         ← structured attack surface model
+    graph.json                  ← entity-relationship graph with derived attack paths
+    graph.dot                   ← Graphviz DOT for visualization (--dot flag)
+```
 
 ### Visualizing the Graph
 
@@ -307,11 +329,12 @@ WAN-reachable paths receive a higher zone weight than LAN-only paths.
 sudo apt install graphviz
 
 # Render to SVG
-dot -Tsvg Archer_A5V6_graph.dot -o Archer_A5V6_graph.svg
+dot -Tsvg analysis/Archer_A5V6/attack_surface/graph.dot \
+    -o analysis/Archer_A5V6/attack_surface/graph.svg
 
 # Interactive viewer
 sudo apt install xdot
-xdot Archer_A5V6_graph.dot
+xdot analysis/Archer_A5V6/attack_surface/graph.dot
 ```
 
 ---

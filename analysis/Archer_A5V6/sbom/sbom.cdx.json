@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:35b60815-9f62-411c-81b3-7b2885923212",
+  "serialNumber": "urn:uuid:df2779d1-189e-484f-98e0-1cc89fcd71c8",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-05-12T18:50:11.391611+00:00",
+    "timestamp": "2026-05-13T18:04:08.054775+00:00",
     "tools": {
       "components": [
         {
@@ -16,15 +16,15 @@
     },
     "component": {
       "type": "firmware",
-      "bom-ref": "a5e2ec42-6d0c-42f2-ad96-1ffb272e6909",
-      "name": "Archer_A5V6",
+      "bom-ref": "cad80a5d-0e02-480b-b6d6-b9a13f5d9603",
+      "name": "raw",
       "description": "Router firmware image"
     }
   },
   "components": [
     {
       "type": "library",
-      "bom-ref": "8eac1e8f-749e-4b97-8e81-9e798f710292",
+      "bom-ref": "9c8540d6-8aab-43c6-926b-da99fc50c1a1",
       "name": "ld-uClibc-0.9.33.2",
       "purl": "pkg:generic/ld-uClibc-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -38,7 +38,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "d329f2fd-648e-41a9-ba3c-ae2f58f54224",
+      "bom-ref": "3f00c9c4-d2be-45dc-845a-0aea32273202",
       "name": "libcJSON",
       "purl": "pkg:generic/libcJSON",
       "description": "lib/libcJSON.so",
@@ -57,7 +57,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "b1a3253b-3c0b-4ecb-8947-c8b486974c79",
+      "bom-ref": "3c542ec5-83b6-49ef-a665-b43955021228",
       "name": "libcmm",
       "version": "1.0",
       "purl": "pkg:generic/libcmm@1.0",
@@ -81,7 +81,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "350b14da-0547-4f7b-a36d-4e60496be6e9",
+      "bom-ref": "88233ac1-99f2-438e-a538-8829f672f771",
       "name": "libcrypt-0.9.33.2",
       "purl": "pkg:generic/libcrypt-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -101,7 +101,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "1e33c37f-0adc-4d1e-ab70-98f42b265c13",
+      "bom-ref": "92df573d-725c-4563-abde-0fad344cb54a",
       "name": "libcrypto",
       "version": "1.0.0",
       "purl": "pkg:generic/libcrypto@1.0.0",
@@ -122,7 +122,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "435f06da-adc6-4c5b-9dcb-ba72d312e952",
+      "bom-ref": "885a5b29-aa93-495f-bb4a-900f44d5d73d",
       "name": "libcurl",
       "version": "4.7.0",
       "purl": "pkg:generic/libcurl@4.7.0",
@@ -147,7 +147,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "bc242897-3669-43c7-835c-443f604ad428",
+      "bom-ref": "078cae11-d602-441d-99a1-c37945550c71",
       "name": "libcutil",
       "purl": "pkg:generic/libcutil",
       "description": "lib/libcutil.so",
@@ -166,7 +166,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "e805b18f-6a7e-475f-89dd-1ba71785a3f6",
+      "bom-ref": "062ef304-3f22-4370-8e6b-da56a1b24507",
       "name": "libdl-0.9.33.2",
       "purl": "pkg:generic/libdl-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -186,7 +186,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "2807b2ff-1321-46b5-93cd-b6dd39060cc3",
+      "bom-ref": "2e60c7f1-1762-4b80-917f-a9615030ac81",
       "name": "libgdpr",
       "purl": "pkg:generic/libgdpr",
       "description": "lib/libgdpr.so",
@@ -209,7 +209,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "46673d98-0439-4936-b892-b728130ffe88",
+      "bom-ref": "a7f10be8-1307-4dc1-90d2-22bbcc9e6261",
       "name": "libiw",
       "version": "29",
       "purl": "pkg:generic/libiw@29",
@@ -229,7 +229,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "89a7c1a8-fe8f-47c3-a33f-f6faa930c899",
+      "bom-ref": "fe8359d4-1681-4eed-b82f-01989a5fac08",
       "name": "libixml",
       "version": "1.0",
       "purl": "pkg:generic/libixml@1.0",
@@ -249,7 +249,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "d5795bd4-3b33-42cd-a398-02920755c059",
+      "bom-ref": "3327143d-79f7-4fd0-8463-4ec25f6bd717",
       "name": "libm-0.9.33.2",
       "purl": "pkg:generic/libm-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -269,7 +269,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "bf04bee0-16f7-4020-b14c-904593e5e491",
+      "bom-ref": "2b49b913-38f8-4f71-820d-ffc57ac246af",
       "name": "libnsl-0.9.33.2",
       "purl": "pkg:generic/libnsl-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -289,7 +289,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "6b6bae13-a87d-4495-80ca-f84fd53637d7",
+      "bom-ref": "38812d85-789a-4b8f-be6c-bca21bc03722",
       "name": "libos",
       "purl": "pkg:generic/libos",
       "description": "lib/libos.so",
@@ -308,7 +308,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "4edbdcac-3549-458d-be74-0a641ccfae76",
+      "bom-ref": "b2c258c9-1784-4726-8e9e-0e9ecd9cc9b3",
       "name": "libpthread-0.9.33.2",
       "purl": "pkg:generic/libpthread-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -328,7 +328,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "23023a87-161e-41a1-8f4b-a1605b917241",
+      "bom-ref": "82f30c2d-12a7-46c2-8441-738793285943",
       "name": "libresolv-0.9.33.2",
       "purl": "pkg:generic/libresolv-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -348,7 +348,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "4c31d6a0-e161-4e2c-8aaf-1fff3278ffcd",
+      "bom-ref": "dac3c9d6-fccf-4e86-9c98-3b20f3ebb349",
       "name": "librt-0.9.33.2",
       "purl": "pkg:generic/librt-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -368,7 +368,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "a7549a48-f4cc-4e85-beaf-704fe4b11915",
+      "bom-ref": "63dea7a7-3c79-4098-86a4-c1dd6c90e9cd",
       "name": "libssl",
       "version": "1.0.0",
       "purl": "pkg:generic/libssl@1.0.0",
@@ -393,7 +393,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "fde47c3f-23bf-45eb-9be9-d6714569f086",
+      "bom-ref": "cf667da0-d787-4c38-abf6-e65de206f30f",
       "name": "libthreadutil",
       "purl": "pkg:generic/libthreadutil",
       "description": "lib/libthreadutil.so",
@@ -412,7 +412,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "c6dbbab6-e0b4-44dc-9b76-f10d94a15b34",
+      "bom-ref": "cb03a28f-23b2-4d1f-b3ed-158d4ac653dc",
       "name": "libuClibc-0.9.33.2",
       "purl": "pkg:generic/libuClibc-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -432,7 +432,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "72024358-5980-4620-81c2-008c07e25613",
+      "bom-ref": "debcd442-ebc4-4032-accb-a98213569ebd",
       "name": "libupnp",
       "purl": "pkg:generic/libupnp",
       "description": "lib/libupnp.so",
@@ -451,7 +451,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "36256812-e3b3-478c-807f-5a6e59784dae",
+      "bom-ref": "bc9e0884-6d22-43d1-a202-6526983c4e20",
       "name": "libutil-0.9.33.2",
       "purl": "pkg:generic/libutil-0.9.33.2",
       "cpe": "cpe:2.3:a:uclibc:uclibc:0.9.33.2:*:*:*:*:*:*:*",
@@ -471,7 +471,7 @@
     },
     {
       "type": "library",
-      "bom-ref": "2a95b565-8fec-43ca-8ea1-c7ab4138dc4f",
+      "bom-ref": "a9fdbc6f-bc9a-4192-97a7-f485350a5559",
       "name": "libxml",
       "purl": "pkg:generic/libxml",
       "description": "lib/libxml.so",
@@ -490,7 +490,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "8c2066ce-b533-4d71-a573-059ecf280116",
+      "bom-ref": "7375851e-e74f-4446-8b75-0eddcc746348",
       "name": "afc.ko",
       "purl": "pkg:generic/afc.ko",
       "description": "lib/modules/afc.ko",
@@ -525,7 +525,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "209f0d20-498a-413a-a43f-6a25dc7d66b8",
+      "bom-ref": "d9759ba3-922e-4708-8357-1b689027a501",
       "name": "ipt_STAT.ko",
       "purl": "pkg:generic/ipt_STAT.ko",
       "description": "lib/modules/ipt_STAT.ko",
@@ -560,7 +560,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "3714a6aa-ab9d-410b-85c6-e2b6b39e58e0",
+      "bom-ref": "4116f0e1-50aa-4780-9c27-181500d989d6",
       "name": "ipv6_pass_through.ko",
       "purl": "pkg:generic/ipv6_pass_through.ko",
       "description": "lib/modules/ipv6_pass_through.ko",
@@ -595,7 +595,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "07fcdcae-9938-4771-9219-a803e1b9946c",
+      "bom-ref": "87839251-ae59-44c4-8332-e7c5962ca501",
       "name": "raeth.ko",
       "purl": "pkg:generic/raeth.ko",
       "description": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko",
@@ -630,7 +630,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c59b39d6-4853-4c17-abe5-00ff18421291",
+      "bom-ref": "8ac3ff73-0e90-4236-9881-ce7945d24004",
       "name": "rt_rdm.ko",
       "purl": "pkg:generic/rt_rdm.ko",
       "description": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko",
@@ -665,7 +665,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "394c802a-4ff4-4e74-8190-7cac23a28668",
+      "bom-ref": "fc2de092-fca9-403b-b585-357329980480",
       "name": "MT7613_ap.ko",
       "version": "1.0",
       "purl": "pkg:generic/MT7613_ap.ko@1.0",
@@ -701,7 +701,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "3579daee-60c6-444b-80a1-f8b021c8047c",
+      "bom-ref": "6343f209-b906-43e4-8f27-370a47f396e9",
       "name": "mt_wifi.ko",
       "version": "1.0",
       "purl": "pkg:generic/mt_wifi.ko@1.0",
@@ -737,7 +737,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "a2b2d62d-9b17-4601-8659-f066088c927a",
+      "bom-ref": "02924048-ae31-462f-bc52-f98ff06ae0b3",
       "name": "nf_nat_ftp.ko",
       "purl": "pkg:generic/nf_nat_ftp.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko",
@@ -772,7 +772,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c69db992-4633-4790-adb7-8a425d37e764",
+      "bom-ref": "a4d04258-5072-4ac1-8601-639dbceb9ef9",
       "name": "nf_nat_h323.ko",
       "purl": "pkg:generic/nf_nat_h323.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko",
@@ -807,7 +807,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "20ec901f-d36d-4e23-addf-d7b7116d6e1a",
+      "bom-ref": "cff66e0f-febd-48cc-aa5f-1b8b628843c2",
       "name": "nf_nat_pptp.ko",
       "purl": "pkg:generic/nf_nat_pptp.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko",
@@ -842,7 +842,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "b43dac8d-874b-4fd6-95f4-40a9b6d18b49",
+      "bom-ref": "77a360fa-b6b6-4d8c-bc30-789297262497",
       "name": "nf_nat_proto_gre.ko",
       "purl": "pkg:generic/nf_nat_proto_gre.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko",
@@ -877,7 +877,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "70a44968-4f35-490e-9929-510495a96232",
+      "bom-ref": "8d951965-81a6-4219-acd6-d5a684ab7ab6",
       "name": "nf_nat_rtsp.ko",
       "version": "6.21",
       "purl": "pkg:generic/nf_nat_rtsp.ko@6.21",
@@ -913,7 +913,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "b191a199-1065-4dfe-8823-653f3ead8243",
+      "bom-ref": "8a661099-3195-4c5f-a7e4-f5883c224c67",
       "name": "nf_nat_sip.ko",
       "purl": "pkg:generic/nf_nat_sip.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko",
@@ -948,7 +948,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "7815aee9-d58e-4221-be43-e6eaf323e116",
+      "bom-ref": "255fc8d3-6d65-40cd-b3d1-727659a75708",
       "name": "nf_nat_tftp.ko",
       "purl": "pkg:generic/nf_nat_tftp.ko",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko",
@@ -983,7 +983,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "d78cbffd-7f41-4268-9b38-ae4f996d18e0",
+      "bom-ref": "c8937472-a2d0-4bb6-bc89-877a36b1b8c2",
       "name": "nf_conntrack_ftp.ko",
       "purl": "pkg:generic/nf_conntrack_ftp.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko",
@@ -1018,7 +1018,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "8fda6404-a06d-4ef5-91be-f6c4a1e73457",
+      "bom-ref": "1be6aa62-f05a-4ebd-8d7f-922a2c7e6402",
       "name": "nf_conntrack_h323.ko",
       "purl": "pkg:generic/nf_conntrack_h323.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko",
@@ -1053,7 +1053,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5a391fdf-031d-4927-b9b8-63cb1a932c8a",
+      "bom-ref": "0e9229fe-f458-4356-8430-ef023d650f13",
       "name": "nf_conntrack_pptp.ko",
       "purl": "pkg:generic/nf_conntrack_pptp.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko",
@@ -1088,7 +1088,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5a89fa60-4548-482b-8545-5a989001e579",
+      "bom-ref": "2010477d-5513-4b76-960c-c382422a8d02",
       "name": "nf_conntrack_proto_gre.ko",
       "purl": "pkg:generic/nf_conntrack_proto_gre.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko",
@@ -1123,7 +1123,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "bba5ea1e-10d5-43bf-8cf0-19b7788aeb5c",
+      "bom-ref": "aa7eede2-b045-4fcd-a959-7088f40de3bd",
       "name": "nf_conntrack_rtsp.ko",
       "purl": "pkg:generic/nf_conntrack_rtsp.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko",
@@ -1158,7 +1158,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "8fb6df82-44bb-4c14-a719-ca929aaad426",
+      "bom-ref": "472db8c1-1f74-4c8f-a50b-22dbab563633",
       "name": "nf_conntrack_sip.ko",
       "purl": "pkg:generic/nf_conntrack_sip.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko",
@@ -1193,7 +1193,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "2311380a-dddc-4e11-9f5c-3fe1b65f4780",
+      "bom-ref": "8dd1c22a-952d-41bb-ae8a-bfc88c684194",
       "name": "nf_conntrack_tftp.ko",
       "purl": "pkg:generic/nf_conntrack_tftp.ko",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko",
@@ -1228,7 +1228,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "67487c19-46c4-403b-a14d-cb47aaaab36f",
+      "bom-ref": "1850150c-a290-4995-af66-ac7ae5890388",
       "name": "shortcut-fe-cm.ko",
       "purl": "pkg:generic/shortcut-fe-cm.ko",
       "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko",
@@ -1263,7 +1263,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "cba70820-a14c-48e2-84c3-44ce214f505b",
+      "bom-ref": "d301492c-93b0-4ed5-b107-f6a50f4b6182",
       "name": "shortcut-fe.ko",
       "purl": "pkg:generic/shortcut-fe.ko",
       "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko",
@@ -1298,7 +1298,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "dcdc05f4-d87e-47dd-abe9-f451adba3950",
+      "bom-ref": "a3bc194a-d987-408e-831c-ee731b7705b0",
       "name": "l2tp_ppp.ko",
       "purl": "pkg:generic/l2tp_ppp.ko",
       "description": "lib/modules/l2tp_ppp.ko",
@@ -1333,7 +1333,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "eede61bd-91a2-40b7-8b14-505fdaf89da4",
+      "bom-ref": "8715b780-cc3b-42c0-b3c9-d4439156cd51",
       "name": "pppol2tp.ko",
       "purl": "pkg:generic/pppol2tp.ko",
       "description": "lib/modules/pppol2tp.ko",
@@ -1368,7 +1368,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "dde6c480-9f8d-4437-a145-30d6d297d45c",
+      "bom-ref": "415f5062-18e1-4fad-92ef-40b9fc875e74",
       "name": "pptp.ko",
       "version": "0.8.5",
       "purl": "pkg:generic/pptp.ko@0.8.5",
@@ -1404,7 +1404,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c65ccb8c-8bf2-435e-937c-4acc515413fc",
+      "bom-ref": "5838cda2-3f7e-451b-a0d5-5ec738b0ac1f",
       "name": "tp_domain.ko",
       "purl": "pkg:generic/tp_domain.ko",
       "description": "lib/modules/tp_domain.ko",
@@ -1439,7 +1439,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "4c8a8d1c-ecd2-4bda-a1a2-6f400a920bb9",
+      "bom-ref": "a3aae27e-8671-440f-ad55-dbbcadda6b9a",
       "name": "mii_mgr",
       "purl": "pkg:generic/mii_mgr",
       "description": "sbin/mii_mgr",
@@ -1478,7 +1478,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "e1b4454b-f7a3-4969-ae97-a668917f2f4a",
+      "bom-ref": "97a5ea6a-9bdb-4a54-8395-d4d825eb3e43",
       "name": "mii_mgr_cl45",
       "purl": "pkg:generic/mii_mgr_cl45",
       "description": "sbin/mii_mgr_cl45",
@@ -1517,7 +1517,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "bb13d0d1-4814-4198-be89-9d11a5f5037f",
+      "bom-ref": "2dabc6a2-0310-4695-89d8-d95970e0bde6",
       "name": "switch",
       "purl": "pkg:generic/switch",
       "description": "sbin/switch",
@@ -1556,7 +1556,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c2824b90-de80-40b5-89a9-26da7119e3e7",
+      "bom-ref": "370ff046-094a-451f-8307-046ba5f47c8c",
       "name": "afcd",
       "purl": "pkg:generic/afcd",
       "description": "usr/bin/afcd",
@@ -1595,7 +1595,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "aac53250-c1de-4bd6-975c-443e28ec841f",
+      "bom-ref": "28d4f69a-bf27-4df0-90f1-faf4e886c21b",
       "name": "ated_tp",
       "purl": "pkg:generic/ated_tp",
       "description": "usr/bin/ated_tp",
@@ -1634,7 +1634,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "f3b8fe6f-42ff-43ab-a95e-4a09f9143443",
+      "bom-ref": "68f0edd2-6bdc-4994-bf7a-bbca92b55e05",
       "name": "cloud_https",
       "purl": "pkg:generic/cloud_https",
       "description": "usr/bin/cloud_https",
@@ -1673,7 +1673,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5f3505d8-38e9-4803-921f-abfb8891e34a",
+      "bom-ref": "4d161bae-087c-4eed-a460-26b441035e38",
       "name": "cmxdns",
       "purl": "pkg:generic/cmxdns",
       "description": "usr/bin/cmxdns",
@@ -1712,7 +1712,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "00e3842c-69ee-4b49-912e-03ba2f9005e8",
+      "bom-ref": "027875ee-1425-41a3-8cbb-15172adf90fe",
       "name": "cos",
       "purl": "pkg:generic/cos",
       "description": "usr/bin/cos",
@@ -1751,7 +1751,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "ea8e573b-2f56-48a5-9403-6d830da7f2b7",
+      "bom-ref": "6ccc0b46-f3dc-494d-a392-f3d72e71ecf4",
       "name": "curl",
       "version": "7.79.0",
       "purl": "pkg:generic/curl@7.79.0",
@@ -1792,7 +1792,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5cd45b7d-8e0a-4855-9dab-15876af4efef",
+      "bom-ref": "a2365681-fbc7-403e-a611-d87de6c225e6",
       "name": "dhcpc",
       "purl": "pkg:generic/dhcpc",
       "description": "usr/bin/dhcpc",
@@ -1831,7 +1831,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5a63f7e6-8eb9-4fd9-8428-6a2f23c32046",
+      "bom-ref": "2aa9d1c0-7287-4264-a51b-14f72cae4a18",
       "name": "dhcpd",
       "purl": "pkg:generic/dhcpd",
       "description": "usr/bin/dhcpd",
@@ -1870,7 +1870,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c6ac9db5-dbde-4fbd-9d82-abf38b456b85",
+      "bom-ref": "727dbfc4-1eb5-4324-8f97-4871f4318975",
       "name": "dnsProxy",
       "purl": "pkg:generic/dnsProxy",
       "description": "usr/bin/dnsProxy",
@@ -1909,7 +1909,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "f61d8e0f-6d60-4106-866a-ea6926449b56",
+      "bom-ref": "bd4e56f2-c7b4-4753-99a8-7a8803db03dc",
       "name": "dropbearmulti",
       "purl": "pkg:generic/dropbearmulti",
       "description": "usr/bin/dropbearmulti",
@@ -1944,7 +1944,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "8bd9dfab-8b56-4cc7-aa73-a9bf57bfaffd",
+      "bom-ref": "d2ab8818-0e7f-41a4-a47b-1fabf30d3dae",
       "name": "dyndns",
       "purl": "pkg:generic/dyndns",
       "description": "usr/bin/dyndns",
@@ -1983,7 +1983,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "586b4cb7-8365-477c-b0b2-dab7c3656bb3",
+      "bom-ref": "96310774-5737-4f1c-b08c-29e5e67978e0",
       "name": "ebtables",
       "version": "802.3",
       "purl": "pkg:generic/ebtables@802.3",
@@ -2024,7 +2024,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "4f810e5a-c23c-4bb2-a5ab-87ae190db8f6",
+      "bom-ref": "63d7a073-2717-4e00-aad0-597afa950a23",
       "name": "httpd",
       "purl": "pkg:generic/httpd",
       "description": "usr/bin/httpd",
@@ -2063,7 +2063,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "b53d2c6e-008b-401e-a344-18b727c12a3b",
+      "bom-ref": "8a1e29f0-1112-49e1-be8f-bc1d7c1068aa",
       "name": "igmpd",
       "purl": "pkg:generic/igmpd",
       "description": "usr/bin/igmpd",
@@ -2102,7 +2102,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "eceb6a23-ebb4-449d-97a3-202aa52d1000",
+      "bom-ref": "553471b5-3c59-4352-9838-fd7004e86724",
       "name": "ip",
       "purl": "pkg:generic/ip",
       "description": "usr/bin/ip",
@@ -2141,7 +2141,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "2d9c8437-a49a-4fa9-8857-cc442c5b0bf4",
+      "bom-ref": "10e02601-190e-4069-9fc4-a5c19da28473",
       "name": "ipping",
       "purl": "pkg:generic/ipping",
       "description": "usr/bin/ipping",
@@ -2180,7 +2180,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "de561723-c81e-422f-89d5-c5ecb00eab73",
+      "bom-ref": "19b33e28-db90-43f8-823d-abca623641b6",
       "name": "iwconfig",
       "purl": "pkg:generic/iwconfig",
       "description": "usr/bin/iwconfig",
@@ -2219,7 +2219,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "d17c2341-af2d-4b96-a15d-78b1a1d08973",
+      "bom-ref": "2911e714-31cb-4c30-89f9-7179405568c7",
       "name": "iwpriv",
       "purl": "pkg:generic/iwpriv",
       "description": "usr/bin/iwpriv",
@@ -2258,7 +2258,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "0c919dc7-3d1f-47b3-938b-d0485de70c3d",
+      "bom-ref": "3318896a-1f2f-404b-ba53-a83346e99672",
       "name": "mldProxy",
       "purl": "pkg:generic/mldProxy",
       "description": "usr/bin/mldProxy",
@@ -2297,7 +2297,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "37e46686-a330-4201-82e5-6f350f848acd",
+      "bom-ref": "3025a149-cd26-41a0-9b14-605e7490511b",
       "name": "noipdns",
       "purl": "pkg:generic/noipdns",
       "description": "usr/bin/noipdns",
@@ -2336,7 +2336,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "0e886885-acce-4e03-a5ef-4213313c49ce",
+      "bom-ref": "aca48809-4f9f-4edd-8195-e29084e4a98e",
       "name": "ntpc",
       "purl": "pkg:generic/ntpc",
       "description": "usr/bin/ntpc",
@@ -2375,7 +2375,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "262cb93b-5afe-420a-936a-50cb6e432aac",
+      "bom-ref": "d273a217-a23a-410f-9de7-c8f7bcf84d46",
       "name": "openssl",
       "version": "1.0",
       "purl": "pkg:generic/openssl@1.0",
@@ -2416,7 +2416,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "f14da8bc-df3c-467e-a68d-3000d4274148",
+      "bom-ref": "d55cb38b-a2e1-4d09-a51b-9c233b2ce4a6",
       "name": "rt2860apd",
       "purl": "pkg:generic/rt2860apd",
       "description": "usr/bin/rt2860apd",
@@ -2455,7 +2455,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "60ee6744-1c0d-43c8-b836-2d30cb5ebb6d",
+      "bom-ref": "f3a890fd-3006-4955-a95b-cc64d731aef5",
       "name": "rtinicapd",
       "purl": "pkg:generic/rtinicapd",
       "description": "usr/bin/rtinicapd",
@@ -2494,7 +2494,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "cc44eb94-9ae5-4212-af70-47c725293356",
+      "bom-ref": "7971ee9f-6b12-4c8a-9dec-3d1c6ad5b022",
       "name": "tc",
       "purl": "pkg:generic/tc",
       "description": "usr/bin/tc",
@@ -2533,7 +2533,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "19301b33-44f0-4fce-8c10-a4b372a96f5e",
+      "bom-ref": "bd84318e-e920-48a0-9a28-a96e94852be8",
       "name": "tddp",
       "purl": "pkg:generic/tddp",
       "description": "usr/bin/tddp",
@@ -2572,7 +2572,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "32ce4f16-ff09-48c3-be06-f83c33990c9c",
+      "bom-ref": "a03377ed-64a4-4a6b-b0b5-58df5b2f9dbd",
       "name": "tdpd",
       "purl": "pkg:generic/tdpd",
       "description": "usr/bin/tdpd",
@@ -2611,7 +2611,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "6e6513d9-5def-4636-b19e-0e5cbb1c567d",
+      "bom-ref": "14093ec8-9891-4739-9b50-61d7eafcac3f",
       "name": "tmpd",
       "purl": "pkg:generic/tmpd",
       "description": "usr/bin/tmpd",
@@ -2650,7 +2650,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "217785f9-942a-4a73-a238-7d2fa53c6c7d",
+      "bom-ref": "b1e8154f-b455-48b7-ad4f-68106df3b169",
       "name": "traceroute",
       "version": "5.0",
       "purl": "pkg:generic/traceroute@5.0",
@@ -2690,7 +2690,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "2701e720-6458-4239-919b-cae446b4a812",
+      "bom-ref": "5f7822ab-c65c-415b-a3a4-eee79ac53788",
       "name": "upnpd",
       "version": "1.0",
       "purl": "pkg:generic/upnpd@1.0",
@@ -2731,7 +2731,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "ea7dca92-2a1a-403b-9075-1c16be831601",
+      "bom-ref": "2f5a261f-c021-4b89-8c89-695648795ca3",
       "name": "wanType",
       "purl": "pkg:generic/wanType",
       "description": "usr/bin/wanType",
@@ -2770,7 +2770,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "6303da3d-3fa8-48e9-8f95-dded83213f70",
+      "bom-ref": "21655690-e516-4356-9eab-cf4323fa2a58",
       "name": "wlNetlinkTool",
       "purl": "pkg:generic/wlNetlinkTool",
       "description": "usr/bin/wlNetlinkTool",
@@ -2809,7 +2809,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "38dad6f9-4314-4f54-9a26-3de903026f6b",
+      "bom-ref": "13513f60-9372-4583-9f5c-ce739f60e5e3",
       "name": "wol",
       "purl": "pkg:generic/wol",
       "description": "usr/bin/wol",
@@ -2848,7 +2848,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "c5990a51-4875-4b5b-8b8a-887b71b48c76",
+      "bom-ref": "7b21a11c-f950-4275-bdc3-bb98d6d67eb0",
       "name": "wscd",
       "version": "1.0",
       "purl": "pkg:generic/wscd@1.0",
@@ -2888,7 +2888,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "2cd74589-2a81-4307-bee7-174f4dbe6d79",
+      "bom-ref": "c25d7a36-00cf-4bc6-8494-95bd39322cb7",
       "name": "wscd_5G",
       "version": "1.0",
       "purl": "pkg:generic/wscd_5G@1.0",
@@ -2928,7 +2928,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "fb1438c2-665d-4b58-a656-fd38fbc2c9d2",
+      "bom-ref": "25adfe16-67e7-4f4b-8b40-bc66b588fd5a",
       "name": "xtables-multi",
       "version": "1.0",
       "purl": "pkg:generic/xtables-multi@1.0",
@@ -2969,7 +2969,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "17ab89e9-c2d5-4111-b1c6-5a708fd3feca",
+      "bom-ref": "ebc18381-9984-4228-824a-736cb146cbf0",
       "name": "bpalogin",
       "version": "0.2",
       "purl": "pkg:generic/bpalogin@0.2",
@@ -3009,7 +3009,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "d9141e58-d8e0-4853-84af-a264ec212c97",
+      "bom-ref": "7fe425a9-6aec-49a3-8ec5-f42c4ceaa39e",
       "name": "dhcp6c",
       "purl": "pkg:generic/dhcp6c",
       "description": "usr/sbin/dhcp6c",
@@ -3048,7 +3048,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "23dd91ca-9b76-4f2e-b6b0-232b100385e1",
+      "bom-ref": "6eb20b9d-1d88-4fb5-9672-6724fc83b1fa",
       "name": "dhcp6s",
       "purl": "pkg:generic/dhcp6s",
       "description": "usr/sbin/dhcp6s",
@@ -3087,7 +3087,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "9cbfcfaf-f0e7-45a3-a0a3-a9e160e61cd3",
+      "bom-ref": "481fede5-d47e-4c58-9cc4-14fe5f8f9e8a",
       "name": "pppd",
       "version": "2.4.5",
       "purl": "pkg:generic/pppd@2.4.5",
@@ -3128,7 +3128,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5d849b6e-683f-41d0-9b16-961faa2fe531",
+      "bom-ref": "bfd1c7d2-27b8-4684-a497-d94c05bc0df0",
       "name": "radvd",
       "purl": "pkg:generic/radvd",
       "description": "usr/sbin/radvd",
@@ -3167,7 +3167,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "ef3514e2-2d82-43ad-a799-7e660f730265",
+      "bom-ref": "621c5f2d-e92d-42a8-b5f3-7a1bbfbb67c1",
       "name": "ripd",
       "purl": "pkg:generic/ripd",
       "description": "usr/sbin/ripd",
@@ -3206,7 +3206,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "5527d083-f487-4a28-b794-bc01b0982efb",
+      "bom-ref": "9c860eab-3e62-42ea-83fd-1c0d309450d1",
       "name": "xl2tpd",
       "version": "1.1.12",
       "purl": "pkg:generic/xl2tpd@1.1.12",
@@ -3247,7 +3247,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "930bc0eb-edfe-452f-b0e7-1215e1087962",
+      "bom-ref": "f9157ba8-e048-4554-a17b-ac0d02034319",
       "name": "zebra",
       "purl": "pkg:generic/zebra",
       "description": "usr/sbin/zebra",
@@ -3286,7 +3286,7 @@
     },
     {
       "type": "application",
-      "bom-ref": "b3578370-300e-41e4-9ad8-93c5c4c55d72",
+      "bom-ref": "835270d5-02c3-4c56-8f9c-e75f9b17f0d3",
       "name": "busybox",
       "version": "1.19.2",
       "purl": "pkg:generic/busybox@1.19.2",
@@ -3315,7 +3315,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "e6465d9a-5760-4d6c-9255-025533bc3ea2",
+      "bom-ref": "baf9dfb9-9e9f-4cb9-9467-d9e838766c1c",
       "name": "afc",
       "purl": "pkg:generic/afc",
       "description": "lib/modules/afc.ko",
@@ -3338,7 +3338,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "bd865ff4-b295-420a-8d49-e65a06ccf450",
+      "bom-ref": "b63ad607-ff71-4705-82a0-8aa35333d3db",
       "name": "ipt_STAT",
       "purl": "pkg:generic/ipt_STAT",
       "description": "lib/modules/ipt_STAT.ko",
@@ -3361,7 +3361,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "b53d9bfc-9dd5-4239-853d-148af3c5745e",
+      "bom-ref": "f69dead4-e9a2-40ed-b024-1afebde1b468",
       "name": "ipv6_pass_through",
       "purl": "pkg:generic/ipv6_pass_through",
       "description": "lib/modules/ipv6_pass_through.ko",
@@ -3384,7 +3384,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "26d48802-b978-4ea1-8f5b-2aa3839b0764",
+      "bom-ref": "18977ca4-3c44-4424-99c2-f261ce04e6f7",
       "name": "raeth",
       "purl": "pkg:generic/raeth",
       "description": "lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko",
@@ -3407,7 +3407,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "80f7761f-1406-4e87-b5aa-838e0b18a652",
+      "bom-ref": "ffcd1e19-eeba-4d57-977d-e782b65e9081",
       "name": "rt_rdm",
       "purl": "pkg:generic/rt_rdm",
       "description": "lib/modules/kmdir/kernel/drivers/net/rt_rdm/rt_rdm.ko",
@@ -3430,7 +3430,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "583baee4-24b5-4d43-bcff-4d7733d5f036",
+      "bom-ref": "895fc544-f51a-4427-9b7d-016cd6806c48",
       "name": "MT7613_ap",
       "purl": "pkg:generic/MT7613_ap",
       "description": "lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko",
@@ -3453,7 +3453,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "e4662790-02c9-4665-8f3a-710e65f78171",
+      "bom-ref": "7288c6a7-c3b9-4821-a028-7ee47bf5f976",
       "name": "mt_wifi",
       "purl": "pkg:generic/mt_wifi",
       "description": "lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko",
@@ -3476,7 +3476,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "f4765451-7a60-4145-a6f6-d99067590044",
+      "bom-ref": "3b2c667e-6897-49cd-98ce-4b968fb2092e",
       "name": "nf_nat_ftp",
       "purl": "pkg:generic/nf_nat_ftp",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_ftp.ko",
@@ -3499,7 +3499,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "688f916b-f17e-46fc-a047-185524b4cabf",
+      "bom-ref": "956f04dc-cf0e-4018-bdd6-51ac7df88b4a",
       "name": "nf_nat_h323",
       "purl": "pkg:generic/nf_nat_h323",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_h323.ko",
@@ -3522,7 +3522,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "b63766c0-c47f-4f03-842a-d7b41b309361",
+      "bom-ref": "6ff21b57-3cca-4817-b5e9-e0f0ca9d65cc",
       "name": "nf_nat_pptp",
       "purl": "pkg:generic/nf_nat_pptp",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_pptp.ko",
@@ -3545,7 +3545,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "87645fcd-3bc4-457e-8b16-45e709e34ee6",
+      "bom-ref": "5696ddf7-b299-455e-8692-20f68e36af14",
       "name": "nf_nat_proto_gre",
       "purl": "pkg:generic/nf_nat_proto_gre",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_proto_gre.ko",
@@ -3568,7 +3568,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "6c0890ad-b90e-4604-99ec-0bc5fab545f0",
+      "bom-ref": "09bf3cae-fdb9-43e0-87ec-55399c254c4d",
       "name": "nf_nat_rtsp",
       "purl": "pkg:generic/nf_nat_rtsp",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_rtsp.ko",
@@ -3591,7 +3591,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "66ff7b1c-1941-47cd-b1c1-573731ef3329",
+      "bom-ref": "653dafe8-06c8-4db5-a827-0097efc3e3fb",
       "name": "nf_nat_sip",
       "purl": "pkg:generic/nf_nat_sip",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_sip.ko",
@@ -3614,7 +3614,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "3c13e19a-3c1e-4ad6-b35c-b5d29d12fea9",
+      "bom-ref": "f870459f-b1e9-42a1-ade8-022e10f0a1d4",
       "name": "nf_nat_tftp",
       "purl": "pkg:generic/nf_nat_tftp",
       "description": "lib/modules/kmdir/kernel/net/ipv4/netfilter/nf_nat_tftp.ko",
@@ -3637,7 +3637,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "52652861-2c78-4a01-b510-0dbbd21029a1",
+      "bom-ref": "55f40a2c-2ef7-48bd-a04a-4724d8eb45f2",
       "name": "nf_conntrack_ftp",
       "purl": "pkg:generic/nf_conntrack_ftp",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko",
@@ -3660,7 +3660,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "01784e3f-9301-4d6d-a08e-6400dcc890a4",
+      "bom-ref": "b78b001f-5849-46c1-be1a-01909e7f1633",
       "name": "nf_conntrack_h323",
       "purl": "pkg:generic/nf_conntrack_h323",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko",
@@ -3683,7 +3683,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "8d1fef44-06bd-4ed6-9c73-a87fdfc74275",
+      "bom-ref": "4ef2c937-25d7-4f6a-a4be-40c1e5b3d2ac",
       "name": "nf_conntrack_pptp",
       "purl": "pkg:generic/nf_conntrack_pptp",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko",
@@ -3706,7 +3706,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "1cdfa6cc-cd46-44be-b5f6-06556cadc323",
+      "bom-ref": "d2053483-257b-4d4b-b49f-8b97e9babbf2",
       "name": "nf_conntrack_proto_gre",
       "purl": "pkg:generic/nf_conntrack_proto_gre",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_proto_gre.ko",
@@ -3729,7 +3729,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "a64660bb-cbd2-4306-829a-f72a9600e15a",
+      "bom-ref": "b38eaa9f-a769-4fec-95ce-a78c16312201",
       "name": "nf_conntrack_rtsp",
       "purl": "pkg:generic/nf_conntrack_rtsp",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_rtsp.ko",
@@ -3752,7 +3752,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "fae549ff-d425-4994-a404-a23c34ad6da2",
+      "bom-ref": "eaaad74b-dfc2-4b90-a1a3-fb9823cce3d1",
       "name": "nf_conntrack_sip",
       "purl": "pkg:generic/nf_conntrack_sip",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_sip.ko",
@@ -3775,7 +3775,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "5595c858-c920-4f22-9772-a1a5cdfd467a",
+      "bom-ref": "d2d567a8-827c-4790-9c7d-d3b887b81829",
       "name": "nf_conntrack_tftp",
       "purl": "pkg:generic/nf_conntrack_tftp",
       "description": "lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko",
@@ -3798,7 +3798,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "58961ee4-5bcc-4a85-b551-ad198f68e636",
+      "bom-ref": "56b69e21-509d-4685-9727-0d1fb18ace59",
       "name": "shortcut-fe-cm",
       "purl": "pkg:generic/shortcut-fe-cm",
       "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko",
@@ -3821,7 +3821,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "b3959f33-bfc0-4872-86a8-25d2ce880d1a",
+      "bom-ref": "dba21a86-be6e-4ee3-8a7f-5a68c12b037a",
       "name": "shortcut-fe",
       "purl": "pkg:generic/shortcut-fe",
       "description": "lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko",
@@ -3844,7 +3844,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "45a8dfa5-e908-4e48-9bd2-7fe570794d38",
+      "bom-ref": "e3a8ce6a-31b4-4525-8cd6-2258622a17f7",
       "name": "l2tp_ppp",
       "purl": "pkg:generic/l2tp_ppp",
       "description": "lib/modules/l2tp_ppp.ko",
@@ -3867,7 +3867,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "b0032ae6-04f3-4377-9988-39dbfc241ba8",
+      "bom-ref": "771a1b78-eef6-47ef-aa23-de8d21d8a72d",
       "name": "pppol2tp",
       "purl": "pkg:generic/pppol2tp",
       "description": "lib/modules/pppol2tp.ko",
@@ -3890,7 +3890,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "72542a9b-5ca4-4dee-a7f8-86b6ab3934ba",
+      "bom-ref": "db1527c1-abb6-46ff-a52f-a8d479613b57",
       "name": "pptp",
       "purl": "pkg:generic/pptp",
       "description": "lib/modules/pptp.ko",
@@ -3913,7 +3913,7 @@
     },
     {
       "type": "firmware",
-      "bom-ref": "89f5aab0-2631-4b8f-8a01-b30ddc345d79",
+      "bom-ref": "dcdeb40d-7105-49c2-b66e-e30563e6e3fa",
       "name": "tp_domain",
       "purl": "pkg:generic/tp_domain",
       "description": "lib/modules/tp_domain.ko",

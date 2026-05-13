@@ -833,25 +833,26 @@ def infer_attack_paths(
     return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]
 
 
-def build_model(analysis_dir: Path, firmware_id: str) -> dict:
-    print(f"[*] Parsing analysis files from {analysis_dir}/")
+def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = None) -> dict:
+    raw_dir = raw_dir or analysis_dir
+    print(f"[*] Parsing analysis files from {raw_dir}/")
 
-    users        = parse_users(analysis_dir)
-    setuid       = parse_setuid(analysis_dir)
-    caps         = parse_capabilities(analysis_dir)
-    world_writable = parse_world_writable(analysis_dir)
-    init         = parse_init_services(analysis_dir)
-    web          = parse_web(analysis_dir)
-    protocols    = parse_protocols(analysis_dir)
-    credentials  = parse_credentials(analysis_dir)
-    weak_crypto  = parse_weak_crypto(analysis_dir)
-    debug        = parse_debug(analysis_dir)
-    ipc          = parse_ipc(analysis_dir)
-    certs        = parse_certs(analysis_dir)
-    nvram        = parse_nvram(analysis_dir)
-    shellcheck   = parse_shellcheck(analysis_dir)
-    hardening    = parse_hardening(analysis_dir)
-    arch         = parse_architecture(analysis_dir)
+    users        = parse_users(raw_dir)
+    setuid       = parse_setuid(raw_dir)
+    caps         = parse_capabilities(raw_dir)
+    world_writable = parse_world_writable(raw_dir)
+    init         = parse_init_services(raw_dir)
+    web          = parse_web(raw_dir)
+    protocols    = parse_protocols(raw_dir)
+    credentials  = parse_credentials(raw_dir)
+    weak_crypto  = parse_weak_crypto(raw_dir)
+    debug        = parse_debug(raw_dir)
+    ipc          = parse_ipc(raw_dir)
+    certs        = parse_certs(raw_dir)
+    nvram        = parse_nvram(raw_dir)
+    shellcheck   = parse_shellcheck(raw_dir)
+    hardening    = parse_hardening(raw_dir)
+    arch         = parse_architecture(raw_dir)
 
     privesc = {
         "setuid_binaries": setuid,
@@ -927,9 +928,14 @@ def main():
         raise SystemExit(1)
 
     firmware_id = analysis_dir.name
-    out_file = args.output or Path(f"{firmware_id}_attack_surface.json")
+    if args.output:
+        out_file = args.output
+    else:
+        as_dir = analysis_dir / "attack_surface"
+        as_dir.mkdir(exist_ok=True)
+        out_file = as_dir / "attack_surface.json"
 
-    model = build_model(analysis_dir, firmware_id)
+    model = build_model(analysis_dir, firmware_id, raw_dir=analysis_dir / "raw")
 
     out_file.write_text(json.dumps(model, indent=2))
     print(f"\n[+] Attack surface model written to {out_file}")

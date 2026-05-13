@@ -1,7 +1,18 @@
+import json
+import re
 import subprocess
 from pathlib import Path
 
 from .context import AnalysisContext, section, existing, multi_section_file
+
+# Known service binary names — used for init-script detection
+_KNOWN_SERVICES = {"httpd", "sshd", "dropbear", "telnetd", "ftpd",
+                   "tftpd", "snmpd", "upnpd", "dhcpd", "dnsd"}
+
+_EMPTY_HASH = {"*", "!", "x", ""}
+_MAX_EVIDENCE = 5
+_MAX_ITEMS    = 10
+_MAX_LIST     = 20
 
 
 def analyze_scripts(ctx: AnalysisContext):
@@ -62,13 +73,23 @@ def analyze_systemd_services(ctx: AnalysisContext):
 
 
 def analyze_init_scripts(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "init_scripts.txt"
+    out_file  = ctx.out_dir / "init_scripts.txt"
+    json_file = ctx.out_dir / "init_scripts.json"
     init_dirs = existing(ctx.rootfs / "etc/init.d", ctx.rootfs / "etc/rc.d")
+
+    _empty = {
+        "detected_services": [], "explicit_ports": [], "has_command_injection": False,
+        "injection_evidence": [], "has_hardcoded_creds": False,
+        "vendor_services": [], "outbound_connections": [], "has_firewall_rules": False,
+    }
+
     if not init_dirs:
         out_file.write_text("No init.d / rc.d directories found.\n")
+        json_file.write_text(json.dumps(_empty, indent=2))
         print(f"  {'init_scripts.txt':45s}  no init dirs found")
         return
-    multi_section_file([
+
+    captured = multi_section_file([
         ("Network-Exposed Services",
          ["grep", "-rE", "telnetd|ftpd|dropbear|sshd|httpd|dnsd|dhcpd|tftpd|snmpd|upnpd|tr069"] + init_dirs),
         ("Explicit Port Bindings",
@@ -91,9 +112,34 @@ def analyze_init_scripts(ctx: AnalysisContext):
          ["grep", "-rE", "tdpServer|tddp|cloud|onemesh|cwmp|omcid"] + init_dirs),
     ], out_file, "init_scripts.txt")
 
+    combined = (
+        " ".join(captured.get("Network-Exposed Services", [])) + " " +
+        " ".join(captured.get("Telnet and Debug Interfaces", [])) + " " +
+        " ".join(captured.get("Vendor-Specific Backdoor Services (TP-Link)", []))
+    )
+    port_raw         = "\n".join(captured.get("Explicit Port Bindings", []))
+    injection_lines  = captured.get("Command Injection Vectors", [])
+    creds_lines      = captured.get("Hardcoded Credentials", [])
+    vendor_lines     = captured.get("Vendor-Specific Backdoor Services (TP-Link)", [])
+    outbound_lines   = captured.get("Outbound Connections", [])
+    firewall_lines   = captured.get("Firewall Rules", [])
+
+    json_file.write_text(json.dumps({
+        "detected_services":     [s for s in _KNOWN_SERVICES if s in combined],
+        "explicit_ports":        list({int(p) for p in re.findall(r"-p\s+(\d+)", port_raw)}),
+        "has_command_injection": bool(injection_lines),
+        "injection_evidence":    injection_lines[:_MAX_EVIDENCE],
+        "has_hardcoded_creds":   bool(creds_lines),
+        "vendor_services":       vendor_lines[:_MAX_ITEMS],
+        "outbound_connections":  outbound_lines[:_MAX_ITEMS],
+        "has_firewall_rules":    bool(firewall_lines),
+    }, indent=2))
+
 
 def analyze_users_groups(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "users_groups.txt"
+    out_file  = ctx.out_dir / "users_groups.txt"
+    json_file = ctx.out_dir / "users_groups.json"
+
     HASH_ALGOS = {
         "$1$":  "MD5-crypt       [WEAK — crackable]",
         "$2a$": "bcrypt",
@@ -108,6 +154,7 @@ def analyze_users_groups(ctx: AnalysisContext):
         sections.append(section(name, p.read_text(errors="replace") if p.exists() else "(not found)"))
 
     shadow_p = ctx.rootfs / "etc/shadow"
+    shadow_hashes: dict = {}
     if shadow_p.exists():
         lines = []
         for line in shadow_p.read_text(errors="replace").splitlines():
@@ -115,6 +162,7 @@ def analyze_users_groups(ctx: AnalysisContext):
             if len(parts) < 2:
                 continue
             user, pw = parts[0], parts[1]
+            shadow_hashes[user] = pw
             if pw in ("*", "!"):
                 status = "locked / no login"
             elif pw == "":
@@ -125,12 +173,35 @@ def analyze_users_groups(ctx: AnalysisContext):
         sections.append(section("Password Hash Classification", "\n".join(lines)))
 
     out_file.write_text("".join(sections))
-    total = sum(len(s.splitlines()) for s in sections)
-    print(f"  {'users_groups.txt':45s}  {total} lines")
+    print(f"  {'users_groups.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
+
+    # Parse passwd + shadow into structured user list
+    users = []
+    passwd_p = ctx.rootfs / "etc/passwd"
+    if passwd_p.exists():
+        for line in passwd_p.read_text(errors="replace").splitlines():
+            parts = line.split(":")
+            if len(parts) < 7:
+                continue
+            name, pw, uid, gid, _, home, shell = parts[:7]
+            effective = shadow_hashes.get(name, pw)
+            users.append({
+                "name":          name,
+                "uid":           int(uid) if uid.isdigit() else uid,
+                "gid":           int(gid) if gid.isdigit() else gid,
+                "home":          home,
+                "shell":         shell,
+                "has_password":  effective not in _EMPTY_HASH,
+                "password_hash": effective if effective not in _EMPTY_HASH else None,
+            })
+
+    json_file.write_text(json.dumps({"users": users}, indent=2))
 
 
 def analyze_ssh_keys(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "ssh_keys.txt"
+    out_file  = ctx.out_dir / "ssh_keys.txt"
+    json_file = ctx.out_dir / "ssh_keys.json"
+
     r = subprocess.run(
         ["find", str(ctx.rootfs),
          "-name", "authorized_keys", "-o", "-name", "id_rsa", "-o", "-name", "id_ecdsa",
@@ -139,17 +210,20 @@ def analyze_ssh_keys(ctx: AnalysisContext):
         capture_output=True, text=True,
     )
     sections = [section("SSH Key Files Found", r.stdout)]
-    for path_str in r.stdout.strip().splitlines():
+    key_files = [l.strip() for l in r.stdout.splitlines() if l.strip()]
+    for path_str in key_files:
         p = Path(path_str)
         if p.is_file():
             sections.append(section(str(p.relative_to(ctx.rootfs)), p.read_text(errors="replace")))
     out_file.write_text("".join(sections))
-    total = sum(len(s.splitlines()) for s in sections)
-    print(f"  {'ssh_keys.txt':45s}  {total} lines")
+    print(f"  {'ssh_keys.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
+
+    json_file.write_text(json.dumps({"files": key_files}, indent=2))
 
 
 def analyze_credentials(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "credentials.json"
+    captured = multi_section_file([
         ("Passwords and Secrets (all config files)",
          ["grep", "-Ei", "password|passwd|secret|community|apikey|token|key="] + ctx.configs),
         ("Hardcoded IP Addresses (all config files)",
@@ -158,9 +232,21 @@ def analyze_credentials(ctx: AnalysisContext):
          ["grep", "-E", r"https?://"] + ctx.configs),
     ], ctx.out_dir / "credentials.txt", "credentials.txt")
 
+    hardcoded = [
+        l for l in captured.get("Passwords and Secrets (all config files)", [])
+        if not l.startswith("Binary file")
+    ][:_MAX_LIST]
+    cloud_urls = captured.get("Cloud and Update Endpoints (all config files)", [])[:_MAX_LIST]
+
+    json_file.write_text(json.dumps({
+        "hardcoded_in_configs": hardcoded,
+        "cloud_endpoints":      cloud_urls,
+    }, indent=2))
+
 
 def analyze_default_credentials(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "default_credentials.json"
+    captured = multi_section_file([
         ("Default Passwords / SSIDs in Configs",
          ["grep", "-Ei", r"admin|default.*pass|ssid|tplink|admin123|password=admin"] + ctx.configs),
         ("Default Credentials in Scripts",
@@ -168,9 +254,17 @@ def analyze_default_credentials(ctx: AnalysisContext):
           str(ctx.rootfs / "etc")] if (ctx.rootfs / "etc").exists() else []),
     ], ctx.out_dir / "default_credentials.txt", "default_credentials.txt")
 
+    defaults = (
+        captured.get("Default Passwords / SSIDs in Configs", []) +
+        captured.get("Default Credentials in Scripts", [])
+    )[:_MAX_LIST]
+
+    json_file.write_text(json.dumps({"defaults": defaults}, indent=2))
+
 
 def analyze_debug_artifacts(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "debug_artifacts.json"
+    captured = multi_section_file([
         ("Debug / Test / Factory Files",
          ["find", str(ctx.rootfs), "-iname", "*debug*", "-o", "-iname", "*test*",
           "-o", "-iname", "*factory*", "-o", "-iname", "*diag*"]),
@@ -178,6 +272,13 @@ def analyze_debug_artifacts(ctx: AnalysisContext):
          ["grep", "-rEi", "debug|verbose|factory|test.mode|diagnostic",
           str(ctx.rootfs / "etc")] if (ctx.rootfs / "etc").exists() else []),
     ], ctx.out_dir / "debug_artifacts.txt", "debug_artifacts.txt")
+
+    findings = [
+        {"context": title, "items": lines[:_MAX_ITEMS]}
+        for title, lines in captured.items()
+        if lines
+    ]
+    json_file.write_text(json.dumps(findings, indent=2))
 
 
 def analyze_dns_routing(ctx: AnalysisContext):
@@ -225,7 +326,7 @@ def analyze_scheduled_tasks(ctx: AnalysisContext):
 
 def analyze_mount_points(ctx: AnalysisContext):
     out_file = ctx.out_dir / "mount_points.txt"
-    VOLATILE = {"tmpfs", "overlayfs", "overlay", "ramfs"}
+    VOLATILE  = {"tmpfs", "overlayfs", "overlay", "ramfs"}
     SENSITIVE = {"/etc", "/var", "/sbin", "/bin", "/usr", "/lib"}
     all_sections = []
     for name in ("etc/fstab", "etc/mtab"):
@@ -259,24 +360,33 @@ def analyze_firmware_update(ctx: AnalysisContext):
 
 
 def analyze_certificates(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "certificates_keys.txt"
+    out_file  = ctx.out_dir / "certificates_keys.txt"
+    json_file = ctx.out_dir / "certificates_keys.json"
+
     r = subprocess.run(
         ["find", str(ctx.rootfs), "-name", "*.pem", "-o", "-name", "*.key",
          "-o", "-name", "*.crt", "-o", "-name", "*.p12", "-o", "-name", "*.der"],
         capture_output=True, text=True,
     )
-    sections = [section("Certificate and Key Files", r.stdout)]
     r2 = subprocess.run(
         ["grep", "-rE", "BEGIN (RSA|EC|PRIVATE|CERTIFICATE)", str(ctx.rootfs)],
         capture_output=True, text=True,
     )
-    sections.append(section("Embedded Keys / Certs in Files", r2.stdout))
-    out_file.write_text("".join(sections))
-    print(f"  {'certificates_keys.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
+    out_file.write_text(
+        section("Certificate and Key Files", r.stdout) +
+        section("Embedded Keys / Certs in Files", r2.stdout)
+    )
+    print(f"  {'certificates_keys.txt':45s}  {len(r.stdout.strip().splitlines()) + len(r2.stdout.strip().splitlines())} lines")
+
+    cert_files = [l.strip() for l in r.stdout.splitlines()  if l.strip()]
+    embedded   = [l.strip() for l in r2.stdout.splitlines() if l.strip()][:_MAX_ITEMS]
+    json_file.write_text(json.dumps({"files": cert_files, "embedded_in_binaries": embedded}, indent=2))
 
 
 def analyze_unix_sockets(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "unix_sockets.txt"
+    out_file  = ctx.out_dir / "unix_sockets.txt"
+    json_file = ctx.out_dir / "unix_sockets.json"
+
     r1 = subprocess.run(
         ["find", str(ctx.rootfs), "-name", "*.sock", "-o", "-name", "*.socket"],
         capture_output=True, text=True,
@@ -289,18 +399,29 @@ def analyze_unix_sockets(ctx: AnalysisContext):
     out_file.write_text(section("Unix Socket Files", r1.stdout) + section("Unix Socket References", r2.stdout))
     print(f"  {'unix_sockets.txt':45s}  {len(r1.stdout.strip().splitlines()) + len(r2.stdout.strip().splitlines())} lines")
 
+    socket_files = [l.strip() for l in r1.stdout.splitlines() if l.strip()]
+    references   = [l.strip() for l in r2.stdout.splitlines() if l.strip()][:_MAX_ITEMS]
+    json_file.write_text(json.dumps({"socket_files": socket_files, "references": references}, indent=2))
+
 
 def analyze_nvram(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "nvram.json"
+    captured = multi_section_file([
         ("nvram_get / nvram_set calls",
          ["grep", "-rE", "nvram_get|nvram_set|nvram get|nvram set", str(ctx.rootfs)]),
         ("NVRAM key references",
          ["grep", "-rE", r"nvram\s+\w+", str(ctx.rootfs)]),
     ], ctx.out_dir / "nvram.txt", "nvram.txt")
 
+    evidence: list = []
+    for lines in captured.values():
+        evidence.extend(lines[:_MAX_EVIDENCE])
+    json_file.write_text(json.dumps({"evidence": evidence[:_MAX_LIST]}, indent=2))
+
 
 def analyze_world_writable(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "world_writable.json"
+    captured = multi_section_file([
         ("World-Writable Files",
          ["find", str(ctx.rootfs), "-type", "f", "-perm", "-002"]),
         ("World-Writable Directories",
@@ -308,3 +429,9 @@ def analyze_world_writable(ctx: AnalysisContext):
         ("SetGID Binaries",
          ["find", str(ctx.rootfs), "-perm", "-2000"]),
     ], ctx.out_dir / "world_writable.txt", "world_writable.txt")
+
+    json_file.write_text(json.dumps({
+        "files":  captured.get("World-Writable Files", []),
+        "dirs":   captured.get("World-Writable Directories", []),
+        "setgid": captured.get("SetGID Binaries", []),
+    }, indent=2))

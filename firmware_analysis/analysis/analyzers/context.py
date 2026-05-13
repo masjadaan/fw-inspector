@@ -38,17 +38,28 @@ def find_all_configs(rootfs: Path) -> list:
     ]
 
 
-def multi_section_file(checks: list, out_file: Path, label: str):
-    """Run a list of (title, cmd) checks, write all sections to one file."""
+def multi_section_file(checks: list, out_file: Path, label: str) -> dict:
+    """Run a list of (title, cmd) checks, write all sections to one file.
+
+    Returns {title: [non-empty lines]} for callers that need the raw data.
+    """
+    captured: dict = {}
     sections = []
     total_lines = 0
     for title, cmd in checks:
+        if not cmd:
+            captured[title] = []
+            sections.append(section(title, ""))
+            continue
         r = subprocess.run(cmd, capture_output=True, text=True)
         output = r.stdout.strip()
-        total_lines += len(output.splitlines()) if output else 0
+        lines = [l for l in output.splitlines() if l.strip()]
+        total_lines += len(lines)
+        captured[title] = lines
         sections.append(section(title, output))
     out_file.write_text("".join(sections))
     print(f"  {out_file.name:45s}  {total_lines} lines across {len(checks)} checks")
+    return captured
 
 
 @dataclass

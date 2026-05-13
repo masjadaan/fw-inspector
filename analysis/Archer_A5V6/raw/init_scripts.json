@@ -1,0 +1,12 @@
+{
+  "detected_services": [
+    "dropbear"
+  ],
+  "explicit_ports": [],
+  "has_command_injection": false,
+  "injection_evidence": [],
+  "has_hardcoded_creds": true,
+  "vendor_services": [],
+  "outbound_connections": [],
+  "has_firewall_rules": false
+}

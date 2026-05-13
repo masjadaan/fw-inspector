@@ -1,0 +1,8 @@
+{
+  "arch": "MIPS",
+  "bits": 32,
+  "endianness": "little-endian",
+  "endianness_short": "LSB",
+  "confidence": 0.77,
+  "elf_count": 98
+}

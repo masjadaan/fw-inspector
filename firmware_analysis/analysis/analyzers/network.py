@@ -1,8 +1,13 @@
+import json
+
 from .context import AnalysisContext, multi_section_file
+
+_MAX_EVIDENCE = 5
 
 
 def analyze_protocols(ctx: AnalysisContext):
-    multi_section_file([
+    json_file = ctx.out_dir / "protocols.json"
+    captured = multi_section_file([
         ("SNMP Community Strings",
          ["grep", "-Ei", "community|snmpd|public|private"] + ctx.configs),
         ("UPnP / SSDP",
@@ -12,6 +17,18 @@ def analyze_protocols(ctx: AnalysisContext):
         ("MQTT",
          ["grep", "-Ei", "mqtt|broker"] + ctx.configs),
     ], ctx.out_dir / "protocols.txt", "protocols.txt")
+
+    proto_map = {
+        "snmp":  "SNMP Community Strings",
+        "upnp":  "UPnP / SSDP",
+        "tr069": "TR-069 / CWMP",
+        "mqtt":  "MQTT",
+    }
+    result = {}
+    for proto, title in proto_map.items():
+        lines = captured.get(title, [])
+        result[proto] = {"present": bool(lines), "evidence": lines[:_MAX_EVIDENCE]}
+    json_file.write_text(json.dumps(result, indent=2))
 
 
 def analyze_interface_binding(ctx: AnalysisContext):

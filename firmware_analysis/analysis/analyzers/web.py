@@ -1,44 +1,89 @@
+import json
 import re
 import subprocess
 from pathlib import Path
 
 from .context import AnalysisContext, section, existing, multi_section_file
 
+_MAX_LIST = 20
+
 
 def analyze_web_interface(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "web_interface.txt"
-    web_roots = existing(ctx.rootfs / "www", ctx.rootfs / "web", ctx.rootfs / "webroot", ctx.rootfs / "usr/share/www")
-    checks = [section("CGI Scripts",
-                       subprocess.run(["find", str(ctx.rootfs), "-name", "*.cgi"], capture_output=True, text=True).stdout)]
-    checks.append(section("Lua Handlers",
-                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.lua"], capture_output=True, text=True).stdout))
-    checks.append(section("JavaScript Files",
-                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.js"], capture_output=True, text=True).stdout))
+    out_file  = ctx.out_dir / "web_interface.txt"
+    json_file = ctx.out_dir / "web_interface.json"
+    web_roots = existing(ctx.rootfs / "www", ctx.rootfs / "web",
+                         ctx.rootfs / "webroot", ctx.rootfs / "usr/share/www")
+
+    cgi_r  = subprocess.run(["find", str(ctx.rootfs), "-name", "*.cgi"],
+                             capture_output=True, text=True)
+    lua_r  = subprocess.run(["find", str(ctx.rootfs), "-name", "*.lua"],
+                             capture_output=True, text=True)
+    js_r   = subprocess.run(["find", str(ctx.rootfs), "-name", "*.js"],
+                             capture_output=True, text=True)
+    html_r = subprocess.run(["find", str(ctx.rootfs), "-name", "*.html",
+                              "-o", "-name", "*.htm"], capture_output=True, text=True)
+
+    api_raw = ""
     if web_roots:
-        r = subprocess.run(["grep", "-rE", r"url|api|endpoint|/cgi-bin|action="] + web_roots, capture_output=True, text=True)
-        checks.append(section("API Endpoints in Web Root", r.stdout))
-    checks.append(section("HTML Pages",
-                           subprocess.run(["find", str(ctx.rootfs), "-name", "*.html", "-o", "-name", "*.htm"],
-                                          capture_output=True, text=True).stdout))
-    out_file.write_text("".join(checks))
-    print(f"  {'web_interface.txt':45s}  {sum(len(c.splitlines()) for c in checks)} lines")
+        api_r   = subprocess.run(["grep", "-rE", r"url|api|endpoint|/cgi-bin|action="] + web_roots,
+                                  capture_output=True, text=True)
+        api_raw = api_r.stdout
+
+    text_parts = [
+        section("CGI Scripts",       cgi_r.stdout),
+        section("Lua Handlers",      lua_r.stdout),
+        section("JavaScript Files",  js_r.stdout),
+    ]
+    if api_raw:
+        text_parts.append(section("API Endpoints in Web Root", api_raw))
+    text_parts.append(section("HTML Pages", html_r.stdout))
+
+    out_file.write_text("".join(text_parts))
+    print(f"  {'web_interface.txt':45s}  {sum(len(p.splitlines()) for p in text_parts)} lines")
+
+    cgi_scripts  = [l.strip() for l in cgi_r.stdout.splitlines()  if l.strip()]
+    lua_handlers = [l.strip() for l in lua_r.stdout.splitlines()  if l.strip()]
+    api_endpoints = [l.strip() for l in api_raw.splitlines() if l.strip()][:_MAX_LIST]
+
+    json_file.write_text(json.dumps({
+        "cgi_scripts":   cgi_scripts,
+        "lua_handlers":  lua_handlers,
+        "api_endpoints": api_endpoints,
+    }, indent=2))
 
 
 def analyze_web_server_configs(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "web_server_configs.txt"
+    out_file  = ctx.out_dir / "web_server_configs.txt"
+    json_file = ctx.out_dir / "web_server_configs.json"
+
     r = subprocess.run(
         ["find", str(ctx.rootfs), "-name", "httpd.conf", "-o", "-name", "nginx.conf",
          "-o", "-name", "lighttpd.conf", "-o", "-name", "uhttpd.conf", "-o", "-name", "boa.conf"],
         capture_output=True, text=True,
     )
     sections = [section("Web Server Config Files Found", r.stdout)]
+    config_files: list[str] = []
+    all_config_content = ""
     for path_str in r.stdout.strip().splitlines():
         p = Path(path_str)
         if p.is_file():
-            sections.append(section(str(p.relative_to(ctx.rootfs)), p.read_text(errors="replace")))
+            content = p.read_text(errors="replace")
+            config_files.append(str(p.relative_to(ctx.rootfs)))
+            all_config_content += content
+            sections.append(section(str(p.relative_to(ctx.rootfs)), content))
     out_file.write_text("".join(sections))
-    total = sum(len(s.splitlines()) for s in sections)
-    print(f"  {'web_server_configs.txt':45s}  {total} lines")
+    print(f"  {'web_server_configs.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
+
+    ports: list[int] = []
+    for m in re.finditer(r"(?:port|listen)[^\d]*(\d{2,5})", all_config_content, re.IGNORECASE):
+        p_val = int(m.group(1))
+        if 1 <= p_val <= 65535:
+            ports.append(p_val)
+
+    json_file.write_text(json.dumps({
+        "config_files":   config_files,
+        "inferred_ports": list(set(ports)) or [80],
+    }, indent=2))
 
 
 def analyze_cgi_injection(ctx: AnalysisContext):

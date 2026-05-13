@@ -1,0 +1,6 @@
+{
+  "files": [],
+  "embedded_in_binaries": [
+    "/output/extracted/rootfs/squashfs-root/etc/cloud/2048_newroot.cer:-----BEGIN CERTIFICATE-----"
+  ]
+}

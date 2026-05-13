@@ -1,0 +1,18 @@
+{
+  "snmp": {
+    "present": false,
+    "evidence": []
+  },
+  "upnp": {
+    "present": false,
+    "evidence": []
+  },
+  "tr069": {
+    "present": false,
+    "evidence": []
+  },
+  "mqtt": {
+    "present": false,
+    "evidence": []
+  }
+}

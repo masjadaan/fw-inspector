@@ -2,7 +2,7 @@ import json
 import re
 import subprocess
 
-from .context import AnalysisContext, section, multi_section_file
+from .context import AnalysisContext, section, multi_section_file, run
 from .elf_cache import _WEAK_SYM_PAT, _FILE_TIMEOUT
 
 
@@ -58,9 +58,12 @@ def analyze_binary_inventory(ctx: AnalysisContext):
 
 
 def analyze_architecture(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "architecture.txt"
+    out_file  = ctx.out_dir / "architecture.txt"
+    json_file = ctx.out_dir / "architecture.json"
     _PAT  = re.compile(r'ELF\s+(\d+)-bit\s+(LSB|MSB)\s+\w+,\s+([^,]+)')
     _NAME = {"Intel": "x86", "AArch64": "ARM64"}
+    _EMPTY = {"arch": "unknown", "bits": 0, "endianness": "unknown",
+              "endianness_short": "?", "confidence": 0.0, "elf_count": 0}
 
     votes: dict = {}
     for path, rec in ctx.elf_cache.items():
@@ -76,6 +79,7 @@ def analyze_architecture(ctx: AnalysisContext):
 
     if not votes:
         out_file.write_text(section("Detected Architecture", "(no ELF binaries found)"))
+        json_file.write_text(json.dumps(_EMPTY, indent=2))
         print(f"  {'architecture.txt':45s}  no ELF binaries")
         return
 
@@ -95,16 +99,22 @@ def analyze_architecture(ctx: AnalysisContext):
         f"  elf_count        : {total_elf}",
         f"  agreeing_count   : {agreeing}",
     ])
-
     evidence = [
         f"  {p.relative_to(ctx.rootfs)}  |  {ctx.elf_cache[p].file_type[:80]}"
         for p in sorted(votes[dominant])[:20]
     ]
-
     out_file.write_text(
         section("Detected Architecture", summary) +
         section(f"Per-Binary Evidence ({agreeing} matching, up to 20 shown)", "\n".join(evidence))
     )
+    json_file.write_text(json.dumps({
+        "arch":             arch,
+        "bits":             bits,
+        "endianness":       endianness,
+        "endianness_short": endian_short,
+        "confidence":       confidence,
+        "elf_count":        total_elf,
+    }, indent=2))
     print(f"  {'architecture.txt':45s}  {arch} {bits}-bit {endianness}  (conf={confidence}, {agreeing}/{total_elf} ELFs)")
 
 
@@ -128,7 +138,8 @@ def analyze_hardcoded_strings(ctx: AnalysisContext):
 
 
 def analyze_weak_crypto(ctx: AnalysisContext):
-    out_file = ctx.out_dir / "weak_crypto.txt"
+    out_file  = ctx.out_dir / "weak_crypto.txt"
+    json_file = ctx.out_dir / "weak_crypto.json"
     checks = [
         ("Weak Crypto in Config Files",
          ["grep", "-Ei", r"md5|des|rc4|ecb|base64.*key|static.*key"] + ctx.configs),
@@ -137,21 +148,33 @@ def analyze_weak_crypto(ctx: AnalysisContext):
          if (ctx.rootfs / "usr").exists() else []),
     ]
     checks = [(t, c) for t, c in checks if c]
-    multi_section_file(checks, out_file, "weak_crypto.txt")
+    captured = multi_section_file(checks, out_file, "weak_crypto.txt")
 
-    findings = []
+    elf_findings = []
     for path, rec in ctx.elf_cache.items():
         syms = [s for s in rec.crypto_imports if _WEAK_SYM_PAT.match(s)]
         if syms:
-            findings.append(f"  {path.relative_to(ctx.rootfs)}: {', '.join(syms)}")
+            elf_findings.append(f"  {path.relative_to(ctx.rootfs)}: {', '.join(syms)}")
     sec = section(
         "Binaries Importing Weak Crypto Symbols  [readelf — concrete, not inferred]",
-        "\n".join(findings) if findings else "(none)",
+        "\n".join(elf_findings) if elf_findings else "(none)",
     )
     with open(out_file, "a") as f:
         f.write(sec)
-    if findings:
-        print(f"    → {len(findings)} ELF binaries import weak crypto symbols (readelf)")
+    if elf_findings:
+        print(f"    → {len(elf_findings)} ELF binaries import weak crypto symbols (readelf)")
+
+    json_data = [
+        {"context": title, "evidence": lines[:5]}
+        for title, lines in captured.items()
+        if lines
+    ]
+    if elf_findings:
+        json_data.append({
+            "context":  "Binaries Importing Weak Crypto Symbols",
+            "evidence": elf_findings[:5],
+        })
+    json_file.write_text(json.dumps(json_data, indent=2))
 
 
 def analyze_hardening(ctx: AnalysisContext):
@@ -344,6 +367,23 @@ def analyze_linker_config(ctx: AnalysisContext):
 
     out_file.write_text("".join(all_sections))
     print(f"  {'linker_config.txt':45s}  {sum(len(s.splitlines()) for s in all_sections)} lines")
+
+
+def analyze_httpd_binaries(ctx: AnalysisContext):
+    """Find HTTP server binaries and write httpd_binaries.txt + httpd_binaries.json."""
+    out_file  = ctx.out_dir / "httpd_binaries.txt"
+    json_file = ctx.out_dir / "httpd_binaries.json"
+    r = subprocess.run(
+        ["find", str(ctx.rootfs),
+         "-name", "*httpd*", "-o", "-name", "*nginx*", "-o", "-name", "*boa*",
+         "-o", "-name", "*lighttpd*", "-o", "-name", "*uhttpd*"],
+        capture_output=True, text=True,
+    )
+    out_file.write_text(r.stdout)
+    binaries = [l.strip() for l in r.stdout.splitlines() if l.strip()]
+    json_file.write_text(json.dumps({"binaries": binaries}, indent=2))
+    status = f"{len(binaries)} found" if binaries else "empty"
+    print(f"  {out_file.name:45s}  {status}")
 
 
 def _strings_http_binaries(ctx: AnalysisContext):

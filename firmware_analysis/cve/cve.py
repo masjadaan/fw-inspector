@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CVE enrichment — Option B (host-side).
+CVE enrichment — host-side.
 
 Runs Grype against the SBOM produced by analyze.py, then cross-references
 every CVE finding with two firmware-specific signals already in the SBOM:
@@ -9,12 +9,14 @@ every CVE finding with two firmware-specific signals already in the SBOM:
      properties on each component — a vulnerable library in a binary with no
      mitigations is far more exploitable than the same library in a hardened one.
 
-  2. Network reachability — derived by tracing entry-point binaries (from
-     <firmware>_attack_surface.json) through their NEEDED shared libraries.
-     A CVE in a library linked by httpd or dropbear is immediately reachable
-     from the network; one only linked by an offline utility is not.
+  2. Network reachability — derived by reading graph.json (produced by graph.py)
+     and traversing the edge chain:
+         TrustZone(WAN/LAN) ← REACHABLE_FROM ← Port ← EXPOSES ← Service ← PROVIDES ← Binary
+     The NEEDED shared libraries of each reachable binary are then resolved via
+     the SBOM. A CVE in a library linked by httpd or dropbear is immediately
+     reachable from the network; one only linked by an offline utility is not.
 
-Output: <analysis_dir>/cve_report.json
+Output: <analysis_dir>/sbom/cve_report.json
 """
 
 import argparse
@@ -27,8 +29,8 @@ from pathlib import Path
 
 # ── Severity ladder ────────────────────────────────────────────────────────────
 
-_LEVELS  = ["none", "info", "low", "medium", "high", "critical"]
-_WEIGHT  = {s: i for i, s in enumerate(_LEVELS)}
+_LEVELS = ["none", "info", "low", "medium", "high", "critical"]
+_WEIGHT = {s: i for i, s in enumerate(_LEVELS)}
 
 
 def _escalate(base: str, hardening: dict | None, reachable: bool) -> tuple[str, list[str]]:
@@ -69,11 +71,11 @@ def _parse_sbom(sbom: dict) -> tuple[dict, dict]:
     name_to_ref: dict = {}
 
     for comp in sbom.get("components", []):
-        ref  = comp.get("bom-ref", "")
-        name = comp.get("name", "")
+        ref   = comp.get("bom-ref", "")
+        name  = comp.get("name", "")
         props = {p["name"]: p["value"] for p in comp.get("properties", [])}
 
-        needed_raw = props.get("firmware:needed_libs", "")
+        needed_raw  = props.get("firmware:needed_libs", "")
         needed_libs = [
             re.sub(r'\.so.*$', '', lib.strip())
             for lib in needed_raw.split(",")
@@ -100,30 +102,64 @@ def _parse_sbom(sbom: dict) -> tuple[dict, dict]:
 
 # ── Reachability ───────────────────────────────────────────────────────────────
 
-def _reachable_libs(attack_surface: Path | None, ref_to_meta: dict, name_to_ref: dict) -> set[str]:
-    """Return the set of canonical library names reachable from network entry points.
+def _reachable_libs(graph_path: Path | None, ref_to_meta: dict, name_to_ref: dict) -> set[str]:
+    """Return SBOM library names reachable from network entry points.
 
-    Traces: entry_point.binary → SBOM component → firmware:needed_libs.
-    Returns canonical names (libssl, libcrypto, …) matched against SBOM component names.
+    Reads graph.json and traverses:
+        TrustZone(WAN/LAN) ← REACHABLE_FROM ← Port ← EXPOSES ← Service ← PROVIDES ← Binary
+    Then resolves each entry-point binary's NEEDED shared libraries via the SBOM.
     """
-    if not attack_surface or not attack_surface.exists():
+    if not graph_path or not graph_path.exists():
         return set()
 
-    data = json.loads(attack_surface.read_text())
-    entry_binaries: list[str] = []
-    for ep in data.get("entry_points", []):
-        raw = ep.get("binary", "")
-        entry_binaries.append(Path(raw).name)   # "/output/.../httpd" → "httpd"
+    data  = json.loads(graph_path.read_text())
+    nodes = {n["id"]: n for n in data["nodes"]}
 
+    # Build outgoing adjacency: node_id → [(relationship, target_id)]
+    out_edges: dict[str, list[tuple[str, str]]] = {}
+    for e in data["edges"]:
+        out_edges.setdefault(e["source"], []).append((e["relationship"], e["target"]))
+
+    # 1. WAN / LAN trust zone node IDs
+    zone_ids = {
+        nid for nid, n in nodes.items()
+        if n["type"] == "TrustZone" and n["attributes"].get("name") in ("WAN", "LAN")
+    }
+
+    # 2. Port nodes with a REACHABLE_FROM edge into one of those zones
+    reachable_port_ids = {
+        nid for nid, n in nodes.items()
+        if n["type"] == "Port"
+        and any(rel == "REACHABLE_FROM" and tgt in zone_ids
+                for rel, tgt in out_edges.get(nid, []))
+    }
+
+    # 3. Service nodes that EXPOSES a reachable port
+    reachable_svc_ids = {
+        nid for nid, n in nodes.items()
+        if n["type"] == "Service"
+        and any(rel == "EXPOSES" and tgt in reachable_port_ids
+                for rel, tgt in out_edges.get(nid, []))
+    }
+
+    # 4. Binary nodes that PROVIDES a reachable service — these are the entry points
+    entry_binary_names: list[str] = [
+        n["attributes"]["name"]
+        for nid, n in nodes.items()
+        if n["type"] == "Binary"
+        and n["attributes"].get("name")
+        and any(rel == "PROVIDES" and tgt in reachable_svc_ids
+                for rel, tgt in out_edges.get(nid, []))
+    ]
+
+    # 5. Resolve entry-point binaries → NEEDED shared libraries via SBOM
     reachable: set[str] = set()
-    for bin_name in entry_binaries:
+    for bin_name in entry_binary_names:
         ref = name_to_ref.get(bin_name)
         if not ref:
             continue
         meta = ref_to_meta[ref]
-        for lib_canon in meta["needed_libs"]:
-            reachable.add(lib_canon)
-        # also mark the entry binary itself as reachable
+        reachable.update(meta["needed_libs"])
         reachable.add(bin_name)
 
     return reachable
@@ -131,10 +167,12 @@ def _reachable_libs(attack_surface: Path | None, ref_to_meta: dict, name_to_ref:
 
 # ── Grype ──────────────────────────────────────────────────────────────────────
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
 _GRYPE_FALLBACKS = [
     "grype",
     "./bin/grype",
-    str(Path(__file__).parent / "bin" / "grype"),
+    str(_REPO_ROOT / "bin" / "grype"),
 ]
 
 
@@ -199,8 +237,8 @@ def _build_report(
     findings: list[dict] = []
 
     for vuln in vulnerabilities:
-        cve_id  = vuln.get("id", "")
-        ratings = vuln.get("ratings", [])
+        cve_id   = vuln.get("id", "")
+        ratings  = vuln.get("ratings", [])
         base_sev = ratings[0].get("severity", "unknown").lower() if ratings else "unknown"
         cvss     = ratings[0].get("score")                       if ratings else None
 
@@ -214,15 +252,15 @@ def _build_report(
             adj_sev, reasons = _escalate(base_sev, h, is_reachable)
 
             findings.append({
-                "cve":               cve_id,
-                "component":         name,
-                "version":           meta.get("version", ""),
-                "base_severity":     base_sev,
-                "adjusted_severity": adj_sev,
-                "cvss_score":        cvss,
-                "escalated":         adj_sev != base_sev,
+                "cve":                cve_id,
+                "component":          name,
+                "version":            meta.get("version", ""),
+                "base_severity":      base_sev,
+                "adjusted_severity":  adj_sev,
+                "cvss_score":         cvss,
+                "escalated":          adj_sev != base_sev,
                 "escalation_reasons": reasons,
-                "network_reachable": is_reachable,
+                "network_reachable":  is_reachable,
                 "hardening": {
                     k: v for k, v in (h or {}).items() if v is not None
                 },
@@ -286,16 +324,16 @@ def main() -> None:
     )
     parser.add_argument(
         "analysis_dir", type=Path,
-        help="Analysis directory produced by analyze.py (must contain sbom.cdx.json).",
+        help="Analysis directory produced by analyze.py (must contain sbom/sbom.cdx.json).",
     )
     parser.add_argument(
-        "--attack-surface", "-a", type=Path, default=None,
-        help="<firmware>_attack_surface.json for network-reachability cross-referencing. "
-             "Auto-detected from the parent of analysis_dir if omitted.",
+        "--graph", "-g", type=Path, default=None,
+        help="graph.json produced by graph.py for network-reachability data. "
+             "Auto-detected from <analysis_dir>/attack_surface/graph.json if omitted.",
     )
     parser.add_argument(
         "--output", "-o", type=Path, default=None,
-        help="Output path for CVE report JSON (default: <analysis_dir>/cve_report.json).",
+        help="Output path for CVE report JSON (default: <analysis_dir>/sbom/cve_report.json).",
     )
     args = parser.parse_args()
 
@@ -305,25 +343,24 @@ def main() -> None:
 
     if not sbom_path.exists():
         print(f"[!] {sbom_path} not found.")
-        print(f"    Run the analysis pipeline first: python3 extract.py <firmware>")
+        print(f"    Run the analysis pipeline first: python3 pipeline.py <firmware>")
         sys.exit(1)
 
-    # Auto-detect attack surface JSON if not provided
-    attack_surface = args.attack_surface
-    if not attack_surface:
-        candidate = analysis_dir / "attack_surface" / "attack_surface.json"
+    graph_path = args.graph
+    if not graph_path:
+        candidate = analysis_dir / "attack_surface" / "graph.json"
         if candidate.exists():
-            attack_surface = candidate
-            print(f"[*] Auto-detected attack surface: {candidate.name}")
+            graph_path = candidate
+            print(f"[*] Auto-detected graph: {candidate.name}")
 
-    sbom         = json.loads(sbom_path.read_text())
+    sbom = json.loads(sbom_path.read_text())
     ref_to_meta, name_to_ref = _parse_sbom(sbom)
 
-    reachable = _reachable_libs(attack_surface, ref_to_meta, name_to_ref)
+    reachable = _reachable_libs(graph_path, ref_to_meta, name_to_ref)
     if reachable:
         print(f"[*] Network-reachable libraries: {', '.join(sorted(reachable))}")
     else:
-        print("[*] No attack surface loaded — reachability escalation disabled.")
+        print("[*] No graph loaded — reachability escalation disabled.")
 
     vulnerabilities = _run_grype(sbom_path)
 

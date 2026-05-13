@@ -12,40 +12,48 @@ Developed and tested against TP-Link Archer A5 V6 (`Archer_A5V6.bin`).
 firmware.bin
     │
     ▼
-[1] extract.py                      ← orchestrates Docker build + run
+[1] firmware_analysis/extraction/extract.py   ← orchestrates Docker build + run
     │
-    ├─ carve.py                     ← binwalk scan → carve bootloader / kernel / rootfs
-    └─ analyze.py                   ← 40+ checks against extracted rootfs
-    │                                  Phase 4: generates sbom/sbom.cdx.json (CycloneDX 1.5)
+    ├─ carve.py                               ← binwalk scan → carve bootloader / kernel / rootfs
+    └─ analyze.py                             ← 40+ checks against extracted rootfs
+    │                                            Phase 4: generates sbom/sbom.cdx.json (CycloneDX 1.5)
     ▼
-analysis/<firmware>/raw/            ← raw findings (txt, json)
-analysis/<firmware>/sbom/           ← sbom.cdx.json
+analysis/<firmware>/raw/                      ← raw findings (txt + json sidecars)
+analysis/<firmware>/sbom/                     ← sbom.cdx.json
     │
     ▼
-[2] surface.py                      ← synthesize structured attack surface model
+[2] firmware_analysis/surface/surface.py      ← synthesize structured attack surface model
     │
     ▼
 analysis/<firmware>/attack_surface/attack_surface.json
     │
     ▼
-[3] graph.py                        ← build typed entity-relationship graph
+[3] firmware_analysis/graph/graph.py          ← build typed entity-relationship graph
     │
     ▼
 analysis/<firmware>/attack_surface/graph.json
-analysis/<firmware>/attack_surface/graph.dot  (optional --dot flag)
+analysis/<firmware>/attack_surface/graph.dot
     │
     ▼
-[4] cve.py                          ← CVE enrichment (host-side, requires grype)
-    │                                  cross-references CVEs with hardening flags
-    │                                  and network reachability from attack surface
+[4] dot (graphviz)                            ← render DOT to SVG (optional, skipped if not installed)
+    │
+    ▼
+analysis/<firmware>/attack_surface/graph.svg
+    │
+    ▼
+[5] firmware_analysis/cve/cve.py              ← CVE enrichment (host-side, requires grype)
+    │                                            cross-references CVEs with hardening flags
+    │                                            and network reachability from graph.json
     ▼
 analysis/<firmware>/sbom/cve_report.json
     │
     ▼
-[5] heatmap.py                      ← CVE severity heatmap (requires matplotlib)
+[6] firmware_analysis/reporting/heatmap.py    ← CVE severity heatmap (requires matplotlib)
     ▼
 analysis/<firmware>/sbom/cve_heatmap.png
 ```
+
+Each stage records `success | partial | failed | skipped` in `pipeline_manifest.json`. Downstream stages are automatically skipped when a dependency fails, preventing stale data from propagating.
 
 ---
 
@@ -84,13 +92,13 @@ optional:
 
 ### Individual stages
 
-#### Step 1 — Extract and Analyze
+#### Stage 1 — Extract and Analyze
 
 ```bash
-python3 extract.py input/TP-Link/Archer_A5_v6.20/Archer_A5V6.bin
+python3 firmware_analysis/extraction/extract.py input/TP-Link/Archer_A5_v6.20/Archer_A5V6.bin
 ```
 
-Builds the Docker image (first run only), then runs `carve.py` and `analyze.py` inside the container. Analysis output lands in `./analysis/<firmware_name>/raw/` and `./analysis/<firmware_name>/sbom/`.
+Builds the Docker image (first run only), then runs `carve.py` and `analyze.py` inside the container. Output lands in `./analysis/<firmware_name>/raw/` and `./analysis/<firmware_name>/sbom/`.
 
 Options:
 
@@ -103,13 +111,13 @@ optional:
   --skip-build      Skip Docker image rebuild
 ```
 
-### Step 2 — Synthesize Attack Surface
+#### Stage 2 — Synthesize Attack Surface
 
 ```bash
-python3 surface.py analysis/Archer_A5V6/
+python3 firmware_analysis/surface/surface.py analysis/Archer_A5V6/
 ```
 
-Reads analysis files from `raw/` and writes `analysis/<firmware>/attack_surface/attack_surface.json` — a structured summary covering entry points, credentials, weak crypto, debug artifacts, certificates, IPC, and more.
+Reads JSON sidecars from `raw/` and writes `analysis/<firmware>/attack_surface/attack_surface.json`.
 
 Options:
 
@@ -121,11 +129,11 @@ optional:
   --output, -o      Override output path for attack_surface.json
 ```
 
-### Step 3 — Build Entity-Relationship Graph
+#### Stage 3 — Build Entity-Relationship Graph
 
 ```bash
-python3 graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json
-python3 graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json --dot
+python3 firmware_analysis/graph/graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json
+python3 firmware_analysis/graph/graph.py analysis/Archer_A5V6/attack_surface/attack_surface.json --dot
 ```
 
 Graph files are written alongside the input in `attack_surface/`.
@@ -141,7 +149,7 @@ optional:
   --dot             Also write a Graphviz DOT file for visualization
 ```
 
-### Step 4 — CVE Enrichment (host-side)
+#### Stage 5 — CVE Enrichment (host-side)
 
 Requires [grype](https://github.com/anchore/grype) on the host:
 
@@ -149,25 +157,25 @@ Requires [grype](https://github.com/anchore/grype) on the host:
 # Install grype (once)
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh
 
-# Run CVE enrichment (attack surface auto-detected from attack_surface/)
-python3 cve.py analysis/Archer_A5V6/
+# Run CVE enrichment (graph.json auto-detected from attack_surface/)
+python3 firmware_analysis/cve/cve.py analysis/Archer_A5V6/
 ```
 
 Options:
 
 ```
 positional:
-  analysis_dir          Firmware directory (e.g. analysis/Archer_A5V6/)
+  analysis_dir      Firmware directory (e.g. analysis/Archer_A5V6/)
 
 optional:
-  --attack-surface, -a  Override attack surface JSON path
-  --output, -o          Override output path for cve_report.json
+  --graph, -g       Override graph.json path
+  --output, -o      Override output path for cve_report.json
 ```
 
-### Step 5 — CVE Severity Heatmap
+#### Stage 6 — CVE Severity Heatmap
 
 ```bash
-python3 heatmap.py analysis/Archer_A5V6/
+python3 firmware_analysis/reporting/heatmap.py analysis/Archer_A5V6/
 ```
 
 Options:
@@ -214,48 +222,48 @@ Volumes:
 
 ## Analysis Checks (`analyze.py`)
 
-40+ checks run in parallel against the extracted root filesystem:
+40+ checks run in parallel against the extracted root filesystem. Each check produces a `.txt` file for human review. Checks consumed by `surface.py` also produce a `.json` sidecar — the machine-readable contract between stages.
 
-| Check | Output File |
+| Check | Output File(s) |
 |---|---|
-| Services and init scripts | `services.txt`, `init_scripts.txt` |
+| Services and init scripts | `init_scripts.txt`, `init_scripts.json` |
 | Systemd services | `services.txt` |
 | Listening ports | `ports_listen.txt` |
-| Network-facing binaries | `network_binaries.txt`, `httpd_binaries.txt` |
+| Network-facing binaries | `network_binaries.txt`, `httpd_binaries.txt`, `httpd_binaries.json` |
 | Strings in HTTP server binaries | `strings_httpd.txt` |
 | SUID/SGID binaries | `setuid_binaries.txt` |
-| World-writable files | `world_writable.txt` |
+| World-writable files | `world_writable.txt`, `world_writable.json` |
 | Linux capabilities | `capabilities.txt`, `xattr_capabilities.txt` |
-| Users and groups | `users_groups.txt` |
-| Credentials in configs | `credentials.txt`, `default_credentials.txt` |
+| Users and groups | `users_groups.txt`, `users_groups.json` |
+| Credentials in configs | `credentials.txt`, `credentials.json`, `default_credentials.txt`, `default_credentials.json` |
 | Hardcoded strings | `hardcoded_strings.txt` |
-| Weak cryptographic symbols | `weak_crypto.txt` |
-| Certificates and SSH keys | `certificates_keys.txt`, `ssh_keys.txt` |
+| Weak cryptographic symbols | `weak_crypto.txt`, `weak_crypto.json` |
+| Certificates and SSH keys | `certificates_keys.txt`, `certificates_keys.json`, `ssh_keys.txt`, `ssh_keys.json` |
 | CGI injection patterns | `cgi_injection.txt` |
 | PHP OS command injection | `php_cmdinject.txt` |
 | PHP code injection sinks | `php_codeinject.txt` |
 | PHP local file inclusion | `php_lfi.txt` |
 | PHP information disclosure | `php_infodisclosure.txt` |
-| Debug artifacts | `debug_artifacts.txt` |
-| Web interface and configs | `web_interface.txt`, `web_server_configs.txt` |
+| Debug artifacts | `debug_artifacts.txt`, `debug_artifacts.json` |
+| Web interface and configs | `web_interface.txt`, `web_interface.json`, `web_server_configs.txt`, `web_server_configs.json` |
 | Config file contents | `config_files.txt`, `config_files_content.txt` |
 | Kernel modules | `kernel_modules.txt` |
 | Binary inventory | `binary_inventory.txt`, `busybox.txt` |
-| Architecture and endianness detection | `architecture.txt` |
+| Architecture and endianness detection | `architecture.txt`, `architecture.json` |
 | Binary hardening (NX / PIE / RELRO / stack canary) | `hardening.json` |
 | ShellCheck static analysis | `shellcheck.json` |
 | Symlink map | `symlinks.txt` |
 | Linker configuration and library paths | `linker_config.txt` |
 | Library versions | `library_versions.txt` |
-| Unix sockets | `unix_sockets.txt` |
+| Unix sockets | `unix_sockets.txt`, `unix_sockets.json` |
 | Interface binding | `interface_binding.txt` |
 | Firewall rules | `firewall_rules.txt` |
 | DNS and routing | `dns_routing.txt` |
-| NVRAM references | `nvram.txt` |
+| NVRAM references | `nvram.txt`, `nvram.json` |
 | Scheduled tasks | `scheduled_tasks.txt` |
 | Mount points and writable overlays | `mount_points.txt` |
 | Firmware update mechanism | `firmware_update.txt` |
-| Protocols | `protocols.txt` |
+| Protocols | `protocols.txt`, `protocols.json` |
 | Scripts | `scripts.txt`, `scripts_content.txt` |
 
 ---
@@ -302,7 +310,7 @@ Every node and edge carries a provenance block:
 ```json
 {
   "type": "extracted | inferred | hypothesized",
-  "source": "weak_crypto.txt",
+  "source": "weak_crypto",
   "confidence": 0.95
 }
 ```
@@ -332,8 +340,10 @@ WAN-reachable paths receive a higher zone weight than LAN-only paths.
 
 ```
 analysis/<firmware>/
+  pipeline_manifest.json        ← per-stage status: success | partial | failed | skipped
   raw/                          ← per-check findings from analyze.py
-    *.txt                       ← text findings (one file per check)
+    *.txt                       ← human-readable findings (one file per check)
+    *.json                      ← machine-readable sidecars consumed by surface.py
     hardening.json              ← binary hardening flags (NX / PIE / RELRO / canary)
     shellcheck.json             ← ShellCheck static analysis findings
   sbom/
@@ -344,15 +354,16 @@ analysis/<firmware>/
     attack_surface.json         ← structured attack surface model
     graph.json                  ← entity-relationship graph with derived attack paths
     graph.dot                   ← Graphviz DOT for visualization (--dot flag)
+    graph.svg                   ← rendered SVG (stage 4, requires graphviz)
 ```
 
 ### Visualizing the Graph
 
+The pipeline renders `graph.svg` automatically at stage 4 if graphviz is installed. To render manually:
+
 ```bash
-# Install graphviz
 sudo apt install graphviz
 
-# Render to SVG
 dot -Tsvg analysis/Archer_A5V6/attack_surface/graph.dot \
     -o analysis/Archer_A5V6/attack_surface/graph.svg
 

@@ -1,0 +1,9 @@
+============================================================
+  Certificate Issues  [expired / self-signed / weak-key]
+============================================================
+etc/cloud/2048_newroot.cer
+    flags   : self-signed
+    subject : CN=tp-link-CA
+    expires : 2068-01-19T08:37:52+00:00
+    key     : RSA 2048-bit
+

@@ -1,0 +1,478 @@
+[
+  {
+    "binary": "bin/busybox",
+    "functions": [
+      "fscanf",
+      "popen",
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "lib/libcJSON.so",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libcmm.so",
+    "functions": [
+      "fscanf",
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "lib/libcrypt-0.9.33.2.so",
+    "functions": [
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libcrypto.so.1.0.0",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libcurl.so.4.7.0",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libcutil.so",
+    "functions": [
+      "sprintf",
+      "system"
+    ]
+  },
+  {
+    "binary": "lib/libgdpr.so",
+    "functions": [
+      "strcat"
+    ]
+  },
+  {
+    "binary": "lib/libiw.so.29",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libm-0.9.33.2.so",
+    "functions": [
+      "sprintf"
+    ]
+  },
+  {
+    "binary": "lib/libos.so",
+    "functions": [
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "lib/libssl.so.1.0.0",
+    "functions": [
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libthreadutil.so",
+    "functions": [
+      "srand"
+    ]
+  },
+  {
+    "binary": "lib/libupnp.so",
+    "functions": [
+      "fscanf",
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libutil-0.9.33.2.so",
+    "functions": [
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "lib/libxml.so",
+    "functions": [
+      "sprintf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "sbin/switch",
+    "functions": [
+      "sprintf"
+    ]
+  },
+  {
+    "binary": "usr/bin/ated_tp",
+    "functions": [
+      "popen",
+      "sscanf",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/cloud_https",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/cmxdns",
+    "functions": [
+      "sprintf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/cos",
+    "functions": [
+      "fscanf",
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/curl",
+    "functions": [
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/dhcpc",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/dhcpd",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/dyndns",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/ebtables",
+    "functions": [
+      "sprintf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/httpd",
+    "functions": [
+      "fscanf",
+      "popen",
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/ip",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/ipping",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/iwconfig",
+    "functions": [
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/iwpriv",
+    "functions": [
+      "sscanf"
+    ]
+  },
+  {
+    "binary": "usr/bin/mldProxy",
+    "functions": [
+      "fscanf",
+      "sprintf"
+    ]
+  },
+  {
+    "binary": "usr/bin/noipdns",
+    "functions": [
+      "sprintf"
+    ]
+  },
+  {
+    "binary": "usr/bin/ntpc",
+    "functions": [
+      "strcat"
+    ]
+  },
+  {
+    "binary": "usr/bin/openssl",
+    "functions": [
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/rt2860apd",
+    "functions": [
+      "sprintf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/rtinicapd",
+    "functions": [
+      "sprintf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/tc",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/tddp",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy",
+      "system",
+      "vsprintf"
+    ]
+  },
+  {
+    "binary": "usr/bin/tdpd",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/tmpd",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/traceroute",
+    "functions": [
+      "sprintf",
+      "strcpy",
+      "vsprintf"
+    ]
+  },
+  {
+    "binary": "usr/bin/upnpd",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/bin/wanType",
+    "functions": [
+      "srand",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/wlNetlinkTool",
+    "functions": [
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/wol",
+    "functions": [
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/wscd",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/wscd_5G",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/bin/xtables-multi",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/sbin/bpalogin",
+    "functions": [
+      "sprintf",
+      "strcat",
+      "strcpy",
+      "vsprintf"
+    ]
+  },
+  {
+    "binary": "usr/sbin/dhcp6c",
+    "functions": [
+      "sprintf",
+      "sscanf",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/sbin/dhcp6s",
+    "functions": [
+      "sscanf",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/sbin/pppd",
+    "functions": [
+      "fscanf",
+      "sprintf",
+      "sscanf",
+      "strcpy",
+      "system"
+    ]
+  },
+  {
+    "binary": "usr/sbin/radvd",
+    "functions": [
+      "fscanf",
+      "rand",
+      "srand",
+      "sscanf"
+    ]
+  },
+  {
+    "binary": "usr/sbin/ripd",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand"
+    ]
+  },
+  {
+    "binary": "usr/sbin/xl2tpd",
+    "functions": [
+      "rand",
+      "sprintf",
+      "srand",
+      "sscanf",
+      "strcat",
+      "strcpy"
+    ]
+  },
+  {
+    "binary": "usr/sbin/zebra",
+    "functions": [
+      "sprintf",
+      "sscanf"
+    ]
+  }
+]

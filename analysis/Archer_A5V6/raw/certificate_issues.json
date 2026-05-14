@@ -1,0 +1,13 @@
+[
+  {
+    "file": "etc/cloud/2048_newroot.cer",
+    "flags": [
+      "self-signed"
+    ],
+    "subject": "CN=tp-link-CA",
+    "issuer": "CN=tp-link-CA",
+    "not_after": "2068-01-19T08:37:52+00:00",
+    "key_type": "RSA",
+    "key_bits": 2048
+  }
+]

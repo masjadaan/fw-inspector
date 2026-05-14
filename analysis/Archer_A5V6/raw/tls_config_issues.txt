@@ -1,0 +1,5 @@
+============================================================
+  SSL/TLS Configuration Issues  [weak protocols / ciphers]
+============================================================
+(none — no weak directives found)
+

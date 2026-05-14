@@ -1,12 +1,8 @@
---- sbin/mii_mgr ---
+--- sbin/mii_mgr_cl45 ---
 socket
 Open socket failed
 
---- sbin/switch ---
-socket
-'socket
-
---- sbin/mii_mgr_cl45 ---
+--- sbin/mii_mgr ---
 socket
 Open socket failed
 
@@ -47,125 +43,9 @@ accept control connection from %s
 dhcp6_ctl_acceptcommand
 	sendNS <ifName> <addr>
 
---- bin/busybox ---
-sendto
-recvfrom
+--- sbin/switch ---
 socket
-recvmsg
-bindresvport
-connect
-bind
-listen
-recvfrom
-error: no inet socket available
-socket:[
-CONNECTING
-CONNECTED
-DISCONNECTING
-LISTENING
-Active Internet connections 
-Proto Recv-Q Send-Q %-*s %-*s State       %s
-Active UNIX domain sockets 
-SYN_RECV
-LISTEN
-Listener Query
-Listener Report
-Listener Reduction
- Queues Send/Recv/Change Times
-send
-recv
-send_time=%-26.24s
-nfs socket
-nfs bindresvport
-can't bind to interface %s
-can't connect to remote host
-bind
-listen
-sendto
-can't create raw socket
-LD_BIND_NOW
-
---- usr/sbin/zebra ---
-socket
-bind
-listen
-accept
-connected_free
-connected_down_ipv4
-connected_up_ipv4
-connected_new
-zsend_ipv4_add_multipath
-zsend_ipv4_delete_multipath
-zsend_interface_up
-zsend_interface_down
-zsend_interface_add
-zsend_interface_delete
-zsend_interface_address_add
-zsend_interface_address_delete
-connect
-recvmsg
-connected_delete_ipv4
-connected_add_ipv4
-sendto
-sendmsg
-bind
--A, --vty_addr     Set vty's bind address
-socket
-netlink-listen
-
---- usr/sbin/dhcp6s ---
-recvmsg
-socket
-bind
-dhcp6_ctl_acceptcommand
-sendto
-accept
-listen
-unexpected binding value type(%d)
-unknown binding type %d
-unexpected binding type(%d)
-remove a binding %s
-internal error: unknown binding type (%d)
-update binding %s for %s
-no binding found for %s
-failed  to copy binding info
-we have a binding already: %s
-failed to copy binding info
-failed to copy binding data
-add a new binding %s
-failed to make a binding
-previous RD value for %s is unknown (accept it)
-recvmsg: %s
-server ID option is included in a rebind message
-no useful information for a rebind
-no binding found for address %s
-unknown binding type: %ul
-no such binding
-socket(insock): %s
-setsockopt(inbound, IPV6_RECVPKTINFO): %s
-bind(insock): %s
-socket(outsock): %s
-remove_binding
-bindingstr
-free_binding
-server6_recv
-update_binding
-update_binding_duration
-add_binding
-binding_timo
-server6_send
-react_rebind
-release_binding_ia
-find_binding_ia
-decline_binding_ia
-no binding
-REBIND
-socket(control sock): %s
-bind(control sock): %s
-listen(control sock): %s
-failed to accept control connection: %s
-accept control connection from %s
-dhcp6_ctl_acceptcommand
+'socket
 
 --- usr/sbin/pppd ---
 sendPacket
@@ -329,6 +209,169 @@ No control connection exists yet for this PAC-PNS pair
 pptp_send_ctrl_packet
 pptp_send_ctrl_packet
 
+--- usr/sbin/zebra ---
+socket
+bind
+listen
+accept
+connected_free
+connected_down_ipv4
+connected_up_ipv4
+connected_new
+zsend_ipv4_add_multipath
+zsend_ipv4_delete_multipath
+zsend_interface_up
+zsend_interface_down
+zsend_interface_add
+zsend_interface_delete
+zsend_interface_address_add
+zsend_interface_address_delete
+connect
+recvmsg
+connected_delete_ipv4
+connected_add_ipv4
+sendto
+sendmsg
+bind
+-A, --vty_addr     Set vty's bind address
+socket
+netlink-listen
+
+--- bin/busybox ---
+sendto
+recvfrom
+socket
+recvmsg
+bindresvport
+connect
+bind
+listen
+recvfrom
+error: no inet socket available
+socket:[
+CONNECTING
+CONNECTED
+DISCONNECTING
+LISTENING
+Active Internet connections 
+Proto Recv-Q Send-Q %-*s %-*s State       %s
+Active UNIX domain sockets 
+SYN_RECV
+LISTEN
+Listener Query
+Listener Report
+Listener Reduction
+ Queues Send/Recv/Change Times
+send
+recv
+send_time=%-26.24s
+nfs socket
+nfs bindresvport
+can't bind to interface %s
+can't connect to remote host
+bind
+listen
+sendto
+can't create raw socket
+LD_BIND_NOW
+
+--- usr/sbin/dhcp6s ---
+recvmsg
+socket
+bind
+dhcp6_ctl_acceptcommand
+sendto
+accept
+listen
+unexpected binding value type(%d)
+unknown binding type %d
+unexpected binding type(%d)
+remove a binding %s
+internal error: unknown binding type (%d)
+update binding %s for %s
+no binding found for %s
+failed  to copy binding info
+we have a binding already: %s
+failed to copy binding info
+failed to copy binding data
+add a new binding %s
+failed to make a binding
+previous RD value for %s is unknown (accept it)
+recvmsg: %s
+server ID option is included in a rebind message
+no useful information for a rebind
+no binding found for address %s
+unknown binding type: %ul
+no such binding
+socket(insock): %s
+setsockopt(inbound, IPV6_RECVPKTINFO): %s
+bind(insock): %s
+socket(outsock): %s
+remove_binding
+bindingstr
+free_binding
+server6_recv
+update_binding
+update_binding_duration
+add_binding
+binding_timo
+server6_send
+react_rebind
+release_binding_ia
+find_binding_ia
+decline_binding_ia
+no binding
+REBIND
+socket(control sock): %s
+bind(control sock): %s
+listen(control sock): %s
+failed to accept control connection: %s
+accept control connection from %s
+dhcp6_ctl_acceptcommand
+
+--- usr/bin/dhcpc ---
+send_release
+listen_socket
+raw_socket
+send_discover
+send_renew
+send_selecting
+send_decline
+msg_recv
+bind
+sendto
+connect
+msg_connCliAndSend
+DHCPC: Couldn't create listen_fd on interface %s
+Recv no OFFER, DHCP Service unavailable
+Send REQUEST to server %s with request ip %s
+Recv OFFER from server %s with ip %s
+Offered address is in use, Send decline
+Recv ACK from server %s with ip %s lease time %ld
+Recv NAK from server %s with ip %s
+Recved DHCP offer for discover.
+bind call failed: %m
+Recv DNS server address %s,%s
+Could not open raw socket
+Could not setsocketopt on raw socket
+DHCPC: socket call failed: %m
+DHCPC: bind call failed: %m
+raw_socket
+
+--- usr/bin/ntpc ---
+msg_send
+bind
+listen
+connect
+recvfrom
+socket
+msg_recv
+could not bind to udp port %d
+bind
+recvfrom
+socket
+ntp connect failed, return.
+
 --- usr/sbin/xl2tpd ---
 send_zlb
 server_socket
@@ -401,92 +444,6 @@ trying to send control packet to %d
 set_listenaddr: Setting listen address to %s
 listen-addr
 
---- usr/sbin/radvd ---
-recvmsg
-send_ra_forall
-open_icmpv6_socket
-recv_rs_ra
-sendmsg
-can't create socket(AF_INET6): %s
-setsockopt(IPV6_RECVPKTINFO): %s
-setsockopt(IPV6_RECVHOPLIMIT): %s
-recv_rs_ra: malloc: %s
-recvmsg: %s
-recvmsg len=%d
-Please send bug reports or suggestions to %s.
-sending RA on %s
-sendmsg: %s
-Sending RA to %s
-AdvSendAdvert is off for %s
-create socket for IPv4 ioctl failed for %s: %s
-
---- usr/bin/ntpc ---
-msg_send
-bind
-listen
-connect
-recvfrom
-socket
-msg_recv
-could not bind to udp port %d
-bind
-recvfrom
-socket
-ntp connect failed, return.
-
---- usr/bin/dhcpc ---
-send_release
-listen_socket
-raw_socket
-send_discover
-send_renew
-send_selecting
-send_decline
-msg_recv
-bind
-sendto
-connect
-msg_connCliAndSend
-DHCPC: Couldn't create listen_fd on interface %s
-Recv no OFFER, DHCP Service unavailable
-Send REQUEST to server %s with request ip %s
-Recv OFFER from server %s with ip %s
-Offered address is in use, Send decline
-Recv ACK from server %s with ip %s lease time %ld
-Recv NAK from server %s with ip %s
-Recved DHCP offer for discover.
-bind call failed: %m
-Recv DNS server address %s,%s
-Could not open raw socket
-Could not setsocketopt on raw socket
-DHCPC: socket call failed: %m
-DHCPC: bind call failed: %m
-raw_socket
-
---- usr/sbin/bpalogin ---
-bind
-closesocket
-socketerror
-connect
-send_transaction
-send_udp_transaction
-send
-sendto
-recv
-recvfrom
-msg_connCliAndSend
-Listening on port %d
-Error binding auth socket
-Cant connect to auth server
-Error binding auth socket 2
-Error connecting auth socket 2
-Will accept heartbeats from %s = %s
-Socket closed - shutting down
-Error binding logout auth socket
-Error connecting logout auth socket
-Sending parm %d value %s
-Sending parm %d value %d
-
 --- usr/sbin/ripd ---
 sendto
 socket
@@ -514,11 +471,29 @@ ip rip send version 2 1
 ip rip send version 1 2
 ip rip send version (1|2)
 
---- usr/bin/wol ---
-socket
+--- usr/sbin/bpalogin ---
+bind
+closesocket
+socketerror
+connect
+send_transaction
+send_udp_transaction
+send
 sendto
-socket
-wol send failed!
+recv
+recvfrom
+msg_connCliAndSend
+Listening on port %d
+Error binding auth socket
+Cant connect to auth server
+Error binding auth socket 2
+Error connecting auth socket 2
+Will accept heartbeats from %s = %s
+Socket closed - shutting down
+Error binding logout auth socket
+Error connecting logout auth socket
+Sending parm %d value %s
+Sending parm %d value %d
 
 --- usr/bin/cmxdns ---
 msg_connCliAndSend
@@ -529,6 +504,31 @@ sendto
 dns_recvAndParseReply
 dns_send_query
 bind
+
+--- usr/bin/wol ---
+socket
+sendto
+socket
+wol send failed!
+
+--- usr/sbin/radvd ---
+recvmsg
+send_ra_forall
+open_icmpv6_socket
+recv_rs_ra
+sendmsg
+can't create socket(AF_INET6): %s
+setsockopt(IPV6_RECVPKTINFO): %s
+setsockopt(IPV6_RECVHOPLIMIT): %s
+recv_rs_ra: malloc: %s
+recvmsg: %s
+recvmsg len=%d
+Please send bug reports or suggestions to %s.
+sending RA on %s
+sendmsg: %s
+Sending RA to %s
+AdvSendAdvert is off for %s
+create socket for IPv4 ioctl failed for %s: %s
 
 --- usr/bin/wanType ---
 msg_connCliAndSend
@@ -555,16 +555,6 @@ bind
 ping: recvfrom
 ping: sendto
 PING: sendto %s
-
---- usr/bin/cloud_https ---
-nextConnectTime
-/var/tmp/lastConnectTime
-%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - post connect timeout          : %d
-%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - get connect timeout           : %d
-%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - nextConnectTime               : %s
-post_connect_timeout_s
-get_connect_timeout_s
-%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - curl set option CURLOPT_CONNECTTIMEOUT ret %d
 
 --- usr/bin/afcd ---
 socket
@@ -635,32 +625,6 @@ UPNP_E_SUBSCRIBE_UNACCEPTED
 UPNP_E_UNSUBSCRIBE_UNACCEPTED
 UPNP_E_NOTIFY_UNACCEPTED
 
---- usr/bin/igmpd ---
-msg_recv
-recvmsg
-socket
-sendmsg
-igmpd# Err: send query - sendmsg
-
---- usr/bin/ebtables ---
-socket
- --arpreply-target target         : ACCEPT, DROP, RETURN or CONTINUE
- --ftos-target target : ACCEPT, DROP, RETURN or CONTINUE
- --ftos-8021p value   : Set vlan tag's 802.1P value according to DSCP value --mark-target target : ACCEPT, DROP, RETURN or CONTINUE
- --snat-target target   : ACCEPT, DROP, RETURN or CONTINUE
- --dnat-target target   : ACCEPT, DROP, RETURN or CONTINUE
- --redirect-target target   : ACCEPT, DROP, RETURN or CONTINUE
-Standard targets: DROP, ACCEPT, RETURN or CONTINUE;
-ACCEPT 
-stp-sender-prio
-stp-sender-addr
---stp-sender-prio prio[:prio]    : sender priority (16-bit) range
---stp-sender-addr address[/mask] : MAC address of sender
-Bad --stp-sender-prio range
-Bad --stp-sender-addr address
-Problem getting a socket, you probably don't have the right permissions
-ACCEPT
-
 --- usr/bin/ip ---
 rtnl_send_check
 socket
@@ -698,19 +662,41 @@ Cannot bind netlink socket
 sender address length == %d
 Sender address length == %d
 
---- usr/bin/noipdns ---
-msg_connCliAndSend
-msg_recv
+--- usr/bin/ebtables ---
 socket
-bind
-connect
-send
-dns_recvAndParseReply
-dns_send_query
-sendto
-recvfrom
-WANIPBinding
-Accept: */*
+ --arpreply-target target         : ACCEPT, DROP, RETURN or CONTINUE
+ --ftos-target target : ACCEPT, DROP, RETURN or CONTINUE
+ --ftos-8021p value   : Set vlan tag's 802.1P value according to DSCP value --mark-target target : ACCEPT, DROP, RETURN or CONTINUE
+ --snat-target target   : ACCEPT, DROP, RETURN or CONTINUE
+ --dnat-target target   : ACCEPT, DROP, RETURN or CONTINUE
+ --redirect-target target   : ACCEPT, DROP, RETURN or CONTINUE
+Standard targets: DROP, ACCEPT, RETURN or CONTINUE;
+ACCEPT 
+stp-sender-prio
+stp-sender-addr
+--stp-sender-prio prio[:prio]    : sender priority (16-bit) range
+--stp-sender-addr address[/mask] : MAC address of sender
+Bad --stp-sender-prio range
+Bad --stp-sender-addr address
+Problem getting a socket, you probably don't have the right permissions
+ACCEPT
+
+--- usr/bin/igmpd ---
+msg_recv
+recvmsg
+socket
+sendmsg
+igmpd# Err: send query - sendmsg
+
+--- usr/bin/cloud_https ---
+nextConnectTime
+/var/tmp/lastConnectTime
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - post connect timeout          : %d
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - get connect timeout           : %d
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - nextConnectTime               : %s
+post_connect_timeout_s
+get_connect_timeout_s
+%04d-%02d-%02d %02d:%02d:%02d.%03d|pid:%d|level:%d|%s:%d|%s | - curl set option CURLOPT_CONNECTTIMEOUT ret %d
 
 --- usr/bin/curl ---
 => Send header
@@ -768,6 +754,20 @@ http_connect
 num_connects
 time_appconnect
 time_connect
+
+--- usr/bin/noipdns ---
+msg_connCliAndSend
+msg_recv
+socket
+bind
+connect
+send
+dns_recvAndParseReply
+dns_send_query
+sendto
+recvfrom
+WANIPBinding
+Accept: */*
 
 --- usr/bin/iwconfig ---
 iw_sockets_open
@@ -1023,6 +1023,27 @@ WANIPConnection
     <stateVariable sendEvents="no">
     <stateVariable sendEvents="no">
 
+--- usr/bin/tdpd ---
+socket
+bind
+recvfrom
+sendto
+sendto
+ConnectionTrigger=AlwaysOn
+ConnectionTrigger=OnDemand
+ConnectionTrigger=Manual
+ConnectionType=%s
+IdleDisconnectTime=%d
+ConnectionType=%s
+WANIPConnectionNumberOfEntries
+WANPPPConnectionNumberOfEntries
+connectionType
+connectionStatus
+Connected
+connectionTrigger
+idleDisconnectTime
+Add spec staip second connection failed for PPPoE!
+
 --- usr/bin/traceroute ---
 connect
 sendto
@@ -1111,27 +1132,6 @@ Cannot send after transport endpoint shutdown
 Connection timed out
 Connection refused
 
---- usr/bin/tdpd ---
-socket
-bind
-recvfrom
-sendto
-sendto
-ConnectionTrigger=AlwaysOn
-ConnectionTrigger=OnDemand
-ConnectionTrigger=Manual
-ConnectionType=%s
-IdleDisconnectTime=%d
-ConnectionType=%s
-WANIPConnectionNumberOfEntries
-WANPPPConnectionNumberOfEntries
-connectionType
-connectionStatus
-Connected
-connectionTrigger
-idleDisconnectTime
-Add spec staip second connection failed for PPPoE!
-
 --- usr/bin/wlNetlinkTool ---
 msg_send
 recvfrom
@@ -1190,6 +1190,97 @@ Cannot bind netlink socket
 sender address length == %d
 Sender address length == %d
 
+--- usr/bin/tmpd ---
+socket
+bind
+listen
+send
+accept
+msg_recv
+tpApp_inf_disconnectWan
+tpApp_inf_connectWan
+tpApp_inf_connectSmartHomeDev
+connected
+ConnectionTrigger=AlwaysOn
+ConnectionTrigger=OnDemand
+ConnectionTrigger=Manual
+ConnectionType=%s
+IdleDisconnectTime=%d
+ConnectionType=%s
+WANIPConnectionNumberOfEntries
+WANPPPConnectionNumberOfEntries
+connectionType
+connectionStatus
+Connected
+connectionTrigger
+idleDisconnectTime
+Add spec staip second connection failed for PPPoE!
+
+--- usr/bin/httpd ---
+msg_recv
+http_inetd_delListenSocket
+http_inetd_addListenSocket
+socket
+bind
+listen
+SSL_accept
+#msg: listen sock list full, index = %d
+#msg: socket failed, index = %d
+#msg: bind failed, index = %d
+#msg: listen failed, index = %d
+#msg: ioctl accept nonblock fail, index = %d
+#msg: ioctl accept block fail, index = %d
+#msg: full one recv no data
+#msg: bio(socket & ssl)
+Connection: close
+Connection: keep-alive
+Connection
+/main/qsEnd.htm
+/main/wlConnect.htm
+/main/wlConnect5G.htm
+/main/arpBind.htm
+/main/arpBindEdit.htm
+
+--- usr/bin/rt2860apd ---
+recv
+bind
+socket
+ieee802_1x_send_resp_to_server
+Radius_client_send
+connect
+recv
+ too short recv
+Recv vlan tag for 802.1x. (%02x %02x)
+socket[PF_PACKET,SOCK_RAW](eth_sock)
+Could not register read socket(eth_sock)
+bind
+Pre-auth raw packet socket binding on %s(socknum=%d,ifindex=%d)
+socket[PF_PACKET,SOCK_RAW]
+Could not register read socket
+EAP raw packet socket binding on %s (socknum=%d,ifindex=%d)
+socket[AF_INET,SOCK_DGRAM]
+Could not init ioctl socket 
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state DISCONNECTED
+IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state CONNECTING
+malloc() failed for ieee802_1x_send(len=%d)
+Send to Sta(%s%d) with Identifier %d
+send[WPA2 pre-auth]
+ieee802_1x_send::WPA2, pre-auth, len=%d
+ioctl failed for ieee802_1x_send(len=%d)
+AS send RADIUS_CODE_ACCESS_REJECT
+ieee802_1x_tx_canned_eap : Send to Sta with Identifier %d
+Finish Radius_client_send..(%d)
+AP_HANDLE_SESSION_TIMER : Send Deauth 
+recv[RADIUS]
+Send packet to server (%s)
+send[RADIUS]
+connect[radius]
+Radius_change_server :: Connect to Radius Server(%s)
+Radius_client_init_auth: can't create auth RADIUS socket for %s%d (it's invalid IP)
+socket[PF_INET,SOCK_DGRAM]
+Could not register read socket for authentication server - iface-%d
+Radius_client_init : no any auth RADIUS socket ready 
+
 --- usr/bin/rtinicapd ---
 recv
 bind
@@ -1245,97 +1336,6 @@ FILS: DHCP sendto failed: %s
 FILS: Failed to open DHCP socket: %s
 FILS: Failed to bind DHCP socket: %s
 %s: DHCP sendto failed: %s
-
---- usr/bin/tmpd ---
-socket
-bind
-listen
-send
-accept
-msg_recv
-tpApp_inf_disconnectWan
-tpApp_inf_connectWan
-tpApp_inf_connectSmartHomeDev
-connected
-ConnectionTrigger=AlwaysOn
-ConnectionTrigger=OnDemand
-ConnectionTrigger=Manual
-ConnectionType=%s
-IdleDisconnectTime=%d
-ConnectionType=%s
-WANIPConnectionNumberOfEntries
-WANPPPConnectionNumberOfEntries
-connectionType
-connectionStatus
-Connected
-connectionTrigger
-idleDisconnectTime
-Add spec staip second connection failed for PPPoE!
-
---- usr/bin/rt2860apd ---
-recv
-bind
-socket
-ieee802_1x_send_resp_to_server
-Radius_client_send
-connect
-recv
- too short recv
-Recv vlan tag for 802.1x. (%02x %02x)
-socket[PF_PACKET,SOCK_RAW](eth_sock)
-Could not register read socket(eth_sock)
-bind
-Pre-auth raw packet socket binding on %s(socknum=%d,ifindex=%d)
-socket[PF_PACKET,SOCK_RAW]
-Could not register read socket
-EAP raw packet socket binding on %s (socknum=%d,ifindex=%d)
-socket[AF_INET,SOCK_DGRAM]
-Could not init ioctl socket 
-IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state DISCONNECTED
-IEEE 802.1X: %02x:%02x:%02x:%02x:%02x:%02x AUTH_PAE entering state CONNECTING
-malloc() failed for ieee802_1x_send(len=%d)
-Send to Sta(%s%d) with Identifier %d
-send[WPA2 pre-auth]
-ieee802_1x_send::WPA2, pre-auth, len=%d
-ioctl failed for ieee802_1x_send(len=%d)
-AS send RADIUS_CODE_ACCESS_REJECT
-ieee802_1x_tx_canned_eap : Send to Sta with Identifier %d
-Finish Radius_client_send..(%d)
-AP_HANDLE_SESSION_TIMER : Send Deauth 
-recv[RADIUS]
-Send packet to server (%s)
-send[RADIUS]
-connect[radius]
-Radius_change_server :: Connect to Radius Server(%s)
-Radius_client_init_auth: can't create auth RADIUS socket for %s%d (it's invalid IP)
-socket[PF_INET,SOCK_DGRAM]
-Could not register read socket for authentication server - iface-%d
-Radius_client_init : no any auth RADIUS socket ready 
-
---- usr/bin/httpd ---
-msg_recv
-http_inetd_delListenSocket
-http_inetd_addListenSocket
-socket
-bind
-listen
-SSL_accept
-#msg: listen sock list full, index = %d
-#msg: socket failed, index = %d
-#msg: bind failed, index = %d
-#msg: listen failed, index = %d
-#msg: ioctl accept nonblock fail, index = %d
-#msg: ioctl accept block fail, index = %d
-#msg: full one recv no data
-#msg: bio(socket & ssl)
-Connection: close
-Connection: keep-alive
-Connection
-/main/qsEnd.htm
-/main/wlConnect.htm
-/main/wlConnect5G.htm
-/main/arpBind.htm
-/main/arpBindEdit.htm
 
 --- usr/bin/cos ---
 msg_recv
@@ -1397,19 +1397,6 @@ iw_sockets_open
 Interface doesn't accept private ioctl...
 socket
 
---- usr/bin/dyndns ---
-msg_connCliAndSend
-msg_recv
-socket
-bind
-connect
-send
-dns_recvAndParseReply
-dns_send_query
-sendto
-recvfrom
-DYNDNS: send state message error!
-
 --- usr/bin/ated_tp ---
 recvfrom
 socket
@@ -1432,6 +1419,36 @@ socket bind error
 socket setsockopt error
 Interface doesn't accept private ioctl...
 socket
+
+--- usr/bin/dyndns ---
+msg_connCliAndSend
+msg_recv
+socket
+bind
+connect
+send
+dns_recvAndParseReply
+dns_send_query
+sendto
+recvfrom
+DYNDNS: send state message error!
+
+--- usr/bin/dnsProxy ---
+msg_recv
+msg_send
+
+--- usr/bin/tddp ---
+tddp_udpSocketCreate
+tddp_udpSocketBindToAnyAddr
+tddp_udpSocketClose
+recvfrom
+sendto
+bind
+socket
+tddp_parserHandler sendto error
+failed to bind socket
+tddp_udpSocketClose failed
+tddp_udpSocketCreate failed
 
 --- usr/bin/xtables-multi ---
 libxt_socket_init
@@ -1485,28 +1502,19 @@ binding-acknowledgement
 binding-error
 Could not open socket to kernel: %s
 
---- usr/bin/dnsProxy ---
-msg_recv
-msg_send
-
---- usr/bin/tddp ---
-tddp_udpSocketCreate
-tddp_udpSocketBindToAnyAddr
-tddp_udpSocketClose
-recvfrom
-sendto
-bind
-socket
-tddp_parserHandler sendto error
-failed to bind socket
-tddp_udpSocketClose failed
-tddp_udpSocketCreate failed
-
 --- lib/libiw.so.29 ---
 iw_sockets_open
 socket
 socket
 mode:Force sending
+
+--- lib/libcutil.so ---
+socket
+bind
+sendto
+recvfrom
+Can't create socket.
+Can't bind. 
 
 --- lib/libcurl.so.4.7.0 ---
 bind
@@ -1597,14 +1605,6 @@ SSL_ERROR_WANT_ACCEPT
 select/poll on SSL socket, errno: %d
 OpenSSL SSL_connect: %s in connection to %s:%ld 
 SSL connection timeout
-
---- lib/libcutil.so ---
-socket
-bind
-sendto
-recvfrom
-Can't create socket.
-Can't bind. 
 
 --- lib/libupnp.so ---
 gSendThreadPool
@@ -1746,9 +1746,6 @@ msg_send
 msg_recv
 Get socket failed, when do remote log
 
---- lib/ld-uClibc-0.9.33.2.so ---
-LD_BIND_NOW
-
 --- lib/libuClibc-0.9.33.2.so ---
 sendfile
 sendfile64
@@ -1799,6 +1796,9 @@ svc_tcp.c - cannot getsockname or listen
 svcudp_create: socket creation problem
 svc_unix.c - AF_UNIX socket creation problem
 svc_unix.c - cannot getsockname or listen
+
+--- lib/ld-uClibc-0.9.33.2.so ---
+LD_BIND_NOW
 
 --- lib/libcmm.so ---
 rsl_sendAppWlanCfg
@@ -2161,9 +2161,6 @@ datagram socket
 unacceptedPolicy
 unacceptedExtension
 
---- lib/libdl-0.9.33.2.so ---
-LD_BIND_NOW
-
 --- lib/libpthread-0.9.33.2.so ---
 __libc_accept
 __libc_connect
@@ -2173,6 +2170,9 @@ __libc_recvmsg
 __libc_send
 __libc_sendmsg
 __libc_sendto
+
+--- lib/libdl-0.9.33.2.so ---
+LD_BIND_NOW
 
 --- lib/modules/l2tp_ppp.ko ---
 <7>PPPOL2TP: %s: recv %d byte data frame, passing to ppp
@@ -2201,28 +2201,6 @@ l2tp_udp_encap_recv
 <1>recv a unknowed get ctl command
 <1>recv a unknowed set ctl command
 
---- lib/modules/pptp.ko ---
-<6>PPTP[%i]: send packet: seq=%i
-<6>PPTP[%i]: connect: addr=%X call_id=%i
-<6>PPTP: bind: addr=%X call_id=%i
-<6>PPTP[%i]: accepting packet %d size=%i (%02x %02x %02x %02x %02x %02x)
-.rel.text.pptp_connect
-.rel.text.pptp_bind
-sock_no_sendmsg
-sock_no_accept
-sock_no_listen
-pppox_unbind_sock
-sock_no_socketpair
-sock_no_recvmsg
-ip_send_check
-
---- lib/modules/tp_domain.ko ---
---->>> Send Http Response error!
-Connection: close
-tp_send_dns6_packet
-.rel.text.tp_send_dns_packet
-.rel.text.tp_send_dns6_packet
-
 --- lib/modules/pppol2tp.ko ---
 <7>L2TP: %s: send %Zd bytes, ns=%u
 <7>L2TP: %s: send %Zd bytes
@@ -2245,11 +2223,43 @@ kernel_connect
 l2tp_recv_common
 l2tp_udp_encap_recv
 
+--- lib/modules/tp_domain.ko ---
+--->>> Send Http Response error!
+Connection: close
+tp_send_dns6_packet
+.rel.text.tp_send_dns_packet
+.rel.text.tp_send_dns6_packet
+
+--- lib/modules/pptp.ko ---
+<6>PPTP[%i]: send packet: seq=%i
+<6>PPTP[%i]: connect: addr=%X call_id=%i
+<6>PPTP: bind: addr=%X call_id=%i
+<6>PPTP[%i]: accepting packet %d size=%i (%02x %02x %02x %02x %02x %02x)
+.rel.text.pptp_connect
+.rel.text.pptp_bind
+sock_no_sendmsg
+sock_no_accept
+sock_no_listen
+pppox_unbind_sock
+sock_no_socketpair
+sock_no_recvmsg
+ip_send_check
+
 --- lib/modules/kmdir/kernel/drivers/net/raeth/raeth.ko ---
 rt2880_eth_send
 .rel.text.rt2880_eth_send
 rt2880_eth_send
 send_sig
+
+--- lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko ---
+description=Shortcut Forwarding Engine - Connection Manager
+.rel.text.sfe_cm_recv
+sfe_ipv4_recv
+sfe_cm_recv
+athrs_fast_nat_recv
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko ---
+description=ftp connection tracking helper
 
 --- lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe.ko ---
 SFE CONNECTIONS: %u
@@ -2264,16 +2274,6 @@ sfe_ipv4_recv
 .rel.text.sfe_ipv4_recv
 sfe_ipv4_recv
 
---- lib/modules/kmdir/kernel/net/shortcut-fe/shortcut-fe-cm.ko ---
-description=Shortcut Forwarding Engine - Connection Manager
-.rel.text.sfe_cm_recv
-sfe_ipv4_recv
-sfe_cm_recv
-athrs_fast_nat_recv
-
---- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_ftp.ko ---
-description=ftp connection tracking helper
-
 --- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_h323.ko ---
 description=H.323 connection tracking helper
 parm=gkrouted_only:only accept calls from gatekeeper
@@ -2286,6 +2286,9 @@ description=RTSP connection tracking module
 
 --- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_pptp.ko ---
 description=Netfilter connection tracking helper module for PPTP
+
+--- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko ---
+description=TFTP connection tracking helper
 
 --- lib/modules/kmdir/kernel/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko ---
 SendMIMOPS
@@ -2399,9 +2402,6 @@ QBSS_LoadIsBusyTimeAccepted
 MtAsicSendCmdToMcuAndWait
 ApAllowToSendPacket
 ApCliAllowToSendPacket
-
---- lib/modules/kmdir/kernel/net/netfilter/nf_conntrack_tftp.ko ---
-description=TFTP connection tracking helper
 
 --- lib/modules/kmdir/kernel/drivers/net/wireless/MT7613_ap/MT7613_ap.ko ---
 WpaSend

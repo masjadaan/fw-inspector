@@ -1,0 +1,61 @@
+============================================================
+  Binaries Importing Dangerous Functions  [readelf — concrete imports]
+============================================================
+bin/busybox: fscanf, popen, rand, sprintf, srand, sscanf, strcat, strcpy, system
+  lib/libcJSON.so: sprintf, sscanf, strcpy
+  lib/libcmm.so: fscanf, rand, sprintf, srand, sscanf, strcat, strcpy, system
+  lib/libcrypt-0.9.33.2.so: strcpy
+  lib/libcrypto.so.1.0.0: sprintf, sscanf, strcat, strcpy
+  lib/libcurl.so.4.7.0: sprintf, sscanf, strcpy
+  lib/libcutil.so: sprintf, system
+  lib/libgdpr.so: strcat
+  lib/libiw.so.29: sprintf, sscanf, strcpy
+  lib/libm-0.9.33.2.so: sprintf
+  lib/libos.so: strcpy, system
+  lib/libssl.so.1.0.0: strcpy
+  lib/libthreadutil.so: srand
+  lib/libupnp.so: fscanf, rand, sprintf, srand, sscanf, strcpy
+  lib/libutil-0.9.33.2.so: strcpy
+  lib/libxml.so: sprintf, strcat, strcpy
+  sbin/switch: sprintf
+  usr/bin/ated_tp: popen, sscanf, system
+  usr/bin/cloud_https: sprintf, sscanf, strcat, system
+  usr/bin/cmxdns: sprintf, strcat, strcpy
+  usr/bin/cos: fscanf, rand, sprintf, srand, sscanf, strcat, strcpy, system
+  usr/bin/curl: sscanf, strcpy
+  usr/bin/dhcpc: rand, sprintf, srand, strcpy, system
+  usr/bin/dhcpd: rand, sprintf, srand, strcpy, system
+  usr/bin/dyndns: sprintf, sscanf, strcpy
+  usr/bin/ebtables: sprintf, strcpy
+  usr/bin/httpd: fscanf, popen, sprintf, sscanf, strcat, strcpy
+  usr/bin/ip: fscanf, sprintf, sscanf, strcat, strcpy
+  usr/bin/ipping: fscanf, sprintf, sscanf, strcpy
+  usr/bin/iwconfig: sscanf, strcpy
+  usr/bin/iwpriv: sscanf
+  usr/bin/mldProxy: fscanf, sprintf
+  usr/bin/noipdns: sprintf
+  usr/bin/ntpc: strcat
+  usr/bin/openssl: sscanf, strcpy
+  usr/bin/rt2860apd: sprintf, strcpy
+  usr/bin/rtinicapd: sprintf, strcpy
+  usr/bin/tc: fscanf, sprintf, sscanf, strcat, strcpy
+  usr/bin/tddp: fscanf, sprintf, sscanf, strcat, strcpy, system, vsprintf
+  usr/bin/tdpd: sprintf, sscanf, strcat, strcpy
+  usr/bin/tmpd: sprintf, sscanf, strcat, strcpy
+  usr/bin/traceroute: sprintf, strcpy, vsprintf
+  usr/bin/upnpd: fscanf, sprintf, strcpy, system
+  usr/bin/wanType: srand, strcpy
+  usr/bin/wlNetlinkTool: strcpy
+  usr/bin/wol: sscanf, strcpy
+  usr/bin/wscd: rand, sprintf, srand, sscanf, strcat, strcpy
+  usr/bin/wscd_5G: rand, sprintf, srand, sscanf, strcat, strcpy
+  usr/bin/xtables-multi: sprintf, sscanf, strcat, strcpy
+  usr/sbin/bpalogin: sprintf, strcat, strcpy, vsprintf
+  usr/sbin/dhcp6c: sprintf, sscanf, strcpy
+  usr/sbin/dhcp6s: sscanf, strcpy, system
+  usr/sbin/pppd: fscanf, sprintf, sscanf, strcpy, system
+  usr/sbin/radvd: fscanf, rand, srand, sscanf
+  usr/sbin/ripd: rand, sprintf, srand
+  usr/sbin/xl2tpd: rand, sprintf, srand, sscanf, strcat, strcpy
+  usr/sbin/zebra: sprintf, sscanf
+

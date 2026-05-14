@@ -13,6 +13,10 @@ _CRYPTO_SYM_PAT = re.compile(
 
 _WEAK_SYM_PAT = re.compile(r"^(MD[245]|DES|RC[24]|MD4)_", re.IGNORECASE)
 
+_DANGEROUS_SYM_PAT = re.compile(
+    r"^(gets|strcpy|strcat|sprintf|vsprintf|scanf|fscanf|sscanf|mktemp|tmpnam|tempnam|system|popen|rand|srand)$"
+)
+
 _STRINGS_TIMEOUT = 30
 _READELF_TIMEOUT = 30
 _FILE_TIMEOUT    = 10
@@ -56,14 +60,15 @@ def _readelf_crypto_imports(path: Path) -> list:
 
 class _ElfRecord:
     """Holds all per-binary data collected in one pass."""
-    __slots__ = ("file_type", "needed_libs", "crypto_imports", "strings_lines", "hardening")
+    __slots__ = ("file_type", "needed_libs", "crypto_imports", "dangerous_imports", "strings_lines", "hardening")
 
     def __init__(self):
-        self.file_type      = ""
-        self.needed_libs    = []
-        self.crypto_imports = []
-        self.strings_lines  = []
-        self.hardening      = {}
+        self.file_type         = ""
+        self.needed_libs       = []
+        self.crypto_imports    = []
+        self.dangerous_imports = []
+        self.strings_lines     = []
+        self.hardening         = {}
 
 
 def _process_one_elf(path: Path) -> tuple:
@@ -103,7 +108,8 @@ def _process_one_elf(path: Path) -> tuple:
             ["readelf", "--dyn-syms", str(path)], capture_output=True, text=True, timeout=_READELF_TIMEOUT
         )
         _has_canary = "__stack_chk_fail" in r.stdout
-        syms = []
+        crypto_syms = []
+        danger_syms = []
         for line in r.stdout.splitlines():
             if "UND" not in line:
                 continue
@@ -111,8 +117,11 @@ def _process_one_elf(path: Path) -> tuple:
             if parts:
                 name = parts[-1].split("@")[0]
                 if _CRYPTO_SYM_PAT.match(name):
-                    syms.append(name)
-        rec.crypto_imports = sorted(set(syms))
+                    crypto_syms.append(name)
+                if _DANGEROUS_SYM_PAT.match(name):
+                    danger_syms.append(name)
+        rec.crypto_imports    = sorted(set(crypto_syms))
+        rec.dangerous_imports = sorted(set(danger_syms))
     except Exception:
         pass
 

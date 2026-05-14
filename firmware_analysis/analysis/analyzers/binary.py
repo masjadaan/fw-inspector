@@ -3,7 +3,7 @@ import re
 import subprocess
 
 from .context import AnalysisContext, section, multi_section_file, run
-from .elf_cache import _WEAK_SYM_PAT, _FILE_TIMEOUT
+from .elf_cache import _DANGEROUS_SYM_PAT, _WEAK_SYM_PAT, _FILE_TIMEOUT
 
 
 def _points_to_busybox(link) -> bool:
@@ -175,6 +175,33 @@ def analyze_weak_crypto(ctx: AnalysisContext):
             "evidence": elf_findings[:5],
         })
     json_file.write_text(json.dumps(json_data, indent=2))
+
+
+def analyze_dangerous_functions(ctx: AnalysisContext):
+    """Report ELF binaries that import known-dangerous libc functions."""
+    out_file  = ctx.out_dir / "dangerous_functions.txt"
+    json_file = ctx.out_dir / "dangerous_functions.json"
+    findings = []
+    for path, rec in sorted(ctx.elf_cache.items(), key=lambda x: x[0]):
+        if rec.dangerous_imports:
+            findings.append({
+                "binary":    str(path.relative_to(ctx.rootfs)),
+                "functions": rec.dangerous_imports,
+            })
+
+    lines = [f"  {f['binary']}: {', '.join(f['functions'])}" for f in findings]
+    out_file.write_text(
+        section(
+            "Binaries Importing Dangerous Functions  [readelf — concrete imports]",
+            "\n".join(lines) if lines else "(none)",
+        )
+    )
+    json_file.write_text(json.dumps(findings, indent=2))
+    n = len(findings)
+    print(f"  {'dangerous_functions.txt':45s}  {n} binaries")
+    if n:
+        total = sum(len(f["functions"]) for f in findings)
+        print(f"    → {total} dangerous imports across {n} binaries")
 
 
 def analyze_hardening(ctx: AnalysisContext):

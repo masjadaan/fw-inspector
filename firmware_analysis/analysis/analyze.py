@@ -17,6 +17,7 @@ from analyzers.binary import (
     analyze_architecture,
     analyze_binary_inventory,
     analyze_busybox,
+    analyze_dangerous_functions,
     analyze_hardcoded_strings,
     analyze_hardening,
     analyze_httpd_binaries,
@@ -153,7 +154,8 @@ STEPS: list[Analyzer] = [
              analyze_hardening,                                                      needs_elf=True),
     Analyzer("[*] Network-capable binaries",               analyze_network_binaries, needs_elf=True),
     Analyzer("[*] Hardcoded strings in binaries",          analyze_hardcoded_strings, needs_elf=True),
-    Analyzer("[*] Weak cryptography",                      analyze_weak_crypto,      needs_elf=True),
+    Analyzer("[*] Weak cryptography",                      analyze_weak_crypto,       needs_elf=True),
+    Analyzer("[*] Dangerous function usage",               analyze_dangerous_functions, needs_elf=True),
 ]
 
 # ── Main ───────────────────────────────────────────────────────────────────────

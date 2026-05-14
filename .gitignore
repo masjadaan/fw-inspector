@@ -1,6 +1,9 @@
 # Firmware binaries — download and provide your own
 input/
 
+# Vendored tools — install system-wide instead (e.g. /usr/local/bin/grype)
+bin/grype
+
 # Claude Code local settings
 .claude/
 

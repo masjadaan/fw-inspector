@@ -33,6 +33,7 @@ from analyzers.context import AnalysisContext, Analyzer, find_all_configs, run
 from analyzers.elf_cache import build_elf_cache
 from analyzers.network import analyze_interface_binding, analyze_protocols
 from analyzers.system import (
+    analyze_certificate_issues,
     analyze_certificates,
     analyze_credentials,
     analyze_debug_artifacts,
@@ -138,6 +139,7 @@ STEPS: list[Analyzer] = [
     Analyzer("[*] Mount points and writable overlays",                               analyze_mount_points),
     Analyzer("[*] Firmware update mechanism",                                        analyze_firmware_update),
     Analyzer("[*] SSL/TLS certificates and keys",                                    analyze_certificates),
+    Analyzer("[*] Certificate issues  (expired / self-signed / weak-key)",           analyze_certificate_issues),
     Analyzer("[*] Unix sockets and IPC",                                             analyze_unix_sockets),
     Analyzer("[*] Port / listen references",
              lambda ctx: run(["grep", "-E", "port|listen|bind"] + ctx.configs,

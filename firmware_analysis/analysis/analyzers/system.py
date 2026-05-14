@@ -1,7 +1,11 @@
 import json
 import re
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
+
+from cryptography import x509
+from cryptography.hazmat.primitives.asymmetric import dsa, ec, rsa
 
 from .context import AnalysisContext, section, existing, multi_section_file
 
@@ -381,6 +385,140 @@ def analyze_certificates(ctx: AnalysisContext):
     cert_files = [l.strip() for l in r.stdout.splitlines()  if l.strip()]
     embedded   = [l.strip() for l in r2.stdout.splitlines() if l.strip()][:_MAX_ITEMS]
     json_file.write_text(json.dumps({"files": cert_files, "embedded_in_binaries": embedded}, indent=2))
+
+
+def _parse_cert_file(path: Path) -> list[dict]:
+    """Parse X.509 certificate(s) from a PEM or DER file.
+
+    Returns a list of dicts (one per cert found). Returns [] if the file
+    contains no parseable X.509 certificate (e.g. private key, PKCS#12).
+    """
+    try:
+        data = path.read_bytes()
+    except Exception:
+        return []
+
+    certs = []
+    if b"-----BEGIN CERTIFICATE-----" in data:
+        for block in re.findall(
+            b"-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----", data, re.DOTALL
+        ):
+            try:
+                certs.append(x509.load_pem_x509_certificate(block))
+            except Exception:
+                pass
+    if not certs:
+        try:
+            certs.append(x509.load_der_x509_certificate(data))
+        except Exception:
+            pass
+    if not certs:
+        return []
+
+    now = datetime.now(timezone.utc)
+    results = []
+    for cert in certs:
+        pub = cert.public_key()
+        if isinstance(pub, rsa.RSAPublicKey):
+            key_type, key_bits = "RSA", pub.key_size
+        elif isinstance(pub, ec.EllipticCurvePublicKey):
+            key_type, key_bits = "EC", pub.key_size
+        elif isinstance(pub, dsa.DSAPublicKey):
+            key_type, key_bits = "DSA", pub.key_size
+        else:
+            key_type, key_bits = "unknown", None
+
+        try:
+            not_after  = cert.not_valid_after_utc
+            not_before = cert.not_valid_before_utc
+        except AttributeError:
+            not_after  = cert.not_valid_after.replace(tzinfo=timezone.utc)
+            not_before = cert.not_valid_before.replace(tzinfo=timezone.utc)
+
+        try:
+            subject = cert.subject.rfc4514_string()
+            issuer  = cert.issuer.rfc4514_string()
+        except Exception:
+            subject = str(cert.subject)
+            issuer  = str(cert.issuer)
+
+        results.append({
+            "subject":     subject,
+            "issuer":      issuer,
+            "not_before":  not_before.isoformat(),
+            "not_after":   not_after.isoformat(),
+            "key_type":    key_type,
+            "key_bits":    key_bits,
+            "expired":     not_after < now,
+            "self_signed": subject == issuer,
+            "weak_key":    key_type == "RSA" and key_bits is not None and key_bits <= 1024,
+        })
+    return results
+
+
+def analyze_certificate_issues(ctx: AnalysisContext):
+    """Parse X.509 certificates and report expired, self-signed, and weak-key findings."""
+    out_file  = ctx.out_dir / "certificate_issues.txt"
+    json_file = ctx.out_dir / "certificate_issues.json"
+
+    r = subprocess.run(
+        ["find", str(ctx.rootfs),
+         "-name", "*.pem", "-o", "-name", "*.crt", "-o", "-name", "*.der", "-o", "-name", "*.cer"],
+        capture_output=True, text=True,
+    )
+    cert_paths = [Path(l.strip()) for l in r.stdout.splitlines() if l.strip()]
+
+    findings = []
+    for path in cert_paths:
+        infos = _parse_cert_file(path)
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        for info in infos:
+            flags = []
+            if info["expired"]:
+                flags.append("expired")
+            if info["self_signed"]:
+                flags.append("self-signed")
+            if info["weak_key"]:
+                flags.append(f"weak-key ({info['key_type']} {info['key_bits']}-bit)")
+            if flags:
+                findings.append({
+                    "file":     rel,
+                    "flags":    flags,
+                    "subject":  info["subject"],
+                    "issuer":   info["issuer"],
+                    "not_after": info["not_after"],
+                    "key_type": info["key_type"],
+                    "key_bits": info["key_bits"],
+                })
+
+    lines = []
+    for f in findings:
+        lines.append(f"  {f['file']}")
+        lines.append(f"    flags   : {', '.join(f['flags'])}")
+        lines.append(f"    subject : {f['subject']}")
+        lines.append(f"    expires : {f['not_after']}")
+        lines.append(f"    key     : {f['key_type']} {f['key_bits']}-bit")
+        lines.append("")
+
+    out_file.write_text(
+        section(
+            "Certificate Issues  [expired / self-signed / weak-key]",
+            "\n".join(lines) if lines else "(none)",
+        )
+    )
+    json_file.write_text(json.dumps(findings, indent=2))
+    n = len(findings)
+    print(f"  {'certificate_issues.txt':45s}  {n} findings across {len(cert_paths)} cert files")
+    if n:
+        by_flag: dict = {}
+        for f in findings:
+            for flag in f["flags"]:
+                key = flag.split(" ")[0]
+                by_flag[key] = by_flag.get(key, 0) + 1
+        print("    → " + "  ".join(f"{v} {k}" for k, v in sorted(by_flag.items())))
 
 
 def analyze_unix_sockets(ctx: AnalysisContext):

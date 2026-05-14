@@ -7,6 +7,53 @@ from .context import AnalysisContext, section, existing, multi_section_file
 
 _MAX_LIST = 20
 
+# (label, compiled pattern, CVE / note)
+_TLS_ISSUES: list[tuple[str, re.Pattern, str]] = [
+    (
+        "SSLv2 enabled",
+        # (?<!\s-): Apache uses "SSLProtocol all -SSLv2" (space-dash) to disable;
+        # lighttpd uses "ssl.use-sslv2" where the dash is part of the key name.
+        re.compile(r"(?<!\s-)SSLv2", re.IGNORECASE),
+        "CVE-2016-0800 DROWN — SSLv2 is cryptographically broken",
+    ),
+    (
+        "SSLv3 enabled",
+        re.compile(r"(?<!\s-)SSLv3", re.IGNORECASE),
+        "CVE-2014-3566 POODLE — SSLv3 CBC padding oracle attack",
+    ),
+    (
+        "TLS 1.0/1.1 configured",
+        re.compile(r"\bTLSv1(?:\.0|\.1)?(?!\.[2-9])", re.IGNORECASE),
+        "RFC 8996 deprecated — BEAST (CVE-2011-3389), POODLE for TLS",
+    ),
+    (
+        "RC4 cipher",
+        # (?<![!\w]): excludes "!RC4" (OpenSSL negation meaning "disable RC4").
+        re.compile(r"(?<![!\w])RC4\b", re.IGNORECASE),
+        "CVE-2015-2808 Bar Mitzvah / RFC 7465 — RC4 is statistically broken",
+    ),
+    (
+        "NULL cipher",
+        re.compile(r"(?<![!\w])(?:eNULL|aNULL|NULL-(?:SHA|MD5|SHA256))\b", re.IGNORECASE),
+        "No encryption or no authentication — plaintext transmission",
+    ),
+    (
+        "EXPORT cipher",
+        re.compile(r"(?<![!\w])EXPORT\b", re.IGNORECASE),
+        "CVE-2015-0204 FREAK / CVE-2015-4000 Logjam — export-grade crypto",
+    ),
+    (
+        "anonymous DH cipher",
+        re.compile(r"(?<![!\w])(?:ADH|AECDH)\b", re.IGNORECASE),
+        "No server authentication — trivial man-in-the-middle attack",
+    ),
+]
+
+_WEB_CONFIG_NAMES = [
+    "httpd.conf", "nginx.conf", "lighttpd.conf",
+    "uhttpd.conf", "boa.conf", "ssl.conf", "openssl.cnf",
+]
+
 
 def analyze_web_interface(ctx: AnalysisContext):
     out_file  = ctx.out_dir / "web_interface.txt"
@@ -56,9 +103,11 @@ def analyze_web_server_configs(ctx: AnalysisContext):
     out_file  = ctx.out_dir / "web_server_configs.txt"
     json_file = ctx.out_dir / "web_server_configs.json"
 
+    find_args = []
+    for name in _WEB_CONFIG_NAMES:
+        find_args += ["-o", "-name", name]
     r = subprocess.run(
-        ["find", str(ctx.rootfs), "-name", "httpd.conf", "-o", "-name", "nginx.conf",
-         "-o", "-name", "lighttpd.conf", "-o", "-name", "uhttpd.conf", "-o", "-name", "boa.conf"],
+        ["find", str(ctx.rootfs)] + find_args[1:],
         capture_output=True, text=True,
     )
     sections = [section("Web Server Config Files Found", r.stdout)]
@@ -84,6 +133,69 @@ def analyze_web_server_configs(ctx: AnalysisContext):
         "config_files":   config_files,
         "inferred_ports": list(set(ports)) or [80],
     }, indent=2))
+
+
+def analyze_tls_config(ctx: AnalysisContext):
+    """Scan web server config files for weak SSL/TLS protocol and cipher directives."""
+    out_file  = ctx.out_dir / "tls_config_issues.txt"
+    json_file = ctx.out_dir / "tls_config_issues.json"
+
+    find_args = []
+    for name in _WEB_CONFIG_NAMES:
+        find_args += ["-o", "-name", name]
+    r = subprocess.run(
+        ["find", str(ctx.rootfs)] + find_args[1:],
+        capture_output=True, text=True,
+    )
+    config_paths = [Path(l.strip()) for l in r.stdout.splitlines() if l.strip()]
+
+    findings = []
+    for path in config_paths:
+        try:
+            file_lines = path.read_text(errors="replace").splitlines()
+        except Exception:
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        for lineno, raw_line in enumerate(file_lines, 1):
+            stripped = raw_line.lstrip()
+            if stripped.startswith("#") or stripped.startswith(";"):
+                continue
+            code = raw_line.split("#")[0]
+            for issue, pattern, cve_note in _TLS_ISSUES:
+                if pattern.search(code):
+                    findings.append({
+                        "file":     rel,
+                        "line":     lineno,
+                        "text":     raw_line.rstrip(),
+                        "issue":    issue,
+                        "cve_note": cve_note,
+                    })
+
+    lines_out = []
+    for f in findings:
+        lines_out.append(f"  {f['file']}:{f['line']}")
+        lines_out.append(f"    issue : {f['issue']}")
+        lines_out.append(f"    note  : {f['cve_note']}")
+        lines_out.append(f"    text  : {f['text'].strip()[:120]}")
+        lines_out.append("")
+
+    out_file.write_text(
+        section(
+            "SSL/TLS Configuration Issues  [weak protocols / ciphers]",
+            "\n".join(lines_out) if lines_out else "(none — no weak directives found)",
+        )
+    )
+    json_file.write_text(json.dumps(findings, indent=2))
+    n = len(findings)
+    print(f"  {'tls_config_issues.txt':45s}  {n} findings across {len(config_paths)} config files")
+    if n:
+        by_issue: dict = {}
+        for f in findings:
+            by_issue[f["issue"]] = by_issue.get(f["issue"], 0) + 1
+        print("    → " + "  ".join(f"{v} '{k}'" for k, v in sorted(by_issue.items())))
 
 
 def analyze_cgi_injection(ctx: AnalysisContext):

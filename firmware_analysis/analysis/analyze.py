@@ -59,6 +59,7 @@ from analyzers.web import (
     analyze_php_codeinject,
     analyze_php_infodisclosure,
     analyze_php_lfi,
+    analyze_tls_config,
     analyze_web_interface,
     analyze_web_server_configs,
 )
@@ -106,6 +107,7 @@ STEPS: list[Analyzer] = [
     Analyzer("[*] SSH keys",                                                         analyze_ssh_keys),
     Analyzer("[*] Web interface",                                                    analyze_web_interface),
     Analyzer("[*] Web server configs",                                               analyze_web_server_configs),
+    Analyzer("[*] SSL/TLS configuration issues  (weak protocols / ciphers)",         analyze_tls_config),
     Analyzer("[*] CGI and web handler injection vectors",                            analyze_cgi_injection),
     Analyzer("[*] PHP OS command injection  (taint: $_GET/$_POST/... → exec/system/...)",
              analyze_php_cmdinject),

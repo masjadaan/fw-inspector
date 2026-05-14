@@ -15,6 +15,7 @@ from parsers import (
     parse_capabilities,
     parse_certs,
     parse_credentials,
+    parse_dangerous_functions,
     parse_debug,
     parse_hardening,
     parse_init_services,
@@ -437,3 +438,26 @@ class TestParseNvram:
     def test_missing_evidence_key_returns_empty(self, tmp_path):
         (tmp_path / "nvram.json").write_text(json.dumps({"other": []}))
         assert parse_nvram(tmp_path) == []
+
+
+# ── parse_dangerous_functions ─────────────────────────────────────────────────
+
+class TestParseDangerousFunctions:
+    def test_missing_returns_empty_list(self, tmp_path):
+        assert parse_dangerous_functions(tmp_path) == []
+
+    def test_returns_list_as_is(self, tmp_path):
+        data = [
+            {"binary": "usr/bin/httpd", "functions": ["gets", "strcpy"]},
+            {"binary": "usr/sbin/telnetd", "functions": ["sprintf"]},
+        ]
+        (tmp_path / "dangerous_functions.json").write_text(json.dumps(data))
+        assert parse_dangerous_functions(tmp_path) == data
+
+    def test_empty_list_in_file_returns_empty(self, tmp_path):
+        (tmp_path / "dangerous_functions.json").write_text("[]")
+        assert parse_dangerous_functions(tmp_path) == []
+
+    def test_malformed_json_returns_empty(self, tmp_path):
+        (tmp_path / "dangerous_functions.json").write_text("{not valid json")
+        assert parse_dangerous_functions(tmp_path) == []

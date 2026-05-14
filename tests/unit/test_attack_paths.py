@@ -15,6 +15,7 @@ from attack_paths import (
     _ap_debug,
     _ap_default_creds,
     _ap_http_admin,
+    _ap_memory_unsafe_binaries,
     _ap_setuid,
     _ap_snmp,
     _ap_static_creds,
@@ -522,12 +523,121 @@ class TestApVendorBackdoor:
 
 # ── infer_attack_paths ────────────────────────────────────────────────────────
 
+def _dangerous(binary: str, functions: list) -> dict:
+    return {"binary": binary, "functions": functions}
+
+
+# ── _ap_memory_unsafe_binaries ────────────────────────────────────────────────
+
+class TestApMemoryUnsafeBinaries:
+    def test_empty_list_returns_none(self):
+        assert _ap_memory_unsafe_binaries(
+            dangerous_functions=[], entry_points=[], init=_init(),
+        ) is None
+
+    def test_non_empty_with_no_reachable_binaries_fires_medium(self):
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/tool", ["gets"])],
+            entry_points=[],
+            init=_init(),
+        )
+        assert result is not None
+        assert result["id"] == "ap-memory-unsafe"
+        assert result["severity"] == "medium"
+
+    def test_binary_matching_entry_point_fires_high(self):
+        ep = {"type": "http", "port": 80, "protocol": "tcp",
+              "binary": "httpd", "interface": "unknown", "source": "test"}
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/httpd", ["strcpy"])],
+            entry_points=[ep],
+            init=_init(),
+        )
+        assert result is not None
+        assert result["severity"] == "high"
+
+    def test_binary_matching_init_service_fires_high(self):
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/sbin/telnetd", ["sprintf"])],
+            entry_points=[],
+            init=_init(detected_services=["telnetd"]),
+        )
+        assert result is not None
+        assert result["severity"] == "high"
+
+    def test_matching_uses_basename_not_full_path(self):
+        ep = {"type": "http", "port": 80, "protocol": "tcp",
+              "binary": "httpd", "interface": "unknown", "source": "test"}
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/httpd", ["gets"])],
+            entry_points=[ep],
+            init=_init(),
+        )
+        assert result["severity"] == "high"
+
+    def test_non_reachable_binary_does_not_elevate_to_high(self):
+        ep = {"type": "http", "port": 80, "protocol": "tcp",
+              "binary": "httpd", "interface": "unknown", "source": "test"}
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/other_tool", ["gets"])],
+            entry_points=[ep],
+            init=_init(),
+        )
+        assert result["severity"] == "medium"
+
+    def test_exposed_binary_count_in_evidence(self):
+        ep = {"type": "http", "port": 80, "protocol": "tcp",
+              "binary": "httpd", "interface": "unknown", "source": "test"}
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/httpd", ["strcpy", "gets"])],
+            entry_points=[ep],
+            init=_init(),
+        )
+        assert any("1" in e for e in result["evidence"])
+
+    def test_binary_path_appears_in_evidence(self):
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("usr/bin/vuln", ["gets"])],
+            entry_points=[],
+            init=_init(),
+        )
+        assert any("usr/bin/vuln" in e for e in result["evidence"])
+
+    def test_all_required_keys_present(self):
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[_dangerous("bin/tool", ["gets"])],
+            entry_points=[],
+            init=_init(),
+        )
+        for key in ("id", "title", "severity", "description", "entry_point", "steps", "evidence"):
+            assert key in result
+
+    def test_multiple_exposed_binaries_counted(self):
+        eps = [
+            {"type": "http",   "port": 80, "protocol": "tcp", "binary": "httpd",   "interface": "unknown", "source": "t"},
+            {"type": "telnet", "port": 23, "protocol": "tcp", "binary": "telnetd", "interface": "unknown", "source": "t"},
+        ]
+        result = _ap_memory_unsafe_binaries(
+            dangerous_functions=[
+                _dangerous("usr/bin/httpd",   ["strcpy"]),
+                _dangerous("usr/sbin/telnetd", ["gets"]),
+            ],
+            entry_points=eps,
+            init=_init(),
+        )
+        assert result["severity"] == "high"
+        assert any("2" in e for e in result["evidence"])
+
+
+# ── infer_attack_paths ────────────────────────────────────────────────────────
+
 class TestInferAttackPaths:
     def _call(self, **overrides):
         defaults = dict(
             entry_points=[], init=_init(), web=_web(), users=[],
             credentials=_credentials(), privesc=_privesc(),
             protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
+            dangerous_functions=[],
         )
         return infer_attack_paths(**{**defaults, **overrides})
 
@@ -557,3 +667,21 @@ class TestInferAttackPaths:
         for path in paths:
             for key in ("id", "title", "severity", "description", "entry_point", "steps", "evidence"):
                 assert key in path
+
+    def test_dangerous_functions_produces_ap_memory_unsafe(self):
+        paths = self._call(dangerous_functions=[_dangerous("bin/tool", ["gets"])])
+        assert any(p["id"] == "ap-memory-unsafe" for p in paths)
+
+    def test_no_dangerous_functions_no_memory_unsafe_path(self):
+        paths = self._call(dangerous_functions=[])
+        assert not any(p["id"] == "ap-memory-unsafe" for p in paths)
+
+    def test_missing_dangerous_functions_defaults_to_no_path(self):
+        # Called without dangerous_functions kwarg at all — should not crash
+        defaults = dict(
+            entry_points=[], init=_init(), web=_web(), users=[],
+            credentials=_credentials(), privesc=_privesc(),
+            protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
+        )
+        paths = infer_attack_paths(**defaults)
+        assert not any(p["id"] == "ap-memory-unsafe" for p in paths)

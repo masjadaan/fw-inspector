@@ -421,6 +421,74 @@ def _ap_update_mitm(credentials: dict, **_) -> AttackPath | None:
     }
 
 
+def _ap_memory_unsafe_binaries(
+    dangerous_functions: list,
+    entry_points: list,
+    init: dict,
+    **_,
+) -> AttackPath | None:
+    if not dangerous_functions:
+        return None
+
+    # Collect binary basenames that are network-reachable
+    reachable: set[str] = set()
+    for ep in entry_points:
+        if ep.get("binary"):
+            reachable.add(ep["binary"].split("/")[-1])
+    for svc in init.get("detected_services", []):
+        reachable.add(svc)
+
+    exposed = [df for df in dangerous_functions if df["binary"].split("/")[-1] in reachable]
+
+    if exposed:
+        funcs = sorted({fn for df in exposed for fn in df["functions"]})
+        n = len(exposed)
+        return {
+            "id":          "ap-memory-unsafe",
+            "title":       "Memory-Unsafe Functions in Network-Reachable Binary",
+            "severity":    "high",
+            "description": (
+                f"{n} network-reachable {'binary' if n == 1 else 'binaries'} "
+                f"import dangerous libc functions ({', '.join(funcs[:5])}). "
+                "Buffer overflows in network-facing code are directly exploitable for RCE."
+            ),
+            "entry_point": f"network — {', '.join(df['binary'].split('/')[-1] for df in exposed[:3])}",
+            "steps": [
+                "Send crafted input to the exposed network service",
+                "Trigger buffer overflow in unsafe function (gets, strcpy, sprintf, etc.)",
+                "Overwrite return address or function pointer to redirect execution",
+                "Achieve remote code execution, typically as root on embedded devices",
+            ],
+            "evidence": [
+                f"dangerous_functions.txt: {n} network-reachable "
+                f"{'binary' if n == 1 else 'binaries'} with unsafe imports",
+            ] + [f"  {df['binary']}: {', '.join(df['functions'])}" for df in exposed[:_MAX_EVIDENCE]],
+        }
+
+    n = len(dangerous_functions)
+    all_funcs = sorted({fn for df in dangerous_functions for fn in df["functions"]})
+    return {
+        "id":          "ap-memory-unsafe",
+        "title":       "Memory-Unsafe Function Usage (Post-Exploitation Aid)",
+        "severity":    "medium",
+        "description": (
+            f"{n} {'binary' if n == 1 else 'binaries'} "
+            f"import dangerous libc functions ({', '.join(all_funcs[:5])}). "
+            "Simplifies local privilege escalation — no heap grooming or ROP chains needed."
+        ),
+        "entry_point": "local — requires initial code execution",
+        "steps": [
+            "Gain initial code execution (e.g. command injection, CGI, or default credentials)",
+            "Identify a SetUID or privileged binary that uses unsafe functions",
+            "Craft input to overflow a buffer and hijack control flow",
+            "Escalate to root",
+        ],
+        "evidence": [
+            f"dangerous_functions.txt: {n} {'binary' if n == 1 else 'binaries'} with unsafe imports",
+        ] + [f"  {df['binary']}: {', '.join(df['functions'])}" for df in dangerous_functions[:_MAX_EVIDENCE]],
+    }
+
+
 def _ap_vendor_backdoor(init: dict, **_) -> AttackPath | None:
     if not init["vendor_services"]:
         return None
@@ -458,6 +526,7 @@ _ATTACK_PATH_INFERRERS = [
     _ap_debug,
     _ap_update_mitm,
     _ap_vendor_backdoor,
+    _ap_memory_unsafe_binaries,
 ]
 
 
@@ -472,10 +541,12 @@ def infer_attack_paths(
     weak_crypto: list,
     debug: list,
     certs: dict,
+    dangerous_functions: list | None = None,
 ) -> list[AttackPath]:
     ctx = dict(
         entry_points=entry_points, init=init, web=web, users=users,
         credentials=credentials, privesc=privesc, protocols=protocols,
         weak_crypto=weak_crypto, debug=debug, certs=certs,
+        dangerous_functions=dangerous_functions or [],
     )
     return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]

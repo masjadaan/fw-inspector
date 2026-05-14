@@ -17,6 +17,7 @@ from parsers import (
     parse_capabilities,
     parse_certs,
     parse_credentials,
+    parse_dangerous_functions,
     parse_debug,
     parse_hardening,
     parse_init_services,
@@ -49,10 +50,11 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
     debug          = parse_debug(raw_dir)
     ipc            = parse_ipc(raw_dir)
     certs          = parse_certs(raw_dir)
-    nvram          = parse_nvram(raw_dir)
-    shellcheck     = parse_shellcheck(raw_dir)
-    hardening      = parse_hardening(raw_dir)
-    arch           = parse_architecture(raw_dir)
+    nvram               = parse_nvram(raw_dir)
+    shellcheck          = parse_shellcheck(raw_dir)
+    hardening           = parse_hardening(raw_dir)
+    arch                = parse_architecture(raw_dir)
+    dangerous_functions = parse_dangerous_functions(raw_dir)
 
     privesc = {
         "setuid_binaries": setuid,
@@ -64,6 +66,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
     attack_paths = infer_attack_paths(
         entry_points, init, web, users, credentials,
         privesc, protocols, weak_crypto, debug, certs,
+        dangerous_functions=dangerous_functions,
     )
 
     return {
@@ -97,9 +100,10 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         "certificates":      certs,
         "nvram_references":  nvram,
         "shellcheck":        shellcheck,
-        "hardening":         hardening,
-        "web":               web,
-        "attack_paths":      attack_paths,
+        "hardening":              hardening,
+        "web":                    web,
+        "dangerous_functions":    dangerous_functions,
+        "attack_paths":           attack_paths,
     }
 
 

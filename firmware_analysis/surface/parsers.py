@@ -185,3 +185,7 @@ def parse_shellcheck(analysis_dir: Path) -> dict:
 
 def parse_nvram(analysis_dir: Path) -> list:
     return _load(analysis_dir / "nvram.json", {"evidence": []}).get("evidence", [])
+
+
+def parse_dangerous_functions(analysis_dir: Path) -> list:
+    return _load(analysis_dir / "dangerous_functions.json", [])

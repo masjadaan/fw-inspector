@@ -21,6 +21,7 @@ from attack_paths import (
     _ap_snmp,
     _ap_static_creds,
     _ap_telnet,
+    _ap_tls_config,
     _ap_tr069,
     _ap_update_mitm,
     _ap_upnp,
@@ -624,6 +625,91 @@ class TestApCertIssues:
         assert len(result["evidence"]) <= 6  # 1 summary + 5 capped
 
 
+# ── _ap_tls_config ────────────────────────────────────────────────────────────
+
+def _tls_issue(issue: str, file: str = "etc/httpd.conf", line: int = 1) -> dict:
+    return {"file": file, "line": line, "text": issue, "issue": issue, "cve_note": ""}
+
+
+class TestApTlsConfig:
+    def test_empty_list_returns_none(self):
+        assert _ap_tls_config(tls_config_issues=[]) is None
+
+    def test_sslv2_fires_critical(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("SSLv2 enabled")])
+        assert result is not None
+        assert result["id"] == "ap-tls-config"
+        assert result["severity"] == "critical"
+
+    def test_sslv3_fires_high(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("SSLv3 enabled")])
+        assert result is not None
+        assert result["severity"] == "high"
+
+    def test_rc4_fires_high(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("RC4 cipher")])
+        assert result["severity"] == "high"
+
+    def test_null_cipher_fires_high(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("NULL cipher")])
+        assert result["severity"] == "high"
+
+    def test_export_cipher_fires_high(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("EXPORT cipher")])
+        assert result["severity"] == "high"
+
+    def test_anon_dh_fires_high(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("anonymous DH cipher")])
+        assert result["severity"] == "high"
+
+    def test_tls10_only_fires_medium(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("TLS 1.0/1.1 configured")])
+        assert result is not None
+        assert result["severity"] == "medium"
+
+    def test_sslv2_overrides_medium(self):
+        result = _ap_tls_config(tls_config_issues=[
+            _tls_issue("TLS 1.0/1.1 configured"),
+            _tls_issue("SSLv2 enabled"),
+        ])
+        assert result["severity"] == "critical"
+
+    def test_high_issue_overrides_medium(self):
+        result = _ap_tls_config(tls_config_issues=[
+            _tls_issue("TLS 1.0/1.1 configured"),
+            _tls_issue("RC4 cipher"),
+        ])
+        assert result["severity"] == "high"
+
+    def test_file_and_line_in_evidence(self):
+        result = _ap_tls_config(
+            tls_config_issues=[_tls_issue("SSLv3 enabled", file="etc/ssl.conf", line=42)],
+        )
+        assert any("etc/ssl.conf" in e for e in result["evidence"])
+        assert any("42" in e for e in result["evidence"])
+
+    def test_count_in_evidence(self):
+        result = _ap_tls_config(tls_config_issues=[
+            _tls_issue("RC4 cipher"),
+            _tls_issue("SSLv3 enabled"),
+        ])
+        assert any("2" in e for e in result["evidence"])
+
+    def test_issue_name_in_description(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("SSLv2 enabled")])
+        assert "SSLv2" in result["description"]
+
+    def test_evidence_capped_at_max(self):
+        issues = [_tls_issue("RC4 cipher", file=f"cfg{i}.conf", line=i) for i in range(10)]
+        result = _ap_tls_config(tls_config_issues=issues)
+        assert len(result["evidence"]) <= 6  # 1 summary + 5 capped
+
+    def test_all_required_keys_present(self):
+        result = _ap_tls_config(tls_config_issues=[_tls_issue("RC4 cipher")])
+        for key in ("id", "title", "severity", "description", "entry_point", "steps", "evidence"):
+            assert key in result
+
+
 # ── infer_attack_paths ────────────────────────────────────────────────────────
 
 def _dangerous(binary: str, functions: list) -> dict:
@@ -740,7 +826,7 @@ class TestInferAttackPaths:
             entry_points=[], init=_init(), web=_web(), users=[],
             credentials=_credentials(), privesc=_privesc(),
             protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
-            dangerous_functions=[], certificate_issues=[],
+            dangerous_functions=[], certificate_issues=[], tls_config_issues=[],
         )
         return infer_attack_paths(**{**defaults, **overrides})
 
@@ -808,3 +894,21 @@ class TestInferAttackPaths:
         )
         paths = infer_attack_paths(**defaults)
         assert not any(p["id"] == "ap-cert-issues" for p in paths)
+
+    def test_tls_config_issues_produces_ap_tls_config(self):
+        paths = self._call(tls_config_issues=[_tls_issue("SSLv3 enabled")])
+        assert any(p["id"] == "ap-tls-config" for p in paths)
+
+    def test_no_tls_config_issues_no_tls_config_path(self):
+        paths = self._call(tls_config_issues=[])
+        assert not any(p["id"] == "ap-tls-config" for p in paths)
+
+    def test_missing_tls_config_issues_defaults_to_no_path(self):
+        # Called without tls_config_issues kwarg at all — should not crash
+        defaults = dict(
+            entry_points=[], init=_init(), web=_web(), users=[],
+            credentials=_credentials(), privesc=_privesc(),
+            protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
+        )
+        paths = infer_attack_paths(**defaults)
+        assert not any(p["id"] == "ap-tls-config" for p in paths)

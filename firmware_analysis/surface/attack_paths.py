@@ -564,6 +564,55 @@ def _ap_vendor_backdoor(init: dict, **_) -> AttackPath | None:
     }
 
 
+_CRITICAL_TLS_ISSUES = {"SSLv2 enabled"}
+_HIGH_TLS_ISSUES     = {"SSLv3 enabled", "RC4 cipher", "NULL cipher", "EXPORT cipher", "anonymous DH cipher"}
+
+
+def _ap_tls_config(tls_config_issues: list, **_) -> AttackPath | None:
+    if not tls_config_issues:
+        return None
+
+    issues_found = {f["issue"] for f in tls_config_issues}
+
+    if issues_found & _CRITICAL_TLS_ISSUES:
+        severity = "critical"
+    elif issues_found & _HIGH_TLS_ISSUES:
+        severity = "high"
+    else:
+        severity = "medium"
+
+    unique_issues = sorted(issues_found)
+    affected_files = sorted({f["file"] for f in tls_config_issues})
+
+    description = (
+        f"{len(tls_config_issues)} weak TLS/SSL directive(s) found across "
+        f"{len(affected_files)} config file(s): {', '.join(unique_issues[:4])}. "
+        "Downgrade attacks and cipher exploits allow traffic decryption or MITM."
+    )
+
+    evidence = [
+        f"tls_config_issues.txt: {len(tls_config_issues)} weak TLS directive(s) "
+        f"in {len(affected_files)} file(s)",
+    ] + [
+        f"  {f['file']}:{f['line']} — {f['issue']}" for f in tls_config_issues[:_MAX_EVIDENCE]
+    ]
+
+    return {
+        "id":          "ap-tls-config",
+        "title":       "Weak SSL/TLS Protocol or Cipher Configuration",
+        "severity":    severity,
+        "description": description,
+        "entry_point": "network — TLS sessions",
+        "steps": [
+            "Identify TLS endpoint from web or protocol entry points",
+            "Initiate TLS handshake advertising only the weak protocol/cipher (SSLv2, SSLv3, RC4, EXPORT)",
+            "Server accepts the downgraded session (DROWN / POODLE / FREAK / LOGJAM)",
+            "Decrypt session traffic or forge authentication tokens",
+        ],
+        "evidence": evidence,
+    }
+
+
 _ATTACK_PATH_INFERRERS = [
     _ap_telnet,
     _ap_http_admin,
@@ -577,6 +626,7 @@ _ATTACK_PATH_INFERRERS = [
     _ap_world_writable,
     _ap_cert_extraction,
     _ap_cert_issues,
+    _ap_tls_config,
     _ap_weak_crypto,
     _ap_debug,
     _ap_update_mitm,
@@ -598,6 +648,7 @@ def infer_attack_paths(
     certs: dict,
     dangerous_functions: list | None = None,
     certificate_issues: list | None = None,
+    tls_config_issues: list | None = None,
 ) -> list[AttackPath]:
     ctx = dict(
         entry_points=entry_points, init=init, web=web, users=users,
@@ -605,5 +656,6 @@ def infer_attack_paths(
         weak_crypto=weak_crypto, debug=debug, certs=certs,
         dangerous_functions=dangerous_functions or [],
         certificate_issues=certificate_issues or [],
+        tls_config_issues=tls_config_issues or [],
     )
     return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]

@@ -27,6 +27,7 @@ from parsers import (
     parse_protocols,
     parse_setuid,
     parse_shellcheck,
+    parse_tls_config_issues,
     parse_users,
     parse_weak_crypto,
     parse_web,
@@ -57,6 +58,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
     arch                = parse_architecture(raw_dir)
     dangerous_functions  = parse_dangerous_functions(raw_dir)
     certificate_issues   = parse_certificate_issues(raw_dir)
+    tls_config_issues    = parse_tls_config_issues(raw_dir)
 
     privesc = {
         "setuid_binaries": setuid,
@@ -70,6 +72,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         privesc, protocols, weak_crypto, debug, certs,
         dangerous_functions=dangerous_functions,
         certificate_issues=certificate_issues,
+        tls_config_issues=tls_config_issues,
     )
 
     return {
@@ -107,6 +110,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         "web":                    web,
         "dangerous_functions":    dangerous_functions,
         "certificate_issues":     certificate_issues,
+        "tls_config_issues":      tls_config_issues,
         "attack_paths":           attack_paths,
     }
 

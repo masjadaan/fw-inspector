@@ -25,6 +25,7 @@ from parsers import (
     parse_protocols,
     parse_setuid,
     parse_shellcheck,
+    parse_tls_config_issues,
     parse_users,
     parse_weak_crypto,
     parse_web,
@@ -485,3 +486,24 @@ class TestParseCertificateIssues:
     def test_malformed_json_returns_empty(self, tmp_path):
         (tmp_path / "certificate_issues.json").write_text("{not valid json")
         assert parse_certificate_issues(tmp_path) == []
+
+
+class TestParseTlsConfigIssues:
+    def test_missing_returns_empty_list(self, tmp_path):
+        assert parse_tls_config_issues(tmp_path) == []
+
+    def test_returns_list_as_is(self, tmp_path):
+        data = [
+            {"file": "etc/httpd.conf", "line": 12, "text": "SSLv2", "issue": "SSLv2 enabled", "cve_note": "CVE-2016-0800"},
+            {"file": "etc/nginx.conf", "line": 7,  "text": "RC4",   "issue": "RC4 cipher",    "cve_note": "CVE-2015-2808"},
+        ]
+        (tmp_path / "tls_config_issues.json").write_text(json.dumps(data))
+        assert parse_tls_config_issues(tmp_path) == data
+
+    def test_empty_list_in_file_returns_empty(self, tmp_path):
+        (tmp_path / "tls_config_issues.json").write_text("[]")
+        assert parse_tls_config_issues(tmp_path) == []
+
+    def test_malformed_json_returns_empty(self, tmp_path):
+        (tmp_path / "tls_config_issues.json").write_text("{not valid json")
+        assert parse_tls_config_issues(tmp_path) == []

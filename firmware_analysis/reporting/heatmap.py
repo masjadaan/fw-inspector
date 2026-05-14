@@ -55,7 +55,7 @@ def _build_matrix(vulnerabilities: list[dict], top: int) -> tuple[list[str], np.
     counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for v in vulnerabilities:
         comp = v.get("component", "unknown")
-        sev  = v.get("adjusted_severity", "info").lower()
+        sev  = v.get("base_severity", "info").lower()
         counts[comp][sev] += 1
 
     # Sort by weighted score descending, then alphabetically for ties.
@@ -127,7 +127,7 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("Adjusted severity", fontsize=9, labelpad=8)
+    ax.set_xlabel("NVD base severity", fontsize=9, labelpad=8)
 
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight")

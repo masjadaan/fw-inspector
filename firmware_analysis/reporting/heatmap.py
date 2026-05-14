@@ -54,7 +54,9 @@ def _load_report(analysis_dir: Path) -> dict:
 def _build_matrix(vulnerabilities: list[dict], top: int) -> tuple[list[str], np.ndarray]:
     counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for v in vulnerabilities:
-        comp = v.get("component", "unknown")
+        name    = v.get("component", "unknown")
+        version = v.get("version", "")
+        comp    = f"{name} {version}" if version else name
         sev  = v.get("base_severity", "info").lower()
         counts[comp][sev] += 1
 

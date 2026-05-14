@@ -11,6 +11,7 @@ and deduplication.
 import pytest
 from attack_paths import (
     _ap_cert_extraction,
+    _ap_cert_issues,
     _ap_cgi_injection,
     _ap_debug,
     _ap_default_creds,
@@ -521,6 +522,108 @@ class TestApVendorBackdoor:
         assert any("tdpServer" in e for e in result["evidence"])
 
 
+# ── _ap_cert_issues ───────────────────────────────────────────────────────────
+
+def _cert_issue(file: str, flags: list, key_bits: int = 2048, key_type: str = "RSA") -> dict:
+    return {
+        "file":     file,
+        "flags":    flags,
+        "subject":  "CN=test",
+        "issuer":   "CN=ca",
+        "not_after": "2020-01-01",
+        "key_type": key_type,
+        "key_bits": key_bits,
+    }
+
+
+class TestApCertIssues:
+    def test_empty_list_returns_none(self):
+        assert _ap_cert_issues(certificate_issues=[]) is None
+
+    def test_expired_cert_fires_high(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/ca.pem", ["expired"])],
+        )
+        assert result is not None
+        assert result["id"] == "ap-cert-issues"
+        assert result["severity"] == "high"
+
+    def test_weak_key_fires_high(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/weak.pem", ["weak-key (RSA 1024-bit)"], key_bits=1024)],
+        )
+        assert result is not None
+        assert result["severity"] == "high"
+
+    def test_self_signed_only_fires_medium(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/self.pem", ["self-signed"])],
+        )
+        assert result is not None
+        assert result["severity"] == "medium"
+
+    def test_expired_and_weak_key_fires_high(self):
+        result = _ap_cert_issues(
+            certificate_issues=[
+                _cert_issue("etc/ssl/a.pem", ["expired"]),
+                _cert_issue("etc/ssl/b.pem", ["weak-key (RSA 1024-bit)"], key_bits=1024),
+            ],
+        )
+        assert result["severity"] == "high"
+
+    def test_self_signed_with_expired_fires_high(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/x.pem", ["expired", "self-signed"])],
+        )
+        assert result["severity"] == "high"
+
+    def test_file_appears_in_evidence(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/ca.pem", ["expired"])],
+        )
+        assert any("etc/ssl/ca.pem" in e for e in result["evidence"])
+
+    def test_flags_appear_in_evidence(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/ca.pem", ["expired", "self-signed"])],
+        )
+        assert any("expired" in e for e in result["evidence"])
+
+    def test_count_in_evidence(self):
+        result = _ap_cert_issues(
+            certificate_issues=[
+                _cert_issue("a.pem", ["expired"]),
+                _cert_issue("b.pem", ["self-signed"]),
+            ],
+        )
+        assert any("2" in e for e in result["evidence"])
+
+    def test_all_required_keys_present(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/ca.pem", ["expired"])],
+        )
+        for key in ("id", "title", "severity", "description", "entry_point", "steps", "evidence"):
+            assert key in result
+
+    def test_expired_mention_in_description(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/a.pem", ["expired"])],
+        )
+        assert "expired" in result["description"].lower()
+
+    def test_weak_key_mention_in_description(self):
+        result = _ap_cert_issues(
+            certificate_issues=[_cert_issue("etc/ssl/b.pem", ["weak-key (RSA 1024-bit)"], key_bits=1024)],
+        )
+        assert "weak" in result["description"].lower() or "1024" in result["description"]
+
+    def test_evidence_capped_at_max(self):
+        certs = [_cert_issue(f"etc/ssl/cert{i}.pem", ["expired"]) for i in range(10)]
+        result = _ap_cert_issues(certificate_issues=certs)
+        # First evidence line is summary; remaining are per-cert (capped at _MAX_EVIDENCE=5)
+        assert len(result["evidence"]) <= 6  # 1 summary + 5 capped
+
+
 # ── infer_attack_paths ────────────────────────────────────────────────────────
 
 def _dangerous(binary: str, functions: list) -> dict:
@@ -637,7 +740,7 @@ class TestInferAttackPaths:
             entry_points=[], init=_init(), web=_web(), users=[],
             credentials=_credentials(), privesc=_privesc(),
             protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
-            dangerous_functions=[],
+            dangerous_functions=[], certificate_issues=[],
         )
         return infer_attack_paths(**{**defaults, **overrides})
 
@@ -685,3 +788,23 @@ class TestInferAttackPaths:
         )
         paths = infer_attack_paths(**defaults)
         assert not any(p["id"] == "ap-memory-unsafe" for p in paths)
+
+    def test_certificate_issues_produces_ap_cert_issues(self):
+        paths = self._call(
+            certificate_issues=[_cert_issue("etc/ssl/ca.pem", ["expired"])],
+        )
+        assert any(p["id"] == "ap-cert-issues" for p in paths)
+
+    def test_no_certificate_issues_no_cert_issues_path(self):
+        paths = self._call(certificate_issues=[])
+        assert not any(p["id"] == "ap-cert-issues" for p in paths)
+
+    def test_missing_certificate_issues_defaults_to_no_path(self):
+        # Called without certificate_issues kwarg at all — should not crash
+        defaults = dict(
+            entry_points=[], init=_init(), web=_web(), users=[],
+            credentials=_credentials(), privesc=_privesc(),
+            protocols=_protocols(), weak_crypto=[], debug=[], certs=_certs(),
+        )
+        paths = infer_attack_paths(**defaults)
+        assert not any(p["id"] == "ap-cert-issues" for p in paths)

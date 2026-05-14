@@ -15,6 +15,7 @@ from pathlib import Path
 from parsers import (
     parse_architecture,
     parse_capabilities,
+    parse_certificate_issues,
     parse_certs,
     parse_credentials,
     parse_dangerous_functions,
@@ -54,7 +55,8 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
     shellcheck          = parse_shellcheck(raw_dir)
     hardening           = parse_hardening(raw_dir)
     arch                = parse_architecture(raw_dir)
-    dangerous_functions = parse_dangerous_functions(raw_dir)
+    dangerous_functions  = parse_dangerous_functions(raw_dir)
+    certificate_issues   = parse_certificate_issues(raw_dir)
 
     privesc = {
         "setuid_binaries": setuid,
@@ -67,6 +69,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         entry_points, init, web, users, credentials,
         privesc, protocols, weak_crypto, debug, certs,
         dangerous_functions=dangerous_functions,
+        certificate_issues=certificate_issues,
     )
 
     return {
@@ -103,6 +106,7 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         "hardening":              hardening,
         "web":                    web,
         "dangerous_functions":    dangerous_functions,
+        "certificate_issues":     certificate_issues,
         "attack_paths":           attack_paths,
     }
 

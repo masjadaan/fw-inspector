@@ -13,6 +13,7 @@ from parsers import (
     non_empty_lines,
     parse_architecture,
     parse_capabilities,
+    parse_certificate_issues,
     parse_certs,
     parse_credentials,
     parse_dangerous_functions,
@@ -461,3 +462,26 @@ class TestParseDangerousFunctions:
     def test_malformed_json_returns_empty(self, tmp_path):
         (tmp_path / "dangerous_functions.json").write_text("{not valid json")
         assert parse_dangerous_functions(tmp_path) == []
+
+
+class TestParseCertificateIssues:
+    def test_missing_returns_empty_list(self, tmp_path):
+        assert parse_certificate_issues(tmp_path) == []
+
+    def test_returns_list_as_is(self, tmp_path):
+        data = [
+            {"file": "etc/ssl/ca.pem", "flags": ["expired"], "subject": "CN=test",
+             "issuer": "CN=test", "not_after": "2020-01-01", "key_type": "RSA", "key_bits": 2048},
+            {"file": "etc/ssl/weak.pem", "flags": ["weak-key (RSA 1024-bit)"], "subject": "CN=weak",
+             "issuer": "CN=ca", "not_after": "2030-01-01", "key_type": "RSA", "key_bits": 1024},
+        ]
+        (tmp_path / "certificate_issues.json").write_text(json.dumps(data))
+        assert parse_certificate_issues(tmp_path) == data
+
+    def test_empty_list_in_file_returns_empty(self, tmp_path):
+        (tmp_path / "certificate_issues.json").write_text("[]")
+        assert parse_certificate_issues(tmp_path) == []
+
+    def test_malformed_json_returns_empty(self, tmp_path):
+        (tmp_path / "certificate_issues.json").write_text("{not valid json")
+        assert parse_certificate_issues(tmp_path) == []

@@ -189,3 +189,7 @@ def parse_nvram(analysis_dir: Path) -> list:
 
 def parse_dangerous_functions(analysis_dir: Path) -> list:
     return _load(analysis_dir / "dangerous_functions.json", [])
+
+
+def parse_certificate_issues(analysis_dir: Path) -> list:
+    return _load(analysis_dir / "certificate_issues.json", [])

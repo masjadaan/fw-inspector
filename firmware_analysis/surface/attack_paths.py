@@ -421,6 +421,60 @@ def _ap_update_mitm(credentials: dict, **_) -> AttackPath | None:
     }
 
 
+def _ap_cert_issues(certificate_issues: list, **_) -> AttackPath | None:
+    if not certificate_issues:
+        return None
+
+    expired  = [c for c in certificate_issues if "expired"      in c.get("flags", [])]
+    weak_key = [c for c in certificate_issues if any("weak-key" in f for f in c.get("flags", []))]
+    self_sig = [c for c in certificate_issues if "self-signed"  in c.get("flags", [])]
+
+    if expired or weak_key:
+        severity = "high"
+        parts = []
+        if expired:
+            parts.append(f"{len(expired)} expired certificate{'s' if len(expired) != 1 else ''}")
+        if weak_key:
+            parts.append(f"{len(weak_key)} certificate{'s' if len(weak_key) != 1 else ''} with weak RSA key (≤1024-bit)")
+        if self_sig:
+            parts.append(f"{len(self_sig)} self-signed")
+        description = (
+            ", ".join(parts) + " found in firmware. "
+            "Expired or cryptographically weak certificates cannot protect TLS sessions "
+            "and enable man-in-the-middle attacks."
+        )
+        title = "Weak or Expired TLS Certificates"
+    else:
+        severity = "medium"
+        title = "Self-Signed TLS Certificates"
+        description = (
+            f"{len(self_sig)} self-signed certificate{'s' if len(self_sig) != 1 else ''} found. "
+            "Without CA chain validation, an attacker can substitute a rogue certificate "
+            "and clients may not detect the impersonation."
+        )
+
+    evidence = [
+        f"certificate_issues.txt: {len(certificate_issues)} certificate(s) with security issues",
+    ] + [
+        f"  {c['file']}: {', '.join(c.get('flags', []))}" for c in certificate_issues[:_MAX_EVIDENCE]
+    ]
+
+    return {
+        "id":          "ap-cert-issues",
+        "title":       title,
+        "severity":    severity,
+        "description": description,
+        "entry_point": "network — TLS sessions / offline firmware",
+        "steps": [
+            "Identify certificate files in firmware filesystem (.pem, .crt, .der)",
+            "Verify certificates are expired, self-signed, or have weak keys (RSA ≤1024-bit)",
+            "Present a forged or substituted certificate to exploit client trust",
+            "Decrypt or intercept TLS traffic between device and cloud / update server",
+        ],
+        "evidence": evidence,
+    }
+
+
 def _ap_memory_unsafe_binaries(
     dangerous_functions: list,
     entry_points: list,
@@ -522,6 +576,7 @@ _ATTACK_PATH_INFERRERS = [
     _ap_setuid,
     _ap_world_writable,
     _ap_cert_extraction,
+    _ap_cert_issues,
     _ap_weak_crypto,
     _ap_debug,
     _ap_update_mitm,
@@ -542,11 +597,13 @@ def infer_attack_paths(
     debug: list,
     certs: dict,
     dangerous_functions: list | None = None,
+    certificate_issues: list | None = None,
 ) -> list[AttackPath]:
     ctx = dict(
         entry_points=entry_points, init=init, web=web, users=users,
         credentials=credentials, privesc=privesc, protocols=protocols,
         weak_crypto=weak_crypto, debug=debug, certs=certs,
         dangerous_functions=dangerous_functions or [],
+        certificate_issues=certificate_issues or [],
     )
     return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]

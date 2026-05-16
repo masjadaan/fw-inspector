@@ -124,8 +124,9 @@ def _build_matrix(
             for _, cvss, reachable, _ in cve_data[comp].values()
         )
 
-    components      = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
-    scores          = [round(score(c)) for c in components]
+    score_map  = {c: score(c) for c in cve_data}
+    components = sorted(cve_data, key=lambda c: (-score_map[c], c))[:top]
+    scores     = [round(score_map[c]) for c in components]
     escalated_counts = [
         sum(1 for _, _, _, esc in cve_data[c].values() if esc)
         for c in components

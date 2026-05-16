@@ -6,7 +6,9 @@ from pathlib import Path
 from core import (
     EXTRACTED, INFERRED,
     Graph,
-    _CRYPTO_CWE, _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _SC_CWE, _SEV_WEIGHT, _TRUST_ZONES,
+    _CERT_ISSUE_CWE, _CRYPTO_CWE, _DANGEROUS_FUNC_CWE,
+    _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _SC_CWE, _SEV_WEIGHT,
+    _TLS_ISSUE_CWE, _TLS_ISSUE_DEFAULT, _TRUST_ZONES,
     mkid, prov, strip_rootfs, sym_to_algo, zone_for,
 )
 
@@ -468,6 +470,114 @@ class GraphBuilder:
                 self.g.add_edge(bin_nid, w_nid, "EXPOSES_WEAKNESS", {},
                                 prov(EXTRACTED, "hardening.json", 0.95))
 
+    # ── Dangerous function imports ────────────────────────────────────────────
+
+    def _build_dangerous_functions(self, surface: dict) -> None:
+        for finding in surface.get("dangerous_functions", []):
+            bin_path  = finding.get("binary", "")
+            functions = finding.get("functions", [])
+            if not bin_path or not functions:
+                continue
+
+            bin_nid = mkid("Binary", bin_path)
+            if bin_nid not in self.g.nodes:
+                self.g.add_node(bin_nid, "Binary", {
+                    "name": Path(bin_path).name,
+                    "path": bin_path,
+                }, prov(EXTRACTED, "dangerous_functions.json", 0.90))
+
+            for fn in functions:
+                cwe_id, desc, severity = _DANGEROUS_FUNC_CWE.get(
+                    fn, ("CWE-676", f"Use of potentially dangerous function {fn}()", "low")
+                )
+                w_nid = mkid("Weakness", "dangerous_function", bin_path, fn)
+                self.g.add_node(w_nid, "Weakness", {
+                    "type":        f"dangerous_function_{fn}",
+                    "function":    fn,
+                    "path":        bin_path,
+                    "cwe":         cwe_id,
+                    "description": desc,
+                    "severity":    severity,
+                }, prov(EXTRACTED, "dangerous_functions.json", 0.90))
+                self.g.add_edge(bin_nid, w_nid, "EXPOSES_WEAKNESS", {},
+                                prov(EXTRACTED, "dangerous_functions.json", 0.90))
+
+    # ── Certificate issues ────────────────────────────────────────────────────
+
+    def _build_certificate_issues(self, surface: dict) -> None:
+        for finding in surface.get("certificate_issues", []):
+            file_path = finding.get("file", "")
+            flags     = finding.get("flags", [])
+            if not file_path or not flags:
+                continue
+
+            cert_nid = mkid("Certificate", "issue", file_path)
+            if cert_nid not in self.g.nodes:
+                self.g.add_node(cert_nid, "Certificate", {
+                    "path":     file_path,
+                    "type":     "file",
+                    "subject":  finding.get("subject", ""),
+                    "issuer":   finding.get("issuer", ""),
+                    "not_after": finding.get("not_after", ""),
+                    "key_type": finding.get("key_type", ""),
+                    "key_bits": finding.get("key_bits", 0),
+                }, prov(EXTRACTED, "certificate_issues.json", 0.95))
+
+            for flag in flags:
+                cwe_id, desc, severity = self._resolve_cert_flag(flag)
+                safe_flag = flag.split(" ")[0].replace("-", "_")
+                w_nid = mkid("Weakness", "certificate_issue", file_path, flag)
+                self.g.add_node(w_nid, "Weakness", {
+                    "type":        f"certificate_{safe_flag}",
+                    "path":        file_path,
+                    "flag":        flag,
+                    "cwe":         cwe_id,
+                    "description": desc,
+                    "severity":    severity,
+                }, prov(EXTRACTED, "certificate_issues.json", 0.95))
+                self.g.add_edge(cert_nid, w_nid, "EXPOSES_WEAKNESS", {},
+                                prov(EXTRACTED, "certificate_issues.json", 0.95))
+
+    @staticmethod
+    def _resolve_cert_flag(flag: str) -> tuple[str, str, str]:
+        for prefix, (cwe_id, desc, severity) in _CERT_ISSUE_CWE.items():
+            if flag == prefix or flag.startswith(prefix + " "):
+                return cwe_id, desc, severity
+        return "CWE-295", f"Certificate issue: {flag}", "medium"
+
+    # ── TLS configuration issues ──────────────────────────────────────────────
+
+    def _build_tls_config_issues(self, surface: dict) -> None:
+        for finding in surface.get("tls_config_issues", []):
+            file_path = finding.get("file", "")
+            issue     = finding.get("issue", "")
+            if not file_path or not issue:
+                continue
+
+            fs_nid = mkid("FilesystemObject", file_path)
+            if fs_nid not in self.g.nodes:
+                self.g.add_node(fs_nid, "FilesystemObject", {
+                    "path":    file_path,
+                    "fs_type": "file",
+                    "role":    "tls_config",
+                }, prov(EXTRACTED, "tls_config_issues.json", 0.90))
+
+            cwe_id, severity = _TLS_ISSUE_CWE.get(issue, _TLS_ISSUE_DEFAULT)
+            line  = finding.get("line", 0)
+            w_nid = mkid("Weakness", "tls_config", file_path, issue, str(line))
+            self.g.add_node(w_nid, "Weakness", {
+                "type":        "tls_config_issue",
+                "issue":       issue,
+                "path":        file_path,
+                "line":        line,
+                "cwe":         cwe_id,
+                "description": f"Weak TLS/SSL configuration: {issue}",
+                "severity":    severity,
+                "cve_note":    finding.get("cve_note", ""),
+            }, prov(EXTRACTED, "tls_config_issues.json", 0.90))
+            self.g.add_edge(fs_nid, w_nid, "EXPOSES_WEAKNESS", {},
+                            prov(EXTRACTED, "tls_config_issues.json", 0.90))
+
     # ── Attack path derivation ────────────────────────────────────────────────
 
     def derive_attack_paths(self, zones: dict[str, str]) -> list[dict]:
@@ -582,8 +692,11 @@ def build(surface: dict, firmware_id: str) -> tuple[Graph, list[dict]]:
     builder._build_fs_and_weaknesses(surface)
     builder._build_credentials(surface)
     builder._build_certificates(surface)
+    builder._build_certificate_issues(surface)
     builder._build_shellcheck(surface)
     builder._build_hardening(surface)
+    builder._build_dangerous_functions(surface)
+    builder._build_tls_config_issues(surface)
 
     attack_paths = builder.derive_attack_paths(zones)
     return builder.g, attack_paths

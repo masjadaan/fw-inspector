@@ -85,6 +85,41 @@ _HARDENING_SEVERITY: dict[str, str] = {
 # Numeric weight per severity level — used to score weakness contribution in attack paths
 _SEV_WEIGHT: dict[str, float] = {"high": 2.0, "medium": 1.0, "low": 0.5}
 
+# Dangerous libc function → (CWE-ID, description, severity)
+_DANGEROUS_FUNC_CWE: dict[str, tuple[str, str, str]] = {
+    "gets":    ("CWE-242", "Inherently dangerous gets() — unbounded stack write, always vulnerable", "high"),
+    "strcpy":  ("CWE-120", "Buffer copy without size check — stack/heap overflow vector", "medium"),
+    "strcat":  ("CWE-120", "Buffer concatenation without size check — overflow vector", "medium"),
+    "sprintf": ("CWE-120", "Unbounded sprintf — buffer overflow via long input", "medium"),
+    "sscanf":  ("CWE-134", "sscanf with attacker-controlled format — format string injection", "medium"),
+    "fscanf":  ("CWE-134", "fscanf with attacker-controlled format — format string injection", "medium"),
+    "system":  ("CWE-78",  "OS command injection via system() — shell metacharacter exploitation", "high"),
+    "popen":   ("CWE-78",  "OS command injection via popen() — shell metacharacter exploitation", "high"),
+    "rand":    ("CWE-338", "Cryptographically weak PRNG — predictable values undermine security", "low"),
+    "srand":   ("CWE-338", "Cryptographically weak PRNG seed — predictable random state", "low"),
+}
+
+# Certificate issue flag prefix → (CWE-ID, description, severity)
+# "weak-key" may carry detail like "weak-key (RSA 512-bit)" — callers match by prefix
+_CERT_ISSUE_CWE: dict[str, tuple[str, str, str]] = {
+    "expired":        ("CWE-298", "Certificate has expired — may be bypassed or rejected by clients", "high"),
+    "self-signed":    ("CWE-295", "Self-signed certificate — no chain of trust; MITM is undetectable", "medium"),
+    "weak-key":       ("CWE-326", "Inadequate key length — private key may be brute-forced", "high"),
+    "weak-algorithm": ("CWE-327", "Weak signature algorithm (MD5/SHA1) — certificate forgery possible", "high"),
+}
+
+# TLS config issue string → (CWE-ID, severity)
+_TLS_ISSUE_CWE: dict[str, tuple[str, str]] = {
+    "SSLv2 enabled":       ("CWE-327", "critical"),
+    "SSLv3 enabled":       ("CWE-327", "high"),
+    "TLSv1.0 enabled":     ("CWE-327", "medium"),
+    "RC4 cipher":          ("CWE-327", "high"),
+    "NULL cipher":         ("CWE-311", "critical"),
+    "EXPORT cipher":       ("CWE-327", "high"),
+    "anonymous DH cipher": ("CWE-295", "high"),
+}
+_TLS_ISSUE_DEFAULT = ("CWE-327", "medium")
+
 # ShellCheck code → (CWE-ID, description) for security-relevant codes only
 _SC_CWE: dict[int, tuple[str, str]] = {
     2059: ("CWE-134", "Variable used as printf format string — format string injection"),

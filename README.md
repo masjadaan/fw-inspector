@@ -62,7 +62,14 @@ Each stage records `success | partial | failed | skipped` in `pipeline_manifest.
 - Docker
 - Python 3.12+
 
-No Python dependencies are required on the host. All extraction tooling runs inside the container.
+All extraction tooling (Stage 1) runs inside the container — no Python dependencies needed for that stage.
+
+Host-side dependencies for optional stages:
+
+| Stage | Dependency | Install |
+|---|---|---|
+| Stage 5 — CVE enrichment | [grype](https://github.com/anchore/grype) | `curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh \| sh` |
+| Stage 6 — Heatmap | matplotlib, numpy | `pip install matplotlib numpy` |
 
 ---
 
@@ -149,6 +156,19 @@ optional:
   --dot             Also write a Graphviz DOT file for visualization
 ```
 
+#### Stage 4 — Render Graph (optional)
+
+Requires graphviz on the host. The pipeline runs this automatically if `dot` is found; to run manually:
+
+```bash
+sudo apt install graphviz
+
+dot -Tsvg analysis/Archer_A5V6/attack_surface/graph.dot \
+    -o analysis/Archer_A5V6/attack_surface/graph.svg
+```
+
+---
+
 #### Stage 5 — CVE Enrichment (host-side)
 
 Requires [grype](https://github.com/anchore/grype) on the host:
@@ -187,6 +207,7 @@ positional:
 optional:
   --top, -n         Max components to show (default: 40, worst-first)
   --output, -o      Override output path for cve_heatmap.png
+  --csv             Also write cve_heatmap.csv alongside the PNG
 ```
 
 CVE severity is adjusted beyond the base CVSS score using two firmware-specific signals:
@@ -299,11 +320,11 @@ Volumes:
 | `Service` | Running service (e.g. dropbear, httpd) |
 | `Port` | Network port with protocol |
 | `ProcessContext` | uid/gid/capabilities of a running service |
-| `Config` | Configuration file |
 | `Credential` | Password hash, API key, or secret |
 | `Certificate` | TLS certificate or SSH key |
 | `FilesystemObject` | File with notable permission or attribute |
 | `CryptoPrimitive` | Cryptographic symbol import (DES, RC4, MD5, etc.) |
+| `User` | System user account (uid, shell, login_possible) |
 | `Weakness` | Concrete weakness instance (e.g. world-writable binary) |
 | `WeaknessClass` | CWE-based weakness class |
 | `TrustZone` | Network exposure zone: WAN / LAN / LOCAL |
@@ -321,7 +342,8 @@ Volumes:
 | `EXPOSES_WEAKNESS` | Entity has a concrete weakness |
 | `CONTAINS_SECRET` | Binary or config contains a hardcoded secret |
 | `LINKS_TO` | Binary dynamically links a library |
-| `LOADS_CONFIG` | Service loads a config file |
+| `HAS_CREDENTIAL` | User has an associated credential (password hash) |
+| `AUTHENTICATES_WITH` | SSH/Telnet service authenticates against a user account |
 
 ### Provenance
 
@@ -370,26 +392,12 @@ analysis/<firmware>/
     sbom.cdx.json               ← CycloneDX 1.5 SBOM (libraries, executables, kernel modules)
     cve_report.json             ← CVE findings enriched with hardening and reachability context
     cve_heatmap.png             ← severity heatmap (components × severity levels)
+    cve_heatmap.csv             ← machine-readable heatmap data (produced with --csv)
   attack_surface/
     attack_surface.json         ← structured attack surface model
     graph.json                  ← entity-relationship graph with derived attack paths
     graph.dot                   ← Graphviz DOT for visualization (--dot flag)
     graph.svg                   ← rendered SVG (stage 4, requires graphviz)
-```
-
-### Visualizing the Graph
-
-The pipeline renders `graph.svg` automatically at stage 4 if graphviz is installed. To render manually:
-
-```bash
-sudo apt install graphviz
-
-dot -Tsvg analysis/Archer_A5V6/attack_surface/graph.dot \
-    -o analysis/Archer_A5V6/attack_surface/graph.svg
-
-# Interactive viewer
-sudo apt install xdot
-xdot analysis/Archer_A5V6/attack_surface/graph.dot
 ```
 
 ---

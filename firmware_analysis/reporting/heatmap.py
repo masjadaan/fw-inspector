@@ -151,7 +151,7 @@ def _draw(
 ) -> None:
     n_rows, n_sev_cols = matrix.shape
     all_cols   = active_sevs + ["esc", "score"]
-    col_labels = [s.upper() for s in active_sevs] + ["ESC", "SCORE"]
+    col_labels = [s.upper() for s in active_sevs] + ["ESCALATED", "SCORE"]
     n_cols     = len(all_cols)
 
     esc_col   = np.array(escalated_counts, dtype=float).reshape(-1, 1)
@@ -223,7 +223,7 @@ def _draw(
         xy=(sev_x, 0), xytext=(0, -20), color="#555555", **_ann,
     )
     ax.annotate(
-        "ESC = # CVEs escalated\nbeyond NVD base",
+        "# CVEs raised above\nNVD base severity",
         xy=(esc_x, 0), xytext=(0, -20), color="#ae017e", **_ann,
     )
     ax.annotate(

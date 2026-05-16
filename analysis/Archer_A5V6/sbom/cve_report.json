@@ -1,15 +1,15 @@
 {
   "firmware": "Archer_A5V6",
   "sbom": "/home/msbit/MyGithub/FirmwareAnalysis/analysis/Archer_A5V6/sbom/sbom.cdx.json",
-  "total_vulnerabilities": 351,
-  "escalated": 250,
+  "total_vulnerabilities": 356,
+  "escalated": 255,
   "by_adjusted_severity": {
     "none": 0,
     "info": 0,
     "low": 2,
     "medium": 18,
     "high": 48,
-    "critical": 283
+    "critical": 288
   },
   "vulnerabilities": [
     {
@@ -135,20 +135,6 @@
       "recommendation": ""
     },
     {
-      "cve": "CVE-2016-8622",
-      "component": "libcurl",
-      "version": "4.7.0",
-      "base_severity": "critical",
-      "adjusted_severity": "critical",
-      "cvss_score": 9.8,
-      "escalated": false,
-      "escalation_reasons": [],
-      "network_reachable": false,
-      "hardening": {},
-      "description": "The URL percent-encoding decode function in libcurl before 7.51.0 is called `curl_easy_unescape`. Internally, even if this function would be made to allocate a unscape destination buffer larger than 2GB, it would return that new length in a signed 32 bit integer variable, thus the length would get either just truncated or both truncated and turned negative. That could then lead to libcurl writing outside of its heap based buffer.",
-      "recommendation": ""
-    },
-    {
       "cve": "CVE-2022-32221",
       "component": "curl",
       "version": "7.79.0",
@@ -170,6 +156,20 @@
         "canary": "False"
       },
       "description": "When doing HTTP(S) transfers, libcurl might erroneously use the read callback (`CURLOPT_READFUNCTION`) to ask for data to send, even when the `CURLOPT_POSTFIELDS` option has been set, if the same handle previously was used to issue a `PUT` request which used that callback. This flaw may surprise the application and cause it to misbehave and either send off the wrong data or use memory after free or similar in the subsequent `POST` request. The problem exists in the logic for a reused handle when it is changed from a PUT to a POST.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2016-8622",
+      "component": "libcurl",
+      "version": "4.7.0",
+      "base_severity": "critical",
+      "adjusted_severity": "critical",
+      "cvss_score": 9.8,
+      "escalated": false,
+      "escalation_reasons": [],
+      "network_reachable": false,
+      "hardening": {},
+      "description": "The URL percent-encoding decode function in libcurl before 7.51.0 is called `curl_easy_unescape`. Internally, even if this function would be made to allocate a unscape destination buffer larger than 2GB, it would return that new length in a signed 32 bit integer variable, thus the length would get either just truncated or both truncated and turned negative. That could then lead to libcurl writing outside of its heap based buffer.",
       "recommendation": ""
     },
     {
@@ -1869,6 +1869,30 @@
       "recommendation": ""
     },
     {
+      "cve": "CVE-2026-6276",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "high",
+      "adjusted_severity": "critical",
+      "cvss_score": 7.5,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "Using libcurl, when a custom `Host:` header is first set for an HTTP request\nand a second request is subsequently done using the same *easy handle* but\nwithout the custom `Host:` header set, the second request would use stale\ninformation and pass on cookies meant for the first host in the second\nrequest. Leak them.",
+      "recommendation": ""
+    },
+    {
       "cve": "CVE-2014-0224",
       "component": "libcrypto",
       "version": "1.0.0",
@@ -2893,6 +2917,54 @@
       "recommendation": ""
     },
     {
+      "cve": "CVE-2026-6253",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5.9,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "curl might erroneously pass on credentials for a first proxy to a second\nproxy.\n\nThis can happen when the following conditions are true:\n\n1. curl is setup to use specific different proxies for different URL schemes\n2. the first proxy needs credentials\n3. the second proxy uses no credentials\n4. while using the first proxy (using say `http://`), curl is asked to follow\n   a redirect to a URL using another scheme (say `https://`), accessed using a\n   second, different, proxy",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2026-4873",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5.9,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "A vulnerability exists where a connection requiring TLS incorrectly reuses an\nexisting unencrypted connection from the same connection pool. If an initial\ntransfer is made in clear-text (via IMAP, SMTP, or POP3), a subsequent request\nto that same host bypasses the TLS requirement and instead transmit data\nunencrypted.",
+      "recommendation": ""
+    },
+    {
       "cve": "CVE-2013-6450",
       "component": "libcrypto",
       "version": "1.0.0",
@@ -3197,6 +3269,30 @@
       "recommendation": ""
     },
     {
+      "cve": "CVE-2026-7168",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5.3,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "Successfully using libcurl to do a transfer over a specific HTTP proxy\n(`proxyA`) with **Digest** authentication and then changing the proxy host to\na second one (`proxyB`) for a second transfer, reusing the same handle, makes\nlibcurl wrongly pass on the `Proxy-Authorization:` header field meant for\n`proxyA`, to `proxyB`.",
+      "recommendation": ""
+    },
+    {
       "cve": "CVE-2025-15079",
       "component": "curl",
       "version": "7.79.0",
@@ -3242,6 +3338,30 @@
         "canary": "False"
       },
       "description": "When an OAuth2 bearer token is used for an HTTP(S) transfer, and that transfer\nperforms a cross-protocol redirect to a second URL that uses an IMAP, LDAP,\nPOP3 or SMTP scheme, curl might wrongly pass on the bearer token to the new\ntarget host.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2026-6429",
+      "component": "curl",
+      "version": "7.79.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5.3,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "When asked to both use a `.netrc` file for credentials and to follow HTTP\nredirects, libcurl could leak the password used for the first host to the\nfollowed-to host under certain circumstances.",
       "recommendation": ""
     },
     {

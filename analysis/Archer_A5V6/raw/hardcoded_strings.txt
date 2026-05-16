@@ -4,6 +4,9 @@ Bearer Type
 %s: bearer capabilities not appropriate for message %s.  Ignoring.
 Bearer Capabilities
 
+--- usr/bin/cloud_https ---
+https://%s%s?deviceId=%s&user=&model=%s&hwId=%s&hwVer=%s&oemId=%s&fwVer=%s&deviceType=%s
+
 --- usr/bin/wscd_5G ---
 http://%s:%d/description.xml
 http://
@@ -23,9 +26,6 @@ s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
 CALLBACK: <http://
 http://www.w3.org/XML/1998/namespace
 http://www.w3.org/2000/xmlns/
-
---- usr/bin/cloud_https ---
-https://%s%s?deviceId=%s&user=&model=%s&hwId=%s&hwVer=%s&oemId=%s&fwVer=%s&deviceType=%s
 
 --- usr/bin/curl ---
  * https://curl.se/libcurl/c/curl_easy_setopt.html
@@ -67,23 +67,19 @@ http://%d.%d.%d.%d:%d/
 Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 
+--- usr/bin/rtinicapd ---
+ secret_len = %d, secret= %s
+
+--- usr/bin/rt2860apd ---
+ secret_len = %d, secret= %s
+
 --- usr/bin/httpd ---
 Location: https://%s:%d
 Location: https://%s
 http://
 
---- usr/bin/rt2860apd ---
- secret_len = %d, secret= %s
-
---- usr/bin/rtinicapd ---
- secret_len = %d, secret= %s
-
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/
-
---- lib/libixml.so ---
-http://www.w3.org/XML/1998/namespace
-http://www.w3.org/2000/xmlns/
 
 --- lib/libcurl.so.4.7.0 ---
 # Your alt-svc cache. https://curl.se/docs/alt-svc.html
@@ -93,6 +89,10 @@ Authorization: Bearer %s
 auth=Bearer %s
 auth=Bearer %s
 auth=Bearer %s
+
+--- lib/libixml.so ---
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
 
 --- lib/libupnp.so ---
 http://schemas.xmlsoap.org/soap/envelope/

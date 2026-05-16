@@ -2,22 +2,22 @@
   "metadata": {
     "firmware_id": "Archer_A5V6",
     "schema_version": "1.0",
-    "generated_at": "2026-05-14T19:54:08.767272+00:00",
-    "node_count": 404,
-    "edge_count": 306,
+    "generated_at": "2026-05-16T05:51:55.129053+00:00",
+    "node_count": 608,
+    "edge_count": 498,
     "node_type_counts": {
       "Firmware": 1,
       "TrustZone": 3,
-      "Binary": 88,
+      "Binary": 99,
       "Service": 2,
       "Port": 2,
       "ProcessContext": 1,
       "CryptoPrimitive": 5,
       "WeaknessClass": 1,
       "FilesystemObject": 14,
-      "Weakness": 272,
+      "Weakness": 464,
       "Credential": 14,
-      "Certificate": 1
+      "Certificate": 2
     },
     "relationship_counts": {
       "PROVIDES": 2,
@@ -26,7 +26,7 @@
       "RUNS_AS": 2,
       "ASSOCIATED_WITH": 5,
       "USES_CRYPTO": 6,
-      "EXPOSES_WEAKNESS": 272,
+      "EXPOSES_WEAKNESS": 464,
       "CONTAINS_SECRET": 14,
       "LINKS_TO": 1
     }
@@ -917,6 +917,41 @@
         "type": "extracted",
         "source": "certificates_keys.txt",
         "confidence": 0.85
+      }
+    },
+    {
+      "id": "45230d73-e57d-5dbc-94ba-2c34a91e0c4b",
+      "type": "Certificate",
+      "attributes": {
+        "path": "etc/cloud/2048_newroot.cer",
+        "type": "file",
+        "subject": "CN=tp-link-CA",
+        "issuer": "CN=tp-link-CA",
+        "not_after": "2068-01-19T08:37:52+00:00",
+        "key_type": "RSA",
+        "key_bits": 2048
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "certificate_issues.json",
+        "confidence": 0.95
+      }
+    },
+    {
+      "id": "17559474-d2df-5452-9353-83d1f2f56638",
+      "type": "Weakness",
+      "attributes": {
+        "type": "certificate_self_signed",
+        "path": "etc/cloud/2048_newroot.cer",
+        "flag": "self-signed",
+        "cwe": "CWE-295",
+        "description": "Self-signed certificate \u2014 no chain of trust; MITM is undetectable",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "certificate_issues.json",
+        "confidence": 0.95
       }
     },
     {
@@ -6421,6 +6456,3396 @@
         "source": "hardening.json",
         "confidence": 0.95
       }
+    },
+    {
+      "id": "2cdb29b2-73d2-5579-8444-735806a6c204",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "bin/busybox",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b68347b6-858a-5267-a6e5-491c2c706d5b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_popen",
+        "function": "popen",
+        "path": "bin/busybox",
+        "cwe": "CWE-78",
+        "description": "OS command injection via popen() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "af59f384-7a84-5b4f-95d1-a9b79b4ac757",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "bin/busybox",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b27adb1b-a699-581c-b01b-2baa1d124b24",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "bin/busybox",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e720aad1-83a9-5b35-b71e-681c8821cc89",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "bin/busybox",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e6b81e09-4140-5228-835d-c2d5aa15ba68",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "bin/busybox",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b5a13c2f-e1f6-56d4-8d10-9c6240067f43",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "bin/busybox",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4c5e3644-2465-578a-9ae5-9971afea7316",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "bin/busybox",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "980e38b5-752a-5a79-bf39-dc0cf803f8d5",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "bin/busybox",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c104a768-acf4-5bfe-8d1e-8b2ef36be38f",
+      "type": "Binary",
+      "attributes": {
+        "name": "libcJSON.so",
+        "path": "lib/libcJSON.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4b8cecee-7712-5813-8a6f-d478e47e7464",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libcJSON.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3b9dd66f-7a25-5168-8cd5-45f312254903",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libcJSON.so",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8ff95956-df20-5e0f-a6d0-a88f475babb0",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libcJSON.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "type": "Binary",
+      "attributes": {
+        "name": "libcmm.so",
+        "path": "lib/libcmm.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b98dd5e9-d78b-546a-9ed2-591dd449333e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4d5ecb96-4d6e-5224-9b67-0d49e4a7a09d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4be443f1-b512-5287-9c2a-eaf03c1ba86c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ca4823b6-43f7-56fc-a0a3-55d152f003b6",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5f95c6b6-9612-5a49-aefc-9c25dd63f237",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2407c977-4e5c-52c4-a5f1-ea797549641c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7bf93c04-d17f-583e-8439-0fae71e77fca",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "39cb52ec-1ea7-502d-a118-f5d3e4fed2ec",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "lib/libcmm.so",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "186e00cf-223b-5f88-a9fa-eabef1a258cf",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libcrypt-0.9.33.2.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "43c02a61-bcdd-57a1-ae67-084e66ae4f7d",
+      "type": "Binary",
+      "attributes": {
+        "name": "libcrypto.so.1.0.0",
+        "path": "lib/libcrypto.so.1.0.0"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "dd4e4985-813c-5555-8d6b-bcafca4a7825",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libcrypto.so.1.0.0",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "afdc2247-89e0-5022-953c-cc8526cb71d3",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libcrypto.so.1.0.0",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c5461871-97b3-5701-91f8-450709a20775",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "lib/libcrypto.so.1.0.0",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f674bd94-e198-579f-ad7c-0cf71824dfcb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libcrypto.so.1.0.0",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b3f93f7b-ba74-56ae-89bd-f62f0ecb7067",
+      "type": "Binary",
+      "attributes": {
+        "name": "libcurl.so.4.7.0",
+        "path": "lib/libcurl.so.4.7.0"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b8050a3e-5137-5fc2-929e-8cad8097034e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libcurl.so.4.7.0",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4c08b760-844d-5181-9c93-529722e988ce",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libcurl.so.4.7.0",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "989805ad-6400-5961-9902-f9386cf54feb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libcurl.so.4.7.0",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8ef621eb-fb2c-58e5-b3c3-c7094104aa47",
+      "type": "Binary",
+      "attributes": {
+        "name": "libcutil.so",
+        "path": "lib/libcutil.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d48fee4a-130c-5e43-9d41-0e7be2f474ab",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libcutil.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f401bcbe-1310-53e2-8615-9940c1012e15",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "lib/libcutil.so",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d37d6e50-449a-5c11-ac86-a53342733846",
+      "type": "Binary",
+      "attributes": {
+        "name": "libgdpr.so",
+        "path": "lib/libgdpr.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "47f78407-7b5c-5a28-b768-73434e2f8519",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "lib/libgdpr.so",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c3ac82f1-4e30-5505-97ad-9848f464d639",
+      "type": "Binary",
+      "attributes": {
+        "name": "libiw.so.29",
+        "path": "lib/libiw.so.29"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3e1b79dd-463f-5f6a-9df7-73b1f8f7e7bb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libiw.so.29",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9c27b6f3-2569-5896-9df4-f2cd22db684f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libiw.so.29",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "81036216-908e-5ff5-bc36-15c7cfff7d16",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libiw.so.29",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e48b1e42-6559-58e8-ac1c-bad5e65a2ef5",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libm-0.9.33.2.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "353f2723-5281-5bc2-b978-44590438eff4",
+      "type": "Binary",
+      "attributes": {
+        "name": "libos.so",
+        "path": "lib/libos.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "24cc550b-6cc1-560c-a014-c8aae6bedd57",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libos.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "08f313dc-c734-5b34-802b-4a44bdd89a2a",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "lib/libos.so",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "691e62d9-d56a-5834-acf5-ac7bb0ab0abd",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libssl.so.1.0.0",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8859ecc9-f75c-5455-b05c-1d274290c9d2",
+      "type": "Binary",
+      "attributes": {
+        "name": "libthreadutil.so",
+        "path": "lib/libthreadutil.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7a443cb9-6081-5ab9-a55b-2d02d7388d67",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "lib/libthreadutil.so",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "type": "Binary",
+      "attributes": {
+        "name": "libupnp.so",
+        "path": "lib/libupnp.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e8958c41-dfe7-50a8-859d-9bee1efa81b1",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "24ff5f5b-f937-5f92-bfce-cb3c4ecd8cb9",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5b6d50fd-61b0-5b22-9187-292ba42299eb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "38ed533e-89fb-56db-9e20-5cab8502be7c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8a62169f-23ab-58b3-b3a8-bc22f742fe77",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4546c323-9041-5151-9450-c94738b68fcf",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libupnp.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9cbe0450-cb8f-510d-9328-650204a31b5a",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libutil-0.9.33.2.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2dbf1bca-3941-5d0a-b0d0-f3f1cd5961d0",
+      "type": "Binary",
+      "attributes": {
+        "name": "libxml.so",
+        "path": "lib/libxml.so"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d0504472-c3ca-5c61-b9fe-08a0a2efce69",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "lib/libxml.so",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "73ef7104-f6ee-57d6-a33f-a790f00837fb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "lib/libxml.so",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3b3f4161-08a8-5955-861a-fa6137f794fb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "lib/libxml.so",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d7821aaf-1129-587e-8bb6-b38ccd268470",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "sbin/switch",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "658a9789-ed3c-55e4-b203-3b66f48654cc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_popen",
+        "function": "popen",
+        "path": "usr/bin/ated_tp",
+        "cwe": "CWE-78",
+        "description": "OS command injection via popen() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "761c389d-7e41-52d7-8534-5943cf6705bb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/ated_tp",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8b994070-36f2-5fa4-a1ee-5d8460bab50d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/ated_tp",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "14fcc984-64f4-5c81-af53-aea750200e1c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/cloud_https",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "72c76ee5-5313-51fb-9d6b-c1f5cada7abc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/cloud_https",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "36e83893-8713-54ad-b198-1567e13770e6",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/cloud_https",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6952c9ae-58eb-5f21-8c69-d80127aafa00",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/cloud_https",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "37860f18-f3e1-5c2c-bad3-a44e5ee40626",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/cmxdns",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6f80d4d5-fa92-5414-a8f1-75e9591b1bbb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/cmxdns",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5d803204-6104-5096-a205-99bd6c29eba1",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/cmxdns",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "253ef111-73db-56eb-85a9-20dda9f908cc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "403e8d16-0c30-5a1d-884f-b6ca7959ac6b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2273dc3f-d642-51ec-bdc2-8cfa076412a8",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5a2caac4-3d93-526c-a029-7bc2b3d5ad2b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a641e834-4abf-59d1-ab65-bb4284aae0d8",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e7ed0e60-39b8-54f0-b3fa-8dcf563cbfea",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "18727766-85d1-5f7b-a4d9-b4c5edcd2334",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1803129a-5eed-55a0-a413-d23bccc6bea2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/cos",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "db2f6504-67f8-570f-ba17-04310bb73dfe",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/curl",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ad322697-8a8a-5230-b301-77e32197b7d2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/curl",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "11a54f63-528a-5e1a-b75f-d0ea01cf9ca6",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/bin/dhcpc",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ecc83258-1ca3-5cb9-bfb8-fa20fc21b325",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/dhcpc",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7dd08870-ad1a-583a-95c1-e12044c04e34",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/dhcpc",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "04ab191e-b6aa-509f-a47a-a877a889d646",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/dhcpc",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b71baef7-e07e-5985-9a00-87f8f94fc8a8",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/dhcpc",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "889853b0-a02b-548c-8151-3d23710b76d3",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/bin/dhcpd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fa0611eb-c530-53eb-b643-3da9cb01e021",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/dhcpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "68da230c-4365-5a17-b09e-823959a37e46",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/dhcpd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0d096024-34cd-5522-8611-732b5274a6b3",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/dhcpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d5a951f8-3791-5952-af13-363619a8b4da",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/dhcpd",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "661d701c-0c10-5d92-927d-4797946df027",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/dyndns",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c365438c-ea13-5e17-8eeb-417b3ddfeeb8",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/dyndns",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4235729b-cc43-5c56-aeae-305889c1adf0",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/dyndns",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "16c0d9a5-cd87-5096-a366-7981997e4459",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/ebtables",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9153ba9c-9eca-5694-aa8f-2ac290d6f152",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/ebtables",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a7c7aa98-a287-5f9d-a26e-256a87512bf2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "eb3d10d8-9712-5716-af22-a57f3fb4b815",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_popen",
+        "function": "popen",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-78",
+        "description": "OS command injection via popen() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "653b11b5-5922-54db-bd42-987ccd4a50bb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1f649a1a-5c0d-5157-b905-3b31c2edcadf",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "be581b66-f8fe-566d-bd9d-0d22f2314d6c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1cf46542-d9ce-53dc-89b9-949f658c7618",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/httpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c73a9171-67e8-573d-ab5f-6fe379027234",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/ip",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d51214ad-7e07-532c-a690-bb7bb0364241",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/ip",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "db4240fd-870b-525d-8a12-891442f4767b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/ip",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b15b84e7-f54d-58ba-87b6-1a37c4725120",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/ip",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2d6821de-d281-5a07-88ca-410a8f53a799",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/ip",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7fa46ccc-cef9-5bb5-a653-8472a412280e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/ipping",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "43074e88-0f32-5beb-affa-e4afe5435741",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/ipping",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4b6dcc75-d12d-5efc-8885-4c1c69cd41c1",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/ipping",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "19c8304e-2eba-502a-94ae-7e9691eb165e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/ipping",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "820e8fb1-4e51-55d3-86ab-83c4fb7e7460",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/iwconfig",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fc09d0c1-ceed-5594-9eef-609e4673e1ad",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/iwconfig",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a96a2a6c-e6dd-5a70-974d-b2c31ea7bcc7",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/iwpriv",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f9a17290-ae01-5e7e-8414-475d8c94a614",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/mldProxy",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "638433ed-5f02-589c-aa19-21f6d4cd2030",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/mldProxy",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "29d7aa77-a5b8-5605-9345-4b3e84243109",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/noipdns",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0e58a089-bb1b-5737-af83-4db3f85f94cc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/ntpc",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ff65c006-cf6b-5e31-9556-6c39fb0632bc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/openssl",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9b2a03a3-647a-5255-8254-c3eb59110851",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/openssl",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d6d7f48a-e9ff-53a0-890d-c304ada74d59",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/rt2860apd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a32ae615-18b6-5737-8940-78d239f36e76",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/rt2860apd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e51f0f7b-483f-5904-a4b8-5982c773f079",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/rtinicapd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "03dd8017-91ce-5d56-8100-e8a4fb683d69",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/rtinicapd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9b214051-11b4-52a4-96d9-5a1ccae936e4",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/tc",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "abddf5e1-7ea5-5055-bb93-ce95bf210a2c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/tc",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b1da19cf-beb8-521e-989b-95880ef2788c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/tc",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "05f5a950-7095-5b8e-adfc-1ddc54154efc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/tc",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9c2ae19e-8bac-5879-adf8-378955da937d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/tc",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "274f7121-0bf4-59d5-8d95-6e9f90a704cd",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8d45f865-8a29-5544-b2d3-2bd7eb2d671d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ad4cce97-7d8e-5c14-bcdb-2cc9485ac2aa",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "07000aa5-7eb8-547b-84b5-72747908ec54",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a626a736-0c94-53c3-855c-54ff70551e7d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a66bd671-7708-50d2-b6f3-524de4a36c8f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "33d2c22b-b1b2-528a-8409-23b4a945e939",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_vsprintf",
+        "function": "vsprintf",
+        "path": "usr/bin/tddp",
+        "cwe": "CWE-676",
+        "description": "Use of potentially dangerous function vsprintf()",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "219449a7-31b2-5d9e-ae27-3e26c82d4350",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/tdpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b011ba29-dc6b-5646-bbdf-633a5accb3dd",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/tdpd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "44e1aa21-b8cb-5c5d-abc5-f0638bd76673",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/tdpd",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "df192f7b-4f5a-5726-ba7b-1813d27e1a5d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/tdpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "29924cd0-cb4d-56a0-9355-049f80ae962e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/tmpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3f3148e1-8899-5177-9a19-337f3c539158",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/tmpd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1d804f84-809d-5702-974b-2aac5de07a3e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/tmpd",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "dd05ba2f-e35b-58fe-aecf-e6f1d23648bb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/tmpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "768029c9-cf54-5107-9d14-37b3eeb59e4e",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/traceroute",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "49b4d733-a99e-5aff-8722-4f84180794d1",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/traceroute",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1e9fdc3d-c239-5eb7-bedd-5a31562108fc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_vsprintf",
+        "function": "vsprintf",
+        "path": "usr/bin/traceroute",
+        "cwe": "CWE-676",
+        "description": "Use of potentially dangerous function vsprintf()",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6f4100fa-74d7-5587-abe0-6939797ae299",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/bin/upnpd",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "56340eef-b069-5ef2-a7bc-227c10341abd",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/upnpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "eadd00d1-f0a4-5813-8e40-953d2f304be4",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/upnpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ec38f6ab-4d67-55e7-b0f0-59d3eff57db4",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/bin/upnpd",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ecb20ed7-43a6-5f5a-b34e-24bd0a67f06c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/wanType",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "db8ab8e9-fe8d-55b7-b465-7fce2d4c76f7",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/wanType",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e6dbb825-b594-5609-baca-b375d12cbe56",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/wlNetlinkTool",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "42bacc9a-9ccd-550c-b9f4-4ad49d60dad9",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/wol",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c1e54b9e-2e53-5815-a7a5-731dff397685",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/wol",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2881921c-f38c-55de-aaa6-d56c8711edee",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "543c73b0-cfff-506b-9505-77f12dc1bbf5",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "eb7ab25b-27de-5599-9c63-afc3d971f54c",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4a212c3f-e3d8-5e4f-abf7-cd00fc9758db",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "65a5a7ba-e6f7-5285-9f41-3a5c517cfaa7",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "38046167-c4d0-55b4-a8e0-5fcbb1a91bad",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/wscd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c61ef72e-8c55-51ec-969a-fc0e5e56cfdd",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "91e8214a-f4cc-59f5-9368-14ed1bd1991f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "41543e3a-616f-5d6a-8870-3d767c555d2b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d4a0a8a0-c567-508d-a3a1-51e3733efaad",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ea8e8321-8763-5f8c-8288-36bdf7a3c0b3",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7f70adac-92b8-55cf-8af0-02f52043a4af",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/wscd_5G",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7ac67b4a-9b25-50d1-ba18-92447d3cc47a",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/bin/xtables-multi",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "053e3a04-8d94-5a66-9f79-503d5128d628",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/bin/xtables-multi",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "62ad04fa-f820-5a4d-b243-f6e04a8daed2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/bin/xtables-multi",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0466b815-dbe4-5377-b1e7-0a5696614c16",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/bin/xtables-multi",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "724c0056-12fe-5a40-b8c4-84e1d41652cc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/bpalogin",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6a0004c3-fcc8-564c-a9b8-0214315a766b",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/sbin/bpalogin",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "41ae0937-89d2-5948-b3cc-a2ec07cfaece",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/sbin/bpalogin",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9767a3f3-ac1b-5a7e-8dcb-f95bf1f6750f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_vsprintf",
+        "function": "vsprintf",
+        "path": "usr/sbin/bpalogin",
+        "cwe": "CWE-676",
+        "description": "Use of potentially dangerous function vsprintf()",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "795782ab-da31-5a8e-9bb6-4cc2f4fc57b1",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/dhcp6c",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1aeb2ce0-6443-574c-9bde-4e5d2c0af011",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/dhcp6c",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8a78efb8-1434-592e-bcd6-e16550498998",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/sbin/dhcp6c",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b5448c90-bb49-5a9e-bd71-e7522e2e9910",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/dhcp6s",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "cb651e10-0646-5b99-8dab-8c6909d5277f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/sbin/dhcp6s",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b7bd25e2-15b2-5a4d-b8d1-b78162f25e65",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/sbin/dhcp6s",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e03d9105-d139-5f20-98c7-914022debcb0",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/sbin/pppd",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2e50f22c-1744-5691-9807-8baf703e76ac",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/pppd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a38b768a-7e6d-5a62-a2d8-de3909e5cce5",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/pppd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a000ca17-c514-51b7-95e5-02bdaccb68dc",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/sbin/pppd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8ae7c117-84ff-5b9f-9f6a-f20bd510343f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_system",
+        "function": "system",
+        "path": "usr/sbin/pppd",
+        "cwe": "CWE-78",
+        "description": "OS command injection via system() \u2014 shell metacharacter exploitation",
+        "severity": "high"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "540b4c00-1871-566e-9ba7-322b6fb71715",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_fscanf",
+        "function": "fscanf",
+        "path": "usr/sbin/radvd",
+        "cwe": "CWE-134",
+        "description": "fscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "bf690f77-d9ec-5c0a-aa9d-46efb8cd59b2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/sbin/radvd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9321e38c-576a-5cfb-b4ed-a2996a43859d",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/sbin/radvd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "235edc30-a5e6-5a09-a3a7-e2b837c9d46f",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/radvd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8b15d166-08b2-5e39-a075-0e8870d799a6",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/sbin/ripd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "11632ede-0ac2-5791-adfe-8268c6a37387",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/ripd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7a700322-1e74-5e77-b726-586c8265dcc6",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/sbin/ripd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6ef95ef3-8770-5faa-8873-4dd22a22fa73",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_rand",
+        "function": "rand",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG \u2014 predictable values undermine security",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e287e702-25a4-5e0a-a919-137a655803ca",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "37ec8197-127f-5369-bbda-902d5b9f6b3a",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_srand",
+        "function": "srand",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-338",
+        "description": "Cryptographically weak PRNG seed \u2014 predictable random state",
+        "severity": "low"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "094c0707-83fb-5d29-98dd-4f896c1eb0c2",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5d8706d4-f1e4-5213-9c32-8236332e14cb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcat",
+        "function": "strcat",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-120",
+        "description": "Buffer concatenation without size check \u2014 overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c0556165-9312-5e1c-8e02-04e9b0db4ddb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_strcpy",
+        "function": "strcpy",
+        "path": "usr/sbin/xl2tpd",
+        "cwe": "CWE-120",
+        "description": "Buffer copy without size check \u2014 stack/heap overflow vector",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0587e375-995a-528c-8dc9-1262437162ce",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sprintf",
+        "function": "sprintf",
+        "path": "usr/sbin/zebra",
+        "cwe": "CWE-120",
+        "description": "Unbounded sprintf \u2014 buffer overflow via long input",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0fca7ba8-0da0-540f-8034-417c6cda17eb",
+      "type": "Weakness",
+      "attributes": {
+        "type": "dangerous_function_sscanf",
+        "function": "sscanf",
+        "path": "usr/sbin/zebra",
+        "cwe": "CWE-134",
+        "description": "sscanf with attacker-controlled format \u2014 format string injection",
+        "severity": "medium"
+      },
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
     }
   ],
   "edges": [
@@ -6996,6 +10421,18 @@
         "type": "extracted",
         "source": "certificates_keys.txt",
         "confidence": 0.85
+      }
+    },
+    {
+      "id": "ab1323d7-2243-5b2b-91b5-e051a2c4d871",
+      "source": "45230d73-e57d-5dbc-94ba-2c34a91e0c4b",
+      "target": "17559474-d2df-5452-9353-83d1f2f56638",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "certificate_issues.json",
+        "confidence": 0.95
       }
     },
     {
@@ -10129,21 +13566,2316 @@
         "source": "hardening.json",
         "confidence": 0.95
       }
+    },
+    {
+      "id": "6fb45ea4-a19d-551b-a1bb-a215d46083e9",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "2cdb29b2-73d2-5579-8444-735806a6c204",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f0747fd0-5c29-54c7-a906-857508ba6710",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "b68347b6-858a-5267-a6e5-491c2c706d5b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ed55e8ba-093c-52e5-8195-91f3af8af35c",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "af59f384-7a84-5b4f-95d1-a9b79b4ac757",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ea6a6f46-6bef-5231-a4f3-ccf8be01c81e",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "b27adb1b-a699-581c-b01b-2baa1d124b24",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f5624cca-1e14-5c4b-a345-2b3990d70025",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "e720aad1-83a9-5b35-b71e-681c8821cc89",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a6154b2f-89b1-5a14-aeec-cade2568f346",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "e6b81e09-4140-5228-835d-c2d5aa15ba68",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "21a76f07-ae0d-5290-a33e-80e7a6bb69be",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "b5a13c2f-e1f6-56d4-8d10-9c6240067f43",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ed857140-3cdd-50b9-8c89-7bc4ef616f52",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "4c5e3644-2465-578a-9ae5-9971afea7316",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "cd8aabf2-5d5a-512e-b9a6-136955f4f8dc",
+      "source": "6debcc39-594f-52f0-b414-6419a448ec7d",
+      "target": "980e38b5-752a-5a79-bf39-dc0cf803f8d5",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "62934b03-bd47-5f82-8411-1cd59f2e0a1a",
+      "source": "c104a768-acf4-5bfe-8d1e-8b2ef36be38f",
+      "target": "4b8cecee-7712-5813-8a6f-d478e47e7464",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "312f0632-ee72-590e-a4f1-e217dc21f939",
+      "source": "c104a768-acf4-5bfe-8d1e-8b2ef36be38f",
+      "target": "3b9dd66f-7a25-5168-8cd5-45f312254903",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c063648f-4661-5be1-bb53-a50b51dc5834",
+      "source": "c104a768-acf4-5bfe-8d1e-8b2ef36be38f",
+      "target": "8ff95956-df20-5e0f-a6d0-a88f475babb0",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3f472b36-3979-5efa-91fa-7ab24b07ddd9",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "b98dd5e9-d78b-546a-9ed2-591dd449333e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5efeb62f-4faa-5519-9d37-c9ebed9721b7",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "4d5ecb96-4d6e-5224-9b67-0d49e4a7a09d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e440e484-5d3a-5f34-ac7d-d2cb42cbbc28",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "4be443f1-b512-5287-9c2a-eaf03c1ba86c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6a293794-970a-5ebc-92aa-90bef99bf6c0",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "ca4823b6-43f7-56fc-a0a3-55d152f003b6",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "72b17599-a799-58e1-87ca-b75fbfdaff21",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "5f95c6b6-9612-5a49-aefc-9c25dd63f237",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "36978237-52e8-55d2-8c40-706e134b13ec",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "2407c977-4e5c-52c4-a5f1-ea797549641c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9790e88b-d389-5ec2-97b6-797679a3018f",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "7bf93c04-d17f-583e-8439-0fae71e77fca",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b6fef76c-3f94-56b5-986e-17f687ce7370",
+      "source": "b3a361ef-f008-5363-a2ca-df147e388d50",
+      "target": "39cb52ec-1ea7-502d-a118-f5d3e4fed2ec",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0868d3a3-df29-57be-ab87-1e1fdc09c646",
+      "source": "1ca021a3-2708-5300-b49c-bcbececb3b3c",
+      "target": "186e00cf-223b-5f88-a9fa-eabef1a258cf",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a232ddf8-4c95-5dee-9810-d119219e9828",
+      "source": "43c02a61-bcdd-57a1-ae67-084e66ae4f7d",
+      "target": "dd4e4985-813c-5555-8d6b-bcafca4a7825",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1d86a062-044b-5ae8-971f-4b4a2bb42eb2",
+      "source": "43c02a61-bcdd-57a1-ae67-084e66ae4f7d",
+      "target": "afdc2247-89e0-5022-953c-cc8526cb71d3",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d8c47efa-cb50-5658-aff9-74e963ccead4",
+      "source": "43c02a61-bcdd-57a1-ae67-084e66ae4f7d",
+      "target": "c5461871-97b3-5701-91f8-450709a20775",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "edd439fa-28c6-55ae-8b37-96193881d0c2",
+      "source": "43c02a61-bcdd-57a1-ae67-084e66ae4f7d",
+      "target": "f674bd94-e198-579f-ad7c-0cf71824dfcb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "67e6e542-208b-58e6-b30d-f2604532b371",
+      "source": "b3f93f7b-ba74-56ae-89bd-f62f0ecb7067",
+      "target": "b8050a3e-5137-5fc2-929e-8cad8097034e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ad8ad6b2-c596-5dba-9d5b-87079bc592b5",
+      "source": "b3f93f7b-ba74-56ae-89bd-f62f0ecb7067",
+      "target": "4c08b760-844d-5181-9c93-529722e988ce",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "573afadb-f375-596c-809e-34bcc9f638fd",
+      "source": "b3f93f7b-ba74-56ae-89bd-f62f0ecb7067",
+      "target": "989805ad-6400-5961-9902-f9386cf54feb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d0a95f34-8578-593d-8f7c-8086d3a06b3f",
+      "source": "8ef621eb-fb2c-58e5-b3c3-c7094104aa47",
+      "target": "d48fee4a-130c-5e43-9d41-0e7be2f474ab",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8f6dd46b-9d89-5ca0-868c-006e97e0af8b",
+      "source": "8ef621eb-fb2c-58e5-b3c3-c7094104aa47",
+      "target": "f401bcbe-1310-53e2-8615-9940c1012e15",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "42b2724f-6c10-50ba-ae37-dfbd638374ae",
+      "source": "d37d6e50-449a-5c11-ac86-a53342733846",
+      "target": "47f78407-7b5c-5a28-b768-73434e2f8519",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "36e4f216-86e3-5de8-9b60-177afd8933a0",
+      "source": "c3ac82f1-4e30-5505-97ad-9848f464d639",
+      "target": "3e1b79dd-463f-5f6a-9df7-73b1f8f7e7bb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2492c36e-9ad9-53c1-8880-2ca1ae0dc82c",
+      "source": "c3ac82f1-4e30-5505-97ad-9848f464d639",
+      "target": "9c27b6f3-2569-5896-9df4-f2cd22db684f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fb116b03-6d87-5ad5-872f-3aef623c6eb6",
+      "source": "c3ac82f1-4e30-5505-97ad-9848f464d639",
+      "target": "81036216-908e-5ff5-bc36-15c7cfff7d16",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "af0f474d-6855-5893-ab86-32ffe819bc82",
+      "source": "5f90ffef-6755-57db-9cf0-3acd602f2ba0",
+      "target": "e48b1e42-6559-58e8-ac1c-bad5e65a2ef5",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b585650b-88c0-5172-84f1-be07027182d9",
+      "source": "353f2723-5281-5bc2-b978-44590438eff4",
+      "target": "24cc550b-6cc1-560c-a014-c8aae6bedd57",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b7b1b1ad-4db2-58bb-8e33-5bf00e84f0b6",
+      "source": "353f2723-5281-5bc2-b978-44590438eff4",
+      "target": "08f313dc-c734-5b34-802b-4a44bdd89a2a",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9d20467a-2e26-5519-a519-e0bf03416a8e",
+      "source": "b7d981d1-2d2c-57b8-8287-674ade8b6b72",
+      "target": "691e62d9-d56a-5834-acf5-ac7bb0ab0abd",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "83f6ce64-0cd3-592c-990d-e8aa6af8470e",
+      "source": "8859ecc9-f75c-5455-b05c-1d274290c9d2",
+      "target": "7a443cb9-6081-5ab9-a55b-2d02d7388d67",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d00922a0-c114-53ac-a0c6-2335e5275316",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "e8958c41-dfe7-50a8-859d-9bee1efa81b1",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "432faa43-aa49-5837-9053-12104b872588",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "24ff5f5b-f937-5f92-bfce-cb3c4ecd8cb9",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "861e2fb7-651d-5745-8839-126b0f7e5385",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "5b6d50fd-61b0-5b22-9187-292ba42299eb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "291a2d9b-2329-5a52-8d01-499b10632055",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "38ed533e-89fb-56db-9e20-5cab8502be7c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8d0e4f72-ad92-54ad-9734-69bdcc8bee0f",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "8a62169f-23ab-58b3-b3a8-bc22f742fe77",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4ace11d9-69e5-576d-b41f-3329cf238876",
+      "source": "40abf3d5-7353-589a-8347-1baa32f862d9",
+      "target": "4546c323-9041-5151-9450-c94738b68fcf",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e4f3e419-58db-5ecd-8199-3567ccaeda94",
+      "source": "48ef93cb-14f4-567f-8b84-a67920065f27",
+      "target": "9cbe0450-cb8f-510d-9328-650204a31b5a",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "41d92d86-046d-50a2-ac73-2af6b740b520",
+      "source": "2dbf1bca-3941-5d0a-b0d0-f3f1cd5961d0",
+      "target": "d0504472-c3ca-5c61-b9fe-08a0a2efce69",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a0f1f76d-7da1-56df-ac19-e4352f7a5e5f",
+      "source": "2dbf1bca-3941-5d0a-b0d0-f3f1cd5961d0",
+      "target": "73ef7104-f6ee-57d6-a33f-a790f00837fb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d9981806-ebf4-5581-9957-88ce51ccaf16",
+      "source": "2dbf1bca-3941-5d0a-b0d0-f3f1cd5961d0",
+      "target": "3b3f4161-08a8-5955-861a-fa6137f794fb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "da413a7d-a7b7-5de2-ad38-13898cf72e66",
+      "source": "1cd40600-5caa-5450-acc6-6bc33ae38930",
+      "target": "d7821aaf-1129-587e-8bb6-b38ccd268470",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "92eaa386-e845-5715-9ded-7d6a066d0a39",
+      "source": "95a7f4ae-78bf-5bbe-a3d5-2a1f73e29715",
+      "target": "658a9789-ed3c-55e4-b203-3b66f48654cc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "613f943e-badb-5696-b4c9-9ad159d55f18",
+      "source": "95a7f4ae-78bf-5bbe-a3d5-2a1f73e29715",
+      "target": "761c389d-7e41-52d7-8534-5943cf6705bb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a7b64c9f-c0bd-5b7f-ab12-8e233606f177",
+      "source": "95a7f4ae-78bf-5bbe-a3d5-2a1f73e29715",
+      "target": "8b994070-36f2-5fa4-a1ee-5d8460bab50d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "49b7f70b-76f4-5f31-8249-c5fe1ecf92a0",
+      "source": "f4411e02-c26d-5fa4-a3a4-7f5262770cc6",
+      "target": "14fcc984-64f4-5c81-af53-aea750200e1c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ebdc562b-399a-5402-9cd7-2746ede52838",
+      "source": "f4411e02-c26d-5fa4-a3a4-7f5262770cc6",
+      "target": "72c76ee5-5313-51fb-9d6b-c1f5cada7abc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5497659c-8d21-5089-ae0b-8654cd117fbe",
+      "source": "f4411e02-c26d-5fa4-a3a4-7f5262770cc6",
+      "target": "36e83893-8713-54ad-b198-1567e13770e6",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2ecc3687-b1e1-5584-b957-7f337b2b566c",
+      "source": "f4411e02-c26d-5fa4-a3a4-7f5262770cc6",
+      "target": "6952c9ae-58eb-5f21-8c69-d80127aafa00",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2d71ae98-5fd5-5d6f-aef3-b01f045682ac",
+      "source": "9b7c4c9d-31f8-588e-90bf-3943b5f87d07",
+      "target": "37860f18-f3e1-5c2c-bad3-a44e5ee40626",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "eb10ac9b-4b78-50e9-815e-1a6447fb090f",
+      "source": "9b7c4c9d-31f8-588e-90bf-3943b5f87d07",
+      "target": "6f80d4d5-fa92-5414-a8f1-75e9591b1bbb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "60452bcb-0757-56f4-bf32-81d649195569",
+      "source": "9b7c4c9d-31f8-588e-90bf-3943b5f87d07",
+      "target": "5d803204-6104-5096-a205-99bd6c29eba1",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "368ca75d-8203-5744-893a-76eefe4b9794",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "253ef111-73db-56eb-85a9-20dda9f908cc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d2868a20-444f-51ea-ba05-442cb5abffa3",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "403e8d16-0c30-5a1d-884f-b6ca7959ac6b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e35a13fd-a437-54ac-bdf8-cef98b133db5",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "2273dc3f-d642-51ec-bdc2-8cfa076412a8",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a41e25da-775f-5ab9-aefb-d3297ddccb0b",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "5a2caac4-3d93-526c-a029-7bc2b3d5ad2b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "853aeb1d-732e-5ff4-940e-e3086c972eb5",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "a641e834-4abf-59d1-ab65-bb4284aae0d8",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "20a0ed7a-a43a-5b56-8715-73588c204ebb",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "e7ed0e60-39b8-54f0-b3fa-8dcf563cbfea",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7945d39d-24b7-5fd9-b6cc-8c481d98a186",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "18727766-85d1-5f7b-a4d9-b4c5edcd2334",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "120d5b7f-cfc6-557a-b057-fd5bbde6bda9",
+      "source": "fd674ed4-6442-5d47-b04e-b308eb5212e1",
+      "target": "1803129a-5eed-55a0-a413-d23bccc6bea2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "36c9a067-c5d1-54c7-beef-0ba003736748",
+      "source": "7cdb32dc-411a-5d5b-8429-148a66904faf",
+      "target": "db2f6504-67f8-570f-ba17-04310bb73dfe",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "849cb8fb-3f90-5586-93aa-05765c54ac49",
+      "source": "7cdb32dc-411a-5d5b-8429-148a66904faf",
+      "target": "ad322697-8a8a-5230-b301-77e32197b7d2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "edc2d4a9-edee-5ca7-a814-a12dc7574d01",
+      "source": "95df3199-b3ad-55e1-9f46-15f3e74a7188",
+      "target": "11a54f63-528a-5e1a-b75f-d0ea01cf9ca6",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3a1700a1-e8e8-5857-9641-8dba8563012a",
+      "source": "95df3199-b3ad-55e1-9f46-15f3e74a7188",
+      "target": "ecc83258-1ca3-5cb9-bfb8-fa20fc21b325",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d6da2952-a651-5928-8d30-5939a2ee7a83",
+      "source": "95df3199-b3ad-55e1-9f46-15f3e74a7188",
+      "target": "7dd08870-ad1a-583a-95c1-e12044c04e34",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0de2c88b-378f-518f-9d28-d272f28bc93d",
+      "source": "95df3199-b3ad-55e1-9f46-15f3e74a7188",
+      "target": "04ab191e-b6aa-509f-a47a-a877a889d646",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7a6dc42d-352e-5128-8f55-19fe2b39b744",
+      "source": "95df3199-b3ad-55e1-9f46-15f3e74a7188",
+      "target": "b71baef7-e07e-5985-9a00-87f8f94fc8a8",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3446e1d6-d6b7-552c-a025-37e19f72f13c",
+      "source": "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c",
+      "target": "889853b0-a02b-548c-8151-3d23710b76d3",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9490cb95-32a4-5b0c-8bbd-b9c95b6f80f6",
+      "source": "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c",
+      "target": "fa0611eb-c530-53eb-b643-3da9cb01e021",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3a2fb3e7-8e9a-5936-8090-05f286eb56bc",
+      "source": "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c",
+      "target": "68da230c-4365-5a17-b09e-823959a37e46",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "701d68cf-5981-5db2-a884-a5fc2cef5fae",
+      "source": "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c",
+      "target": "0d096024-34cd-5522-8611-732b5274a6b3",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "51274e48-5b1d-53c6-9696-3c2f6f92a26f",
+      "source": "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c",
+      "target": "d5a951f8-3791-5952-af13-363619a8b4da",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7e482731-5642-59b0-8483-9e5f2e28a8fe",
+      "source": "79fc8b32-1639-53bf-a351-8e8cd6e3cdec",
+      "target": "661d701c-0c10-5d92-927d-4797946df027",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1a91250e-1509-50a2-9bfc-31316216291b",
+      "source": "79fc8b32-1639-53bf-a351-8e8cd6e3cdec",
+      "target": "c365438c-ea13-5e17-8eeb-417b3ddfeeb8",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f93c57bd-a139-5532-9f4e-5100e8457c9f",
+      "source": "79fc8b32-1639-53bf-a351-8e8cd6e3cdec",
+      "target": "4235729b-cc43-5c56-aeae-305889c1adf0",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "13aa3fb5-5bfc-5995-b5df-b4663ad29ae8",
+      "source": "43582383-3837-5635-9955-d641db293ff3",
+      "target": "16c0d9a5-cd87-5096-a366-7981997e4459",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ae142954-5de5-575d-8eab-8f0cccca61ea",
+      "source": "43582383-3837-5635-9955-d641db293ff3",
+      "target": "9153ba9c-9eca-5694-aa8f-2ac290d6f152",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8c50b137-cd53-5b37-a0f0-e441afdf827d",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "a7c7aa98-a287-5f9d-a26e-256a87512bf2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "cf8fb84c-1585-50a5-a102-5e3e33047baf",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "eb3d10d8-9712-5716-af22-a57f3fb4b815",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9349e4b1-bd4d-593f-b81d-d25c5588d301",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "653b11b5-5922-54db-bd42-987ccd4a50bb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fc8e4a4a-b1ae-579d-9ea0-f407598827e0",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "1f649a1a-5c0d-5157-b905-3b31c2edcadf",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6abc6414-d5d1-5a61-ac38-0fafe990e168",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "be581b66-f8fe-566d-bd9d-0d22f2314d6c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "68557a3a-768e-5610-b3ce-ec0b7b36bc87",
+      "source": "4dc53652-b6dd-5e04-b729-606881df03b8",
+      "target": "1cf46542-d9ce-53dc-89b9-949f658c7618",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "51e8784d-f512-50ae-b705-8c05df5badd7",
+      "source": "f2b34e71-f93e-5f61-98d4-b7c45463b13e",
+      "target": "c73a9171-67e8-573d-ab5f-6fe379027234",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "19f88b9b-1278-51c9-8fcf-cd40d4bd9610",
+      "source": "f2b34e71-f93e-5f61-98d4-b7c45463b13e",
+      "target": "d51214ad-7e07-532c-a690-bb7bb0364241",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9852277e-860a-50d5-b486-3eaded5292c0",
+      "source": "f2b34e71-f93e-5f61-98d4-b7c45463b13e",
+      "target": "db4240fd-870b-525d-8a12-891442f4767b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3d9d0f6a-e313-503c-b52f-649858361615",
+      "source": "f2b34e71-f93e-5f61-98d4-b7c45463b13e",
+      "target": "b15b84e7-f54d-58ba-87b6-1a37c4725120",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "640ff9ea-fee9-51e0-b7af-40df0976861d",
+      "source": "f2b34e71-f93e-5f61-98d4-b7c45463b13e",
+      "target": "2d6821de-d281-5a07-88ca-410a8f53a799",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6a8fc133-a52c-5731-ae9d-5f71dc6956fe",
+      "source": "a354352e-7456-516d-ae7c-f9f8fe23d7ac",
+      "target": "7fa46ccc-cef9-5bb5-a653-8472a412280e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "22d9beed-9c9a-59e5-a09d-8c49b2c4e1b4",
+      "source": "a354352e-7456-516d-ae7c-f9f8fe23d7ac",
+      "target": "43074e88-0f32-5beb-affa-e4afe5435741",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0bee60c9-6047-5f1b-a275-36299acd124c",
+      "source": "a354352e-7456-516d-ae7c-f9f8fe23d7ac",
+      "target": "4b6dcc75-d12d-5efc-8885-4c1c69cd41c1",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "62f4218a-b2bb-5bcb-948c-b7748f0de428",
+      "source": "a354352e-7456-516d-ae7c-f9f8fe23d7ac",
+      "target": "19c8304e-2eba-502a-94ae-7e9691eb165e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "642b9205-85f0-56fa-ae51-a884246a83d7",
+      "source": "90ee2587-e25f-5ac0-806a-69b5116ba7c6",
+      "target": "820e8fb1-4e51-55d3-86ab-83c4fb7e7460",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "bc09df4a-69fa-5b95-85ed-c0302a188ce6",
+      "source": "90ee2587-e25f-5ac0-806a-69b5116ba7c6",
+      "target": "fc09d0c1-ceed-5594-9eef-609e4673e1ad",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "15aa9f79-9b79-5134-aeaa-8a289e67006b",
+      "source": "36cdffe2-6740-5eac-8146-0b1655c72eec",
+      "target": "a96a2a6c-e6dd-5a70-974d-b2c31ea7bcc7",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d7446d57-960e-5f45-b3dd-e02381d7bbb4",
+      "source": "4baffbd9-3180-5b61-8d05-b39b22007288",
+      "target": "f9a17290-ae01-5e7e-8414-475d8c94a614",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2bb262ce-cf99-5884-89ea-c4a039286d6a",
+      "source": "4baffbd9-3180-5b61-8d05-b39b22007288",
+      "target": "638433ed-5f02-589c-aa19-21f6d4cd2030",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f86bb6f1-8eb4-5eed-a85b-806d9a45b327",
+      "source": "85fb3a2a-20bd-5f1d-9129-a312e64290ee",
+      "target": "29d7aa77-a5b8-5605-9345-4b3e84243109",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "064e76b7-ce89-57cf-9950-4662aeaf02d2",
+      "source": "d547695b-5180-58a8-9053-1bef6a605059",
+      "target": "0e58a089-bb1b-5737-af83-4db3f85f94cc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c36d188f-65db-54cd-80b2-2ff564a11803",
+      "source": "b39084e2-3659-5bb2-8cb9-fea7e3730aba",
+      "target": "ff65c006-cf6b-5e31-9556-6c39fb0632bc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a573ce71-471d-5b27-911c-e373fefc2141",
+      "source": "b39084e2-3659-5bb2-8cb9-fea7e3730aba",
+      "target": "9b2a03a3-647a-5255-8254-c3eb59110851",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c0504559-9a18-5359-a21d-584162065241",
+      "source": "e2c132c9-6d54-5487-a8e1-220e2148dfcf",
+      "target": "d6d7f48a-e9ff-53a0-890d-c304ada74d59",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "22fbb52c-4132-578c-90ca-7d221b7af2fa",
+      "source": "e2c132c9-6d54-5487-a8e1-220e2148dfcf",
+      "target": "a32ae615-18b6-5737-8940-78d239f36e76",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d45f188c-5e1a-5f89-b889-0981c8c28cc3",
+      "source": "bfe24bce-5b33-5383-b1ef-66c05251d51d",
+      "target": "e51f0f7b-483f-5904-a4b8-5982c773f079",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ec8cb32a-b4f6-523b-9e5f-b311083b2dc1",
+      "source": "bfe24bce-5b33-5383-b1ef-66c05251d51d",
+      "target": "03dd8017-91ce-5d56-8100-e8a4fb683d69",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1ee022e7-548d-5147-8f56-5d618d2c9129",
+      "source": "cf382f56-a30a-51f7-9f2e-bce48fd4d224",
+      "target": "9b214051-11b4-52a4-96d9-5a1ccae936e4",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b136158f-f8c8-592c-9caf-00108fa28a20",
+      "source": "cf382f56-a30a-51f7-9f2e-bce48fd4d224",
+      "target": "abddf5e1-7ea5-5055-bb93-ce95bf210a2c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "053a5ced-320e-52eb-88b3-ccdd8cdcf309",
+      "source": "cf382f56-a30a-51f7-9f2e-bce48fd4d224",
+      "target": "b1da19cf-beb8-521e-989b-95880ef2788c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4f3fd2c4-b625-5798-8048-80f71371ed67",
+      "source": "cf382f56-a30a-51f7-9f2e-bce48fd4d224",
+      "target": "05f5a950-7095-5b8e-adfc-1ddc54154efc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "88fb74cf-9292-5318-8c92-eca646ee31e7",
+      "source": "cf382f56-a30a-51f7-9f2e-bce48fd4d224",
+      "target": "9c2ae19e-8bac-5879-adf8-378955da937d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6e4121ad-53ab-5b20-9124-91c0320fe18c",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "274f7121-0bf4-59d5-8d95-6e9f90a704cd",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "017bba3d-9792-5bbf-aad2-ceaa6ae00189",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "8d45f865-8a29-5544-b2d3-2bd7eb2d671d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a4b70d3e-c3a5-53fd-844d-bb02f9b2d8a5",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "ad4cce97-7d8e-5c14-bcdb-2cc9485ac2aa",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ddc626f0-88bf-585b-936e-26f76610128d",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "07000aa5-7eb8-547b-84b5-72747908ec54",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d00f9ec3-b446-54fb-b1b6-3d43cfc663ee",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "a626a736-0c94-53c3-855c-54ff70551e7d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "7490ece6-c75a-51eb-8196-000ba2ee9be6",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "a66bd671-7708-50d2-b6f3-524de4a36c8f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "6a771af4-0fde-55e9-b3fc-bc6962159e16",
+      "source": "eed87768-cea3-5e09-a6dc-d88882b3ae8f",
+      "target": "33d2c22b-b1b2-528a-8409-23b4a945e939",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f7812bd3-14a4-5641-a1a0-3cf6ee0dd96d",
+      "source": "c3f5fc1d-2118-5805-9269-d871fd80a506",
+      "target": "219449a7-31b2-5d9e-ae27-3e26c82d4350",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4de40845-a02b-5304-a1cd-4349746ea8d4",
+      "source": "c3f5fc1d-2118-5805-9269-d871fd80a506",
+      "target": "b011ba29-dc6b-5646-bbdf-633a5accb3dd",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "8810c82e-1524-5c69-8e5f-86f0945a6580",
+      "source": "c3f5fc1d-2118-5805-9269-d871fd80a506",
+      "target": "44e1aa21-b8cb-5c5d-abc5-f0638bd76673",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a77762e1-1a22-5c04-84e7-56a172a0ccd1",
+      "source": "c3f5fc1d-2118-5805-9269-d871fd80a506",
+      "target": "df192f7b-4f5a-5726-ba7b-1813d27e1a5d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9647d913-4467-55bc-82b8-be257d50c790",
+      "source": "ac7d2441-9527-5f43-ba12-7448c49bf08b",
+      "target": "29924cd0-cb4d-56a0-9355-049f80ae962e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fd3cabc9-1a93-5a9a-a35c-4e4754d23f4a",
+      "source": "ac7d2441-9527-5f43-ba12-7448c49bf08b",
+      "target": "3f3148e1-8899-5177-9a19-337f3c539158",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "13aff4e0-4f71-5205-9880-3ba27bc7d030",
+      "source": "ac7d2441-9527-5f43-ba12-7448c49bf08b",
+      "target": "1d804f84-809d-5702-974b-2aac5de07a3e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ba777f55-acd6-57c0-9756-ca304e3de7d7",
+      "source": "ac7d2441-9527-5f43-ba12-7448c49bf08b",
+      "target": "dd05ba2f-e35b-58fe-aecf-e6f1d23648bb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "22b6c3de-338e-56c6-970b-5d0a43e71aaf",
+      "source": "04021b04-d8e9-5832-9f20-1b8e5caa55cf",
+      "target": "768029c9-cf54-5107-9d14-37b3eeb59e4e",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "444bce93-0776-55cc-9996-64d981751d8e",
+      "source": "04021b04-d8e9-5832-9f20-1b8e5caa55cf",
+      "target": "49b4d733-a99e-5aff-8722-4f84180794d1",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "20592577-d5b4-580b-95d6-1a8a2573d12f",
+      "source": "04021b04-d8e9-5832-9f20-1b8e5caa55cf",
+      "target": "1e9fdc3d-c239-5eb7-bedd-5a31562108fc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b6785f6c-c972-5413-8dd3-ba15a2c77b90",
+      "source": "f3f76c3f-8ec0-5a7d-93a5-718c622aaeaa",
+      "target": "6f4100fa-74d7-5587-abe0-6939797ae299",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d3224ba0-ad80-5260-b29a-b4b2a2e529ac",
+      "source": "f3f76c3f-8ec0-5a7d-93a5-718c622aaeaa",
+      "target": "56340eef-b069-5ef2-a7bc-227c10341abd",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "74733a63-0610-5107-8581-ce70d36d7079",
+      "source": "f3f76c3f-8ec0-5a7d-93a5-718c622aaeaa",
+      "target": "eadd00d1-f0a4-5813-8e40-953d2f304be4",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b37c3b77-1cad-50d0-ac43-2782dadc2adb",
+      "source": "f3f76c3f-8ec0-5a7d-93a5-718c622aaeaa",
+      "target": "ec38f6ab-4d67-55e7-b0f0-59d3eff57db4",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a8b4e769-4022-5af3-8956-795b0be158a9",
+      "source": "27373fbf-fbfe-5755-8db9-db0f66be1eac",
+      "target": "ecb20ed7-43a6-5f5a-b34e-24bd0a67f06c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c5a37769-d063-5401-93e1-f4aba97ce774",
+      "source": "27373fbf-fbfe-5755-8db9-db0f66be1eac",
+      "target": "db8ab8e9-fe8d-55b7-b465-7fce2d4c76f7",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "bc7c81d4-f70d-54a4-93f1-83881f93fac5",
+      "source": "8f78270d-21dc-5aea-946f-689a5b5bbad0",
+      "target": "e6dbb825-b594-5609-baca-b375d12cbe56",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a5bf5951-4bdc-527c-9fe5-e72152573cd9",
+      "source": "e500c9a3-9139-5d70-b02e-db9105207aa2",
+      "target": "42bacc9a-9ccd-550c-b9f4-4ad49d60dad9",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "afc4ae8d-3ced-5580-9ff4-28b7526cda86",
+      "source": "e500c9a3-9139-5d70-b02e-db9105207aa2",
+      "target": "c1e54b9e-2e53-5815-a7a5-731dff397685",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d8c90051-bf99-57a5-9188-07d7050b7ffd",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "2881921c-f38c-55de-aaa6-d56c8711edee",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c09b50ca-88d2-5169-b519-9ab85cf708a8",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "543c73b0-cfff-506b-9505-77f12dc1bbf5",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3feeab4f-2bd9-5cbc-90ca-df1ce4136a58",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "eb7ab25b-27de-5599-9c63-afc3d971f54c",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d5ce22af-1efc-550a-a3a1-a5b83ab1b697",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "4a212c3f-e3d8-5e4f-abf7-cd00fc9758db",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d13223c4-fd1c-5b98-bc9b-6037c5f50a13",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "65a5a7ba-e6f7-5285-9f41-3a5c517cfaa7",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4fbeb135-819d-5811-8aa0-4b8717169199",
+      "source": "dfe1469a-6831-5be4-9403-1f8e11807dff",
+      "target": "38046167-c4d0-55b4-a8e0-5fcbb1a91bad",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "d3bc144e-0d7a-51fc-9b5a-da99261f941d",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "c61ef72e-8c55-51ec-969a-fc0e5e56cfdd",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2e4c5f76-f306-5109-8543-091560752021",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "91e8214a-f4cc-59f5-9368-14ed1bd1991f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1497ee24-88bf-57e9-9b1b-d9849c9b862b",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "41543e3a-616f-5d6a-8870-3d767c555d2b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2eb846e0-0f2f-5912-a97f-c5a5e1ee6749",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "d4a0a8a0-c567-508d-a3a1-51e3733efaad",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "76adc146-3dd7-5d94-b2c0-e6b7ec67bb19",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "ea8e8321-8763-5f8c-8288-36bdf7a3c0b3",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "b386b218-9bfb-5648-944f-bdf12075abcd",
+      "source": "4334f2cc-be70-5b21-acfa-638d6712c3dd",
+      "target": "7f70adac-92b8-55cf-8af0-02f52043a4af",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "fdf78d81-7f59-5988-b85c-a666f4d1ccea",
+      "source": "8425ca93-5eca-5be7-8e9f-d0c86cc97360",
+      "target": "7ac67b4a-9b25-50d1-ba18-92447d3cc47a",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "592169fa-20d8-5412-8de7-48eecc0a0185",
+      "source": "8425ca93-5eca-5be7-8e9f-d0c86cc97360",
+      "target": "053e3a04-8d94-5a66-9f79-503d5128d628",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2c978fd1-6931-586f-8879-39ffe536482e",
+      "source": "8425ca93-5eca-5be7-8e9f-d0c86cc97360",
+      "target": "62ad04fa-f820-5a4d-b243-f6e04a8daed2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "2919133c-094e-5be6-8b9e-1b052a0a1633",
+      "source": "8425ca93-5eca-5be7-8e9f-d0c86cc97360",
+      "target": "0466b815-dbe4-5377-b1e7-0a5696614c16",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "de0766fa-0aa3-5fd0-a074-7fb17579539e",
+      "source": "6b7af156-77f3-584f-81b0-88c14cd8fa70",
+      "target": "724c0056-12fe-5a40-b8c4-84e1d41652cc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "4423bac8-b731-5b01-ac4e-c0628fa63ac1",
+      "source": "6b7af156-77f3-584f-81b0-88c14cd8fa70",
+      "target": "6a0004c3-fcc8-564c-a9b8-0214315a766b",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "718cdd66-3564-5dcd-8069-d0f7d1dda0dd",
+      "source": "6b7af156-77f3-584f-81b0-88c14cd8fa70",
+      "target": "41ae0937-89d2-5948-b3cc-a2ec07cfaece",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "bba09017-36a2-5023-8053-6ab88c8c184f",
+      "source": "6b7af156-77f3-584f-81b0-88c14cd8fa70",
+      "target": "9767a3f3-ac1b-5a7e-8dcb-f95bf1f6750f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f694e220-6a6a-576b-9125-f6b92590701f",
+      "source": "6a8e7ff5-1004-527b-b2eb-ee0d659da89c",
+      "target": "795782ab-da31-5a8e-9bb6-4cc2f4fc57b1",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "18c9887b-46e5-5996-80f9-fb45ac43e4db",
+      "source": "6a8e7ff5-1004-527b-b2eb-ee0d659da89c",
+      "target": "1aeb2ce0-6443-574c-9bde-4e5d2c0af011",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "55d60d1b-4bea-5ad6-931c-c877d2a6d474",
+      "source": "6a8e7ff5-1004-527b-b2eb-ee0d659da89c",
+      "target": "8a78efb8-1434-592e-bcd6-e16550498998",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0e65f99f-af46-5fa8-a345-0b6026aeefa3",
+      "source": "4d15d81b-0c9c-5b9a-b392-74ae51eadec9",
+      "target": "b5448c90-bb49-5a9e-bd71-e7522e2e9910",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5526d166-3b78-504c-ba75-fd7ba5da5725",
+      "source": "4d15d81b-0c9c-5b9a-b392-74ae51eadec9",
+      "target": "cb651e10-0646-5b99-8dab-8c6909d5277f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "cda041b4-b303-5afc-adac-f4bcc2b4945c",
+      "source": "4d15d81b-0c9c-5b9a-b392-74ae51eadec9",
+      "target": "b7bd25e2-15b2-5a4d-b8d1-b78162f25e65",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "a20892a8-ddd7-5255-9e02-ff2520692edf",
+      "source": "52002ad8-bb5c-5b98-93dd-6ffc388e17e1",
+      "target": "e03d9105-d139-5f20-98c7-914022debcb0",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5f017d33-234c-5adf-b14b-1293d6980f4a",
+      "source": "52002ad8-bb5c-5b98-93dd-6ffc388e17e1",
+      "target": "2e50f22c-1744-5691-9807-8baf703e76ac",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9835688e-af61-5c0d-9cd1-f61c09750418",
+      "source": "52002ad8-bb5c-5b98-93dd-6ffc388e17e1",
+      "target": "a38b768a-7e6d-5a62-a2d8-de3909e5cce5",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9ba98a7e-1d1b-52aa-8431-eba6b6a8c6ea",
+      "source": "52002ad8-bb5c-5b98-93dd-6ffc388e17e1",
+      "target": "a000ca17-c514-51b7-95e5-02bdaccb68dc",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "3ad9aa67-6dc2-5a89-9583-dd53a4978a0b",
+      "source": "52002ad8-bb5c-5b98-93dd-6ffc388e17e1",
+      "target": "8ae7c117-84ff-5b9f-9f6a-f20bd510343f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "1ab7f03e-4233-5660-bbfe-47b60fdcb413",
+      "source": "788b924d-9e84-551b-86eb-564353f45944",
+      "target": "540b4c00-1871-566e-9ba7-322b6fb71715",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "54d22211-4cd1-5bd5-8804-335c910e826b",
+      "source": "788b924d-9e84-551b-86eb-564353f45944",
+      "target": "bf690f77-d9ec-5c0a-aa9d-46efb8cd59b2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "864e61f5-068f-5a53-800c-2f9563ffa2a4",
+      "source": "788b924d-9e84-551b-86eb-564353f45944",
+      "target": "9321e38c-576a-5cfb-b4ed-a2996a43859d",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "f4deb10a-85e4-5663-be92-ecbd99220d69",
+      "source": "788b924d-9e84-551b-86eb-564353f45944",
+      "target": "235edc30-a5e6-5a09-a3a7-e2b837c9d46f",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ea5367b9-1d12-5eb2-aeeb-a118fb5f5acf",
+      "source": "cae15a53-b312-5206-946c-dd57759c3c72",
+      "target": "8b15d166-08b2-5e39-a075-0e8870d799a6",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "264505a2-ad45-520f-9c4c-dd38e7747c63",
+      "source": "cae15a53-b312-5206-946c-dd57759c3c72",
+      "target": "11632ede-0ac2-5791-adfe-8268c6a37387",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "90ce1707-aea6-5652-ad36-5fa3fcc890af",
+      "source": "cae15a53-b312-5206-946c-dd57759c3c72",
+      "target": "7a700322-1e74-5e77-b726-586c8265dcc6",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5e66acea-ca8d-57a1-923c-d6d0786575b5",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "6ef95ef3-8770-5faa-8873-4dd22a22fa73",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "dc5a2bbb-a7b9-5ed2-8847-82c82abec4c2",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "e287e702-25a4-5e0a-a919-137a655803ca",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "ea25a539-f3dd-590a-8251-a5bb176bd60f",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "37ec8197-127f-5369-bbda-902d5b9f6b3a",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "5e6d1ab8-740e-5db9-8f2b-402720422ba4",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "094c0707-83fb-5d29-98dd-4f896c1eb0c2",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "0befc22f-8602-57dc-9d95-ac44fbfc90d2",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "5d8706d4-f1e4-5213-9c32-8236332e14cb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "9dbf9d4d-cfa5-5321-8651-e4faa6e1860f",
+      "source": "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a",
+      "target": "c0556165-9312-5e1c-8e02-04e9b0db4ddb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "c13fecd1-93b3-5b83-bb80-2e167f5908aa",
+      "source": "8cc4293b-035b-5f3f-829e-1fc44165463d",
+      "target": "0587e375-995a-528c-8dc9-1262437162ce",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "e4d0e535-fd23-515f-be34-6aaa40c46d23",
+      "source": "8cc4293b-035b-5f3f-829e-1fc44165463d",
+      "target": "0fca7ba8-0da0-540f-8034-417c6cda17eb",
+      "relationship": "EXPOSES_WEAKNESS",
+      "attributes": {},
+      "provenance": {
+        "type": "extracted",
+        "source": "dangerous_functions.json",
+        "confidence": 0.9
+      }
     }
   ],
   "derived_attack_paths": [
     {
       "id": "74486eb1-fa3c-5d36-a902-8e5812473af2",
       "title": "LAN \u2192 SSH :22/tcp",
-      "severity": "high",
-      "score": 4.0,
+      "severity": "critical",
+      "score": 6.0,
       "zone": "LAN",
       "port": 22,
       "protocol": "tcp",
       "service": "ssh",
       "runs_as_root": true,
       "crypto_weaknesses": [],
-      "structural_weaknesses": [],
+      "structural_weaknesses": [
+        "debug_artifact",
+        "certificate_self_signed"
+      ],
       "steps": [
         "Reach port 22/tcp from LAN",
         "Interact with ssh service",
@@ -10159,15 +15891,18 @@
     {
       "id": "a7dbcd5d-02f2-5799-8499-7af1a85d57bf",
       "title": "LAN \u2192 HTTP :80/tcp",
-      "severity": "high",
-      "score": 4.0,
+      "severity": "critical",
+      "score": 6.0,
       "zone": "LAN",
       "port": 80,
       "protocol": "tcp",
       "service": "http",
       "runs_as_root": true,
       "crypto_weaknesses": [],
-      "structural_weaknesses": [],
+      "structural_weaknesses": [
+        "debug_artifact",
+        "certificate_self_signed"
+      ],
       "steps": [
         "Reach port 80/tcp from LAN",
         "Interact with http service",

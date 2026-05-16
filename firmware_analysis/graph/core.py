@@ -85,6 +85,14 @@ _HARDENING_SEVERITY: dict[str, str] = {
 # Numeric weight per severity level — used to score weakness contribution in attack paths
 _SEV_WEIGHT: dict[str, float] = {"high": 2.0, "medium": 1.0, "low": 0.5}
 
+# Protocol key → (well-known port, transport, description)
+_PROTOCOL_META: dict[str, tuple[int, str, str]] = {
+    "snmp":  (161,  "udp", "SNMP daemon — community string auth, public/private defaults common"),
+    "upnp":  (1900, "udp", "UPnP/SSDP — device discovery and NAT traversal, often unauthenticated"),
+    "tr069": (7547, "tcp", "TR-069/CWMP — ISP remote management (ACS client), WAN-facing"),
+    "mqtt":  (1883, "tcp", "MQTT broker — IoT pub/sub messaging, often unauthenticated"),
+}
+
 # Dangerous libc function → (CWE-ID, description, severity)
 _DANGEROUS_FUNC_CWE: dict[str, tuple[str, str, str]] = {
     "gets":    ("CWE-242", "Inherently dangerous gets() — unbounded stack write, always vulnerable", "high"),

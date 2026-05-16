@@ -7,7 +7,7 @@ from core import (
     EXTRACTED, INFERRED,
     Graph,
     _CERT_ISSUE_CWE, _CRYPTO_CWE, _DANGEROUS_FUNC_CWE,
-    _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _SC_CWE, _SEV_WEIGHT,
+    _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _PROTOCOL_META, _SC_CWE, _SEV_WEIGHT,
     _TLS_ISSUE_CWE, _TLS_ISSUE_DEFAULT, _TRUST_ZONES,
     mkid, prov, strip_rootfs, sym_to_algo, zone_for,
 )
@@ -123,6 +123,51 @@ class GraphBuilder:
                             prov(INFERRED, "zone_heuristic", 0.70))
 
         return port_nids, svc_nids
+
+    # ── Protocol entry points (SNMP / UPnP / TR-069 / MQTT) ──────────────────
+
+    def _build_protocols(self, surface: dict, zones: dict[str, str]) -> dict[str, str]:
+        """Add Service/Port nodes for protocols detected in config files.
+
+        Called before _build_network_layer() so these nodes are created with
+        evidence from protocols.json first; _build_network_layer() then adds
+        the Binary→PROVIDES edge for any protocol that is also in entry_points.
+        """
+        svc_nids: dict[str, str] = {}
+        for proto, info in surface.get("protocols", {}).items():
+            if not info.get("present"):
+                continue
+            if proto not in _PROTOCOL_META:
+                continue
+
+            port_num, transport, description = _PROTOCOL_META[proto]
+            evidence = info.get("evidence", [])
+
+            svc_nid = mkid("Service", proto, str(port_num))
+            self.g.add_node(svc_nid, "Service", {
+                "name":        proto,
+                "description": description,
+                "evidence":    evidence[:3],
+            }, prov(EXTRACTED, "protocols.json", 0.75))
+            svc_nids[proto] = svc_nid
+
+            port_nid = mkid("Port", str(port_num), transport)
+            self.g.add_node(port_nid, "Port", {
+                "number":       port_num,
+                "protocol":     transport,
+                "service_type": proto,
+                "interface":    "unknown",
+            }, prov(EXTRACTED, "protocols.json", 0.75))
+
+            self.g.add_edge(svc_nid, port_nid, "EXPOSES", {},
+                            prov(EXTRACTED, "protocols.json", 0.75))
+
+            z = zone_for(port_num, proto)
+            self.g.add_edge(port_nid, zones[z], "REACHABLE_FROM",
+                            {"note": "zone assigned by port/service heuristic"},
+                            prov(INFERRED, "zone_heuristic", 0.70))
+
+        return svc_nids
 
     # ── Process contexts ──────────────────────────────────────────────────────
 
@@ -578,6 +623,20 @@ class GraphBuilder:
             self.g.add_edge(fs_nid, w_nid, "EXPOSES_WEAKNESS", {},
                             prov(EXTRACTED, "tls_config_issues.json", 0.90))
 
+    # ── IPC / Unix sockets ────────────────────────────────────────────────────
+
+    def _build_ipc(self, surface: dict) -> None:
+        """Add FilesystemObject nodes for Unix socket files (LOCAL zone context)."""
+        for path in surface.get("ipc", {}).get("socket_files", []):
+            clean = strip_rootfs(path)
+            nid   = mkid("FilesystemObject", path)
+            if nid not in self.g.nodes:
+                self.g.add_node(nid, "FilesystemObject", {
+                    "path":    clean,
+                    "fs_type": "socket",
+                    "role":    "ipc",
+                }, prov(EXTRACTED, "unix_sockets.json", 0.90))
+
     # ── Attack path derivation ────────────────────────────────────────────────
 
     def derive_attack_paths(self, zones: dict[str, str]) -> list[dict]:
@@ -698,7 +757,12 @@ def build(surface: dict, firmware_id: str) -> tuple[Graph, list[dict]]:
 
     builder._build_firmware(surface)
     zones = builder._build_trust_zones()
-    _, svc_nids = builder._build_network_layer(surface, zones)
+    # _build_protocols runs first so protocol Service/Port nodes are created with
+    # evidence attributes; _build_network_layer then adds Binary+PROVIDES edges
+    # for any protocol also present in entry_points (add_node is idempotent).
+    proto_svc_nids = builder._build_protocols(surface, zones)
+    _, ep_svc_nids = builder._build_network_layer(surface, zones)
+    svc_nids = {**proto_svc_nids, **ep_svc_nids}
     builder._build_process_contexts(surface, svc_nids)
     builder._build_crypto(surface)
     builder._build_fs_and_weaknesses(surface)
@@ -709,6 +773,7 @@ def build(surface: dict, firmware_id: str) -> tuple[Graph, list[dict]]:
     builder._build_hardening(surface)
     builder._build_dangerous_functions(surface)
     builder._build_tls_config_issues(surface)
+    builder._build_ipc(surface)
 
     attack_paths = builder.derive_attack_paths(zones)
     return builder.g, attack_paths

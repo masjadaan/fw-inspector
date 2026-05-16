@@ -232,7 +232,7 @@ def _draw(
     )
 
     plt.tight_layout()
-    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    fig.savefig(out_path, dpi=150, bbox_inches="tight", pad_inches=0.3)
     plt.close(fig)
 
 

@@ -113,23 +113,25 @@ def _build_matrix(
     components = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
     scores     = [round(score(c), 1) for c in components]
 
+    active_sevs = [s for s in _SEVERITIES if any(counts[c].get(s, 0) > 0 for c in components)]
     matrix = np.array(
-        [[counts[comp].get(sev, 0) for sev in _SEVERITIES] for comp in components],
+        [[counts[comp].get(sev, 0) for sev in active_sevs] for comp in components],
         dtype=float,
     )
-    return components, matrix, scores
+    return components, matrix, scores, active_sevs
 
 
 def _draw(
     components: list[str],
     matrix: np.ndarray,
-    scores: list[int],
+    scores: list[float],
+    active_sevs: list[str],
     firmware_id: str,
     out_path: Path,
 ) -> None:
     n_rows, n_sev_cols = matrix.shape
-    all_cols   = _SEVERITIES + ["score"]
-    col_labels = [s.upper() for s in _SEVERITIES] + ["SCORE"]
+    all_cols   = active_sevs + ["score"]
+    col_labels = [s.upper() for s in active_sevs] + ["SCORE"]
     n_cols     = len(all_cols)
 
     score_col = np.array(scores, dtype=float).reshape(-1, 1)
@@ -220,10 +222,10 @@ def main() -> None:
         print("[!] No vulnerabilities in report — nothing to plot.")
         sys.exit(0)
 
-    components, matrix, scores = _build_matrix(vulns, args.top)
+    components, matrix, scores, active_sevs = _build_matrix(vulns, args.top)
 
     out_path = args.output or analysis_dir / "sbom" / "cve_heatmap.png"
-    _draw(components, matrix, scores, firmware_id, out_path)
+    _draw(components, matrix, scores, active_sevs, firmware_id, out_path)
 
     print(f"[+] Heatmap written → {out_path}")
     print(f"    {len(components)} components × {len(_SEVERITIES)} severity levels  "

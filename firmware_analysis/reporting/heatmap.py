@@ -39,6 +39,7 @@ _COL_CMAPS = {
     "medium":   "YlOrBr",
     "low":      "Blues",
     "info":     "Greens",
+    "esc":      "RdPu",
     "score":    "Purples",
 }
 
@@ -130,17 +131,19 @@ def _draw(
     components: list[str],
     matrix: np.ndarray,
     scores: list[float],
+    escalated_counts: list[int],
     active_sevs: list[str],
     firmware_id: str,
     out_path: Path,
 ) -> None:
     n_rows, n_sev_cols = matrix.shape
-    all_cols   = active_sevs + ["score"]
-    col_labels = [s.upper() for s in active_sevs] + ["SCORE"]
+    all_cols   = active_sevs + ["esc", "score"]
+    col_labels = [s.upper() for s in active_sevs] + ["ESC", "SCORE"]
     n_cols     = len(all_cols)
 
+    esc_col   = np.array(escalated_counts, dtype=float).reshape(-1, 1)
     score_col = np.array(scores, dtype=float).reshape(-1, 1)
-    extended  = np.hstack([matrix, score_col])
+    extended  = np.hstack([matrix, esc_col, score_col])
 
     cell_h = 0.45
     fig_h  = max(6, n_rows * cell_h + 2)
@@ -178,8 +181,9 @@ def _draw(
     ax.set_yticklabels(components, fontsize=8)
     ax.yaxis.set_tick_params(length=0)
 
-    # Thicker separator before the SCORE column.
-    ax.axvline(n_sev_cols - 0.5, color="white", linewidth=3)
+    # Thicker separators before ESC and SCORE columns.
+    ax.axvline(n_sev_cols - 0.5,     color="white", linewidth=3)
+    ax.axvline(n_sev_cols + 1 - 0.5, color="white", linewidth=3)
 
     # Grid lines between cells.
     for x in np.arange(-0.5, n_cols, 1):
@@ -253,7 +257,7 @@ def main() -> None:
     components, matrix, scores, escalated_counts, active_sevs = _build_matrix(vulns, args.top)
 
     out_path = args.output or analysis_dir / "sbom" / "cve_heatmap.png"
-    _draw(components, matrix, scores, active_sevs, firmware_id, out_path)
+    _draw(components, matrix, scores, escalated_counts, active_sevs, firmware_id, out_path)
 
     print(f"[+] Heatmap written → {out_path}")
     print(f"    {len(components)} components × {len(_SEVERITIES)} severity levels  "

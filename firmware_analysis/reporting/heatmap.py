@@ -93,7 +93,7 @@ def _build_matrix(
         cve_id = v.get("cve", "unknown")
         if cve_id not in cve_data[label]:
             cve_data[label][cve_id] = (
-                v.get("base_severity", "info").lower(),
+                v.get("adjusted_severity", v.get("base_severity", "info")).lower(),
                 float(v.get("cvss_score", 0.0)),
                 bool(v.get("network_reachable", False)),
             )

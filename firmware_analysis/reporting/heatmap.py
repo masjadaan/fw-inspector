@@ -40,7 +40,40 @@ _COL_CMAPS = {
     "medium":   "YlOrBr",
     "low":      "Blues",
     "info":     "Greens",
+    "score":    "Purples",
 }
+
+# Library variants that share CVEs with their upstream package.
+_NAME_ALIASES: dict[str, str] = {
+    "libcrypto":  "openssl",
+    "libssl":     "openssl",
+    "ld-uClibc":  "uClibc",
+    "libcrypt":   "uClibc",
+    "libdl":      "uClibc",
+    "libm":       "uClibc",
+    "libnsl":     "uClibc",
+    "libpthread": "uClibc",
+    "libresolv":  "uClibc",
+    "librt":      "uClibc",
+    "libuClibc":  "uClibc",
+    "libutil":    "uClibc",
+}
+
+import re as _re
+_VERSION_SUFFIX = _re.compile(r"-(\d[\d.]+)$")
+
+
+def _canonical(name: str, version: str) -> str:
+    """Map library variants to their upstream package label, deduplicating by CVE."""
+    m = _VERSION_SUFFIX.search(name)
+    if m and not version:
+        version = m.group(1)
+        name = name[: m.start()]
+    canonical_name = _NAME_ALIASES.get(name, name)
+    # Normalise "openssl 1.0" → "openssl 1.0.0" so all three variants land on one row.
+    if canonical_name == "openssl" and version in ("1.0", "1.0.0"):
+        version = "1.0.0"
+    return f"{canonical_name} {version}".strip() if version else canonical_name
 
 
 def _load_report(analysis_dir: Path) -> dict:
@@ -51,47 +84,61 @@ def _load_report(analysis_dir: Path) -> dict:
     return json.loads(path.read_text())
 
 
-def _build_matrix(vulnerabilities: list[dict], top: int) -> tuple[list[str], np.ndarray]:
-    counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+def _build_matrix(
+    vulnerabilities: list[dict], top: int
+) -> tuple[list[str], np.ndarray, list[int]]:
+    # Deduplicate: canonical_label → severity → set of unique CVE IDs.
+    groups: dict[str, dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
     for v in vulnerabilities:
-        name    = v.get("component", "unknown")
-        version = v.get("version", "")
-        comp    = f"{name} {version}" if version else name
-        sev  = v.get("base_severity", "info").lower()
-        counts[comp][sev] += 1
+        label  = _canonical(v.get("component", "unknown"), v.get("version", ""))
+        sev    = v.get("base_severity", "info").lower()
+        cve_id = v.get("cve", "unknown")
+        groups[label][sev].add(cve_id)
 
-    # Sort by weighted score descending, then alphabetically for ties.
-    def score(comp):
+    counts = {
+        label: {sev: len(cves) for sev, cves in sevs.items()}
+        for label, sevs in groups.items()
+    }
+
+    def score(comp: str) -> int:
         return sum(_WEIGHTS.get(s, 0) * n for s, n in counts[comp].items())
 
     components = sorted(counts, key=lambda c: (-score(c), c))[:top]
+    scores     = [score(c) for c in components]
 
     matrix = np.array(
         [[counts[comp].get(sev, 0) for sev in _SEVERITIES] for comp in components],
         dtype=float,
     )
-    return components, matrix
+    return components, matrix, scores
 
 
 def _draw(
     components: list[str],
     matrix: np.ndarray,
+    scores: list[int],
     firmware_id: str,
     out_path: Path,
 ) -> None:
-    n_rows, n_cols = matrix.shape
+    n_rows, n_sev_cols = matrix.shape
+    all_cols   = _SEVERITIES + ["score"]
+    col_labels = [s.upper() for s in _SEVERITIES] + ["SCORE"]
+    n_cols     = len(all_cols)
+
+    score_col = np.array(scores, dtype=float).reshape(-1, 1)
+    extended  = np.hstack([matrix, score_col])
+
     cell_h = 0.45
     fig_h  = max(6, n_rows * cell_h + 2)
-    fig, ax = plt.subplots(figsize=(10, fig_h))
+    fig, ax = plt.subplots(figsize=(11, fig_h))
 
     # Build a composite RGBA image: each column uses its own colour map.
     rgba = np.ones((n_rows, n_cols, 4))
-    for j, sev in enumerate(_SEVERITIES):
-        col_vals = matrix[:, j]
+    for j, col in enumerate(all_cols):
+        col_vals = extended[:, j]
         col_max  = col_vals.max() if col_vals.max() > 0 else 1
-        norm     = col_vals / col_max          # 0–1 within this column
-        cmap     = plt.get_cmap(_COL_CMAPS[sev])
-        # Map 0 → very light tint, 1 → full colour (skip the very-white end).
+        norm     = col_vals / col_max
+        cmap     = plt.get_cmap(_COL_CMAPS[col])
         for i, v in enumerate(norm):
             rgba[i, j] = cmap(0.15 + 0.85 * v) if col_vals[i] > 0 else (0.97, 0.97, 0.97, 1)
 
@@ -101,22 +148,24 @@ def _draw(
     # Cell annotations.
     for i in range(n_rows):
         for j in range(n_cols):
-            val = int(matrix[i, j])
+            val = int(extended[i, j])
             if val > 0:
-                # Pick white or dark text for contrast.
-                bg = rgba[i, j, :3]
-                lum = 0.2126 * bg[0] + 0.7152 * bg[1] + 0.0722 * bg[2]
+                bg      = rgba[i, j, :3]
+                lum     = 0.2126 * bg[0] + 0.7152 * bg[1] + 0.0722 * bg[2]
                 txt_col = "white" if lum < 0.45 else "#222222"
                 ax.text(j, i, str(val), ha="center", va="center",
                         fontsize=8, color=txt_col, fontweight="bold")
 
     # Axes.
     ax.set_xticks(range(n_cols))
-    ax.set_xticklabels([s.upper() for s in _SEVERITIES], fontsize=9, fontweight="bold")
+    ax.set_xticklabels(col_labels, fontsize=9, fontweight="bold")
     ax.xaxis.set_tick_params(length=0)
     ax.set_yticks(range(n_rows))
     ax.set_yticklabels(components, fontsize=8)
     ax.yaxis.set_tick_params(length=0)
+
+    # Thicker separator before the SCORE column.
+    ax.axvline(n_sev_cols - 0.5, color="white", linewidth=3)
 
     # Grid lines between cells.
     for x in np.arange(-0.5, n_cols, 1):
@@ -126,10 +175,11 @@ def _draw(
 
     total = int(matrix.sum())
     ax.set_title(
-        f"{firmware_id} — CVE severity heatmap  ({total} findings, {n_rows} components)",
+        f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("NVD base severity", fontsize=9, labelpad=8)
+    ax.set_xlabel("NVD base severity  ·  SCORE = Σ(critical×5 + high×4 + medium×3 + low×2 + info×1)",
+                  fontsize=8, labelpad=8)
 
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
@@ -163,14 +213,14 @@ def main() -> None:
         print("[!] No vulnerabilities in report — nothing to plot.")
         sys.exit(0)
 
-    components, matrix = _build_matrix(vulns, args.top)
+    components, matrix, scores = _build_matrix(vulns, args.top)
 
     out_path = args.output or analysis_dir / "sbom" / "cve_heatmap.png"
-    _draw(components, matrix, firmware_id, out_path)
+    _draw(components, matrix, scores, firmware_id, out_path)
 
     print(f"[+] Heatmap written → {out_path}")
     print(f"    {len(components)} components × {len(_SEVERITIES)} severity levels  "
-          f"({int(matrix.sum())} total findings)")
+          f"({int(matrix.sum())} unique findings, deduplicated by CVE ID)")
 
 
 if __name__ == "__main__":

@@ -623,8 +623,20 @@ class GraphBuilder:
 
                     weakness_types: list[str] = []
                     weakness_score: float = 0.0
+
+                    # Sources: binaries (direct) + their linked certificates
+                    weakness_sources: list[str] = list(binaries)
                     for bin_nid in binaries:
-                        for w_nid in g.successors(bin_nid, "EXPOSES_WEAKNESS"):
+                        weakness_sources.extend(g.successors(bin_nid, "LINKS_TO"))
+                    # Global context: every FilesystemObject and Certificate node
+                    # (world-writable, debug artifacts, shellcheck, TLS config, cert issues)
+                    # are reachable by any attacker who gains a foothold on this service.
+                    for nid, data in g.nodes.items():
+                        if data["type"] in ("FilesystemObject", "Certificate"):
+                            weakness_sources.append(nid)
+
+                    for src_nid in weakness_sources:
+                        for w_nid in g.successors(src_nid, "EXPOSES_WEAKNESS"):
                             wattrs = g.nodes[w_nid]["attributes"]
                             wt = wattrs.get("type", "")
                             if wt and wt not in weakness_types:

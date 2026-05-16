@@ -85,9 +85,9 @@ def _load_report(analysis_dir: Path) -> dict:
 
 def _build_matrix(
     vulnerabilities: list[dict], top: int
-) -> tuple[list[str], np.ndarray, list[float]]:
-    # Deduplicate: canonical_label → cve_id → (severity, cvss_score, network_reachable).
-    cve_data: dict[str, dict[str, tuple[str, float, bool]]] = defaultdict(dict)
+) -> tuple[list[str], np.ndarray, list[float], list[int], list[str]]:
+    # Deduplicate: canonical_label → cve_id → (severity, cvss_score, network_reachable, escalated).
+    cve_data: dict[str, dict[str, tuple[str, float, bool, bool]]] = defaultdict(dict)
     for v in vulnerabilities:
         label  = _canonical(v.get("component", "unknown"), v.get("version", ""))
         cve_id = v.get("cve", "unknown")
@@ -96,29 +96,34 @@ def _build_matrix(
                 v.get("adjusted_severity", v.get("base_severity", "info")).lower(),
                 float(v.get("cvss_score", 0.0)),
                 bool(v.get("network_reachable", False)),
+                bool(v.get("escalated", False)),
             )
 
     # Severity counts from deduplicated CVEs.
     counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for label, cves in cve_data.items():
-        for sev, _, _ in cves.values():
+        for sev, _, _, _ in cves.values():
             counts[label][sev] += 1
 
     def score(comp: str) -> float:
         return sum(
             cvss * (1.5 if reachable else 1.0)
-            for _, cvss, reachable in cve_data[comp].values()
+            for _, cvss, reachable, _ in cve_data[comp].values()
         )
 
-    components = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
-    scores     = [round(score(c), 1) for c in components]
+    components      = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
+    scores          = [round(score(c), 1) for c in components]
+    escalated_counts = [
+        sum(1 for _, _, _, esc in cve_data[c].values() if esc)
+        for c in components
+    ]
 
     active_sevs = [s for s in _SEVERITIES if any(counts[c].get(s, 0) > 0 for c in components)]
     matrix = np.array(
         [[counts[comp].get(sev, 0) for sev in active_sevs] for comp in components],
         dtype=float,
     )
-    return components, matrix, scores, active_sevs
+    return components, matrix, scores, escalated_counts, active_sevs
 
 
 def _draw(
@@ -195,6 +200,25 @@ def _draw(
     plt.close(fig)
 
 
+def _write_csv(
+    components: list[str],
+    matrix: np.ndarray,
+    scores: list[float],
+    escalated_counts: list[int],
+    active_sevs: list[str],
+    out_path: Path,
+) -> None:
+    import csv
+    headers = ["component"] + [s.upper() for s in active_sevs] + ["ESCALATED", "SCORE"]
+    with out_path.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(headers)
+        for i, comp in enumerate(components):
+            row = [comp] + [int(matrix[i, j]) for j in range(len(active_sevs))]
+            row += [escalated_counts[i], scores[i]]
+            w.writerow(row)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate a CVE severity heatmap from cve_report.json."
@@ -211,6 +235,10 @@ def main() -> None:
         "--output", "-o", type=Path, default=None,
         help="Output PNG path (default: <analysis_dir>/cve_heatmap.png).",
     )
+    parser.add_argument(
+        "--csv", action="store_true",
+        help="Also write a companion CSV alongside the PNG.",
+    )
     args = parser.parse_args()
 
     analysis_dir = args.analysis_dir.resolve()
@@ -222,7 +250,7 @@ def main() -> None:
         print("[!] No vulnerabilities in report — nothing to plot.")
         sys.exit(0)
 
-    components, matrix, scores, active_sevs = _build_matrix(vulns, args.top)
+    components, matrix, scores, escalated_counts, active_sevs = _build_matrix(vulns, args.top)
 
     out_path = args.output or analysis_dir / "sbom" / "cve_heatmap.png"
     _draw(components, matrix, scores, active_sevs, firmware_id, out_path)
@@ -230,6 +258,11 @@ def main() -> None:
     print(f"[+] Heatmap written → {out_path}")
     print(f"    {len(components)} components × {len(_SEVERITIES)} severity levels  "
           f"({int(matrix.sum())} unique findings, deduplicated by CVE ID)")
+
+    if args.csv:
+        csv_path = out_path.with_suffix(".csv")
+        _write_csv(components, matrix, scores, escalated_counts, active_sevs, csv_path)
+        print(f"[+] CSV written    → {csv_path}")
 
 
 if __name__ == "__main__":

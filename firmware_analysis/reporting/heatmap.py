@@ -208,7 +208,7 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("Device-adjusted severity  ·  SCORE = Σ CVSS scores (×1.5 if network-reachable)",
+    ax.set_xlabel("Device-adjusted severity  ·  ESC = # CVEs escalated beyond NVD base  ·  SCORE = Σ CVSS scores (×1.5 if network-reachable)",
                   fontsize=8, labelpad=8)
 
     plt.tight_layout()

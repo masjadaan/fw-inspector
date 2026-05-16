@@ -6,7 +6,7 @@ from pathlib import Path
 from core import (
     EXTRACTED, INFERRED,
     Graph,
-    _CERT_ISSUE_CWE, _CRYPTO_CWE, _DANGEROUS_FUNC_CWE,
+    _CERT_ISSUE_CWE, _CRED_EXPOSURE_WEIGHT, _CRYPTO_CWE, _DANGEROUS_FUNC_CWE,
     _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _INVALID_SHELLS, _PROTOCOL_META,
     _SC_CWE, _SEV_WEIGHT, _SHELL_AUTH_SERVICES,
     _TLS_ISSUE_CWE, _TLS_ISSUE_DEFAULT, _TRUST_ZONES,
@@ -23,6 +23,9 @@ def _derive_steps(
     runs_as_root: bool,
     crypto_algos: list[str],
     weak_auth_users: list[str] | None = None,
+    dangerous_funcs: list[str] | None = None,
+    cert_issues: list[str] | None = None,
+    exposed_cred_types: list[str] | None = None,
 ) -> list[str]:
     steps = [
         f"Reach port {port_attrs['number']}/{port_attrs['protocol']} from {zone}",
@@ -40,6 +43,23 @@ def _derive_steps(
         steps.append(
             f"Auth backend uses weak password hash (MD5-crypt) for user(s) {users_str} — "
             "offline brute-force yields plaintext credentials"
+        )
+    if dangerous_funcs:
+        fn_str = ", ".join(f"{f}()" for f in dangerous_funcs[:4])
+        steps.append(
+            f"Binary imports dangerous functions ({fn_str}) — "
+            "memory corruption or command injection may allow pre-auth exploitation"
+        )
+    if cert_issues:
+        issue_str = ", ".join(cert_issues[:3])
+        steps.append(
+            f"Certificate issues ({issue_str}) on linked cert — "
+            "MITM is possible; intercepted sessions are not integrity-protected"
+        )
+    if exposed_cred_types:
+        steps.append(
+            "Hardcoded or default credentials present in firmware — "
+            "static passwords enable credential stuffing or direct login"
         )
     steps.append("Pivot to further targets or extract credentials/keys from filesystem")
     return steps
@@ -797,12 +817,79 @@ class GraphBuilder:
                                         wattrs.get("severity", "low"), 0.5
                                     )
 
+                    # ── Targeted bonus 1: dangerous functions on service binary ──────
+                    # Name-based lookup compensates for the path-format mismatch between
+                    # entry_point binary nodes (absolute paths) and dangerous_functions
+                    # binary nodes (relative paths), which would otherwise give them
+                    # different mkids and miss the EXPOSES_WEAKNESS edges.
+                    dangerous_func_score: float = 0.0
+                    dangerous_funcs: list[str] = []
+                    bin_names = (
+                        {g.nodes[b]["attributes"].get("name", "") for b in binaries} - {""}
+                    )
+                    df_seen: set[str] = set()
+                    for nid, data in g.nodes.items():
+                        if (
+                            data["type"] == "Binary"
+                            and data["attributes"].get("name", "") in bin_names
+                        ):
+                            for w_nid in g.successors(nid, "EXPOSES_WEAKNESS"):
+                                wattrs = g.nodes[w_nid]["attributes"]
+                                wtype  = wattrs.get("type", "")
+                                if wtype.startswith("dangerous_function_") and wtype not in df_seen:
+                                    df_seen.add(wtype)
+                                    dangerous_func_score += _SEV_WEIGHT.get(
+                                        wattrs.get("severity", "low"), 0.5
+                                    )
+                                    fn = wattrs.get("function", wtype[len("dangerous_function_"):])
+                                    if fn not in dangerous_funcs:
+                                        dangerous_funcs.append(fn)
+
+                    # ── Targeted bonus 2: cert/TLS issues on binary-linked certs ────
+                    cert_issue_score: float = 0.0
+                    cert_issues: list[str] = []
+                    ci_seen: set[str] = set()
+                    for bin_nid in binaries:
+                        for cert_nid in g.successors(bin_nid, "LINKS_TO"):
+                            for w_nid in g.successors(cert_nid, "EXPOSES_WEAKNESS"):
+                                wattrs = g.nodes[w_nid]["attributes"]
+                                wtype  = wattrs.get("type", "")
+                                if wtype not in ci_seen:
+                                    ci_seen.add(wtype)
+                                    cert_issue_score += _SEV_WEIGHT.get(
+                                        wattrs.get("severity", "low"), 0.5
+                                    )
+                                    issue = wattrs.get("flag", wtype.replace("certificate_", ""))
+                                    if issue not in cert_issues:
+                                        cert_issues.append(issue)
+
+                    # ── Targeted bonus 3: hardcoded credential exposure ───────────
+                    # Walks CONTAINS_SECRET edges from FilesystemObject and Firmware nodes.
+                    # password_hash/shadow_hash excluded — already scored via the
+                    # weak_auth_users → EXPOSES_WEAKNESS chain above.
+                    cred_exposure_score: float = 0.0
+                    exposed_cred_types: list[str] = []
+                    ce_seen: set[str] = set()
+                    for nid, data in g.nodes.items():
+                        if data["type"] in ("FilesystemObject", "Firmware"):
+                            for cred_nid in g.successors(nid, "CONTAINS_SECRET"):
+                                if g.nodes[cred_nid]["type"] == "Credential":
+                                    ctype = g.nodes[cred_nid]["attributes"].get("type", "")
+                                    w = _CRED_EXPOSURE_WEIGHT.get(ctype, 0.0)
+                                    if w and ctype not in ce_seen:
+                                        ce_seen.add(ctype)
+                                        cred_exposure_score += w
+                                        exposed_cred_types.append(ctype)
+
                     score: float = 0.0
                     if zone_name == "WAN":   score += 3
                     elif zone_name == "LAN": score += 1
                     if runs_as_root:         score += 3
                     score += min(len(crypto_algos), 2)
-                    score += min(weakness_score, 4)
+                    score += min(weakness_score,       4)
+                    score += min(dangerous_func_score, 2)
+                    score += min(cert_issue_score,     2)
+                    score += min(cred_exposure_score,  2)
 
                     if score >= 6:   severity = "critical"
                     elif score >= 4: severity = "high"
@@ -829,13 +916,20 @@ class GraphBuilder:
                         "port": port_attrs["number"],
                         "protocol": port_attrs["protocol"],
                         "service": svc_attrs["name"],
-                        "runs_as_root": runs_as_root,
-                        "crypto_weaknesses": crypto_algos,
-                        "structural_weaknesses": weakness_types,
-                        "weak_auth_users": weak_auth_users,
+                        "runs_as_root":          runs_as_root,
+                        "crypto_weaknesses":      crypto_algos,
+                        "structural_weaknesses":  weakness_types,
+                        "weak_auth_users":        weak_auth_users,
+                        "dangerous_funcs":        dangerous_funcs,
+                        "cert_issues":            cert_issues,
+                        "exposed_cred_types":     exposed_cred_types,
+                        "dangerous_func_score":   round(dangerous_func_score, 2),
+                        "cert_issue_score":       round(cert_issue_score, 2),
+                        "cred_exposure_score":    round(cred_exposure_score, 2),
                         "steps": _derive_steps(
                             zone_name, port_attrs, svc_attrs,
                             runs_as_root, crypto_algos, weak_auth_users,
+                            dangerous_funcs, cert_issues, exposed_cred_types,
                         ),
                         "provenance": prov(INFERRED, "graph_traversal", 0.80),
                     })

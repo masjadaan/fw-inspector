@@ -85,6 +85,15 @@ _HARDENING_SEVERITY: dict[str, str] = {
 # Numeric weight per severity level — used to score weakness contribution in attack paths
 _SEV_WEIGHT: dict[str, float] = {"high": 2.0, "medium": 1.0, "low": 0.5}
 
+# Credential type → score weight for the credential-exposure bonus in attack path scoring.
+# password_hash/shadow_hash are omitted — they're already scored via the
+# User→HAS_CREDENTIAL→Credential→EXPOSES_WEAKNESS chain (weak_auth_users path).
+_CRED_EXPOSURE_WEIGHT: dict[str, float] = {
+    "hardcoded_config":             1.5,
+    "default_credential_reference": 1.0,
+    "cloud_endpoint":               0.5,
+}
+
 # Protocol key → (well-known port, transport, description)
 _PROTOCOL_META: dict[str, tuple[int, str, str]] = {
     "snmp":  (161,  "udp", "SNMP daemon — community string auth, public/private defaults common"),

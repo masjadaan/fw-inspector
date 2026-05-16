@@ -2,15 +2,19 @@
 """
 Generate a CVE severity heatmap from cve_report.json.
 
-Rows    — components (sorted by weighted severity score, worst first)
-Columns — adjusted severity levels: critical · high · medium · low · info
-Cells   — count of CVEs at that severity for that component
+Rows    — components (deduplicated by CVE ID, sorted by score descending)
+Columns — device-adjusted severity levels (only non-empty columns rendered)
+          + ESC  : count of CVEs escalated due to missing binary hardening
+          + SCORE: Σ CVSS scores, ×1.5 for network-reachable CVEs
+Cells   — count of unique CVEs at that severity for that component
 
 Output: <analysis_dir>/cve_heatmap.png  (or --output path)
+        <analysis_dir>/cve_heatmap.csv  (with --csv)
 
 Usage:
     python3 heatmap.py analysis/Archer_A5V6/
     python3 heatmap.py analysis/Archer_A5V6/ --top 30 --output heatmap.png
+    python3 heatmap.py analysis/Archer_A5V6/ --csv
 """
 
 import argparse
@@ -23,7 +27,6 @@ try:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    import matplotlib.colors as mcolors
     import numpy as np
 except ImportError:
     print("[!] matplotlib and numpy are required:  pip install matplotlib numpy")
@@ -86,7 +89,7 @@ def _load_report(analysis_dir: Path) -> dict:
 
 def _build_matrix(
     vulnerabilities: list[dict], top: int
-) -> tuple[list[str], np.ndarray, list[float], list[int], list[str]]:
+) -> tuple[list[str], np.ndarray, list[int], list[int], list[str]]:
     # Deduplicate: canonical_label → cve_id → (severity, cvss_score, network_reachable, escalated).
     cve_data: dict[str, dict[str, tuple[str, float, bool, bool]]] = defaultdict(dict)
     for v in vulnerabilities:
@@ -122,7 +125,7 @@ def _build_matrix(
         )
 
     components      = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
-    scores          = [round(score(c), 1) for c in components]
+    scores          = [round(score(c)) for c in components]
     escalated_counts = [
         sum(1 for _, _, _, esc in cve_data[c].values() if esc)
         for c in components
@@ -139,7 +142,7 @@ def _build_matrix(
 def _draw(
     components: list[str],
     matrix: np.ndarray,
-    scores: list[float],
+    scores: list[int],
     escalated_counts: list[int],
     active_sevs: list[str],
     firmware_id: str,
@@ -216,7 +219,7 @@ def _draw(
 def _write_csv(
     components: list[str],
     matrix: np.ndarray,
-    scores: list[float],
+    scores: list[int],
     escalated_counts: list[int],
     active_sevs: list[str],
     out_path: Path,

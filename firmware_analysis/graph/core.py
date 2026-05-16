@@ -128,6 +128,35 @@ _TLS_ISSUE_CWE: dict[str, tuple[str, str]] = {
 }
 _TLS_ISSUE_DEFAULT = ("CWE-327", "medium")
 
+# Password hash prefix → (algo_name, strength, cwe_id or None)
+# Listed longest-prefix first so "$2a$" is matched before a hypothetical "$2$"
+_HASH_ALGO: list[tuple[str, str, str, str | None]] = [
+    ("$2b$", "bcrypt",        "strong", None),
+    ("$2a$", "bcrypt",        "strong", None),
+    ("$6$",  "SHA-512-crypt", "strong", None),
+    ("$5$",  "SHA-256-crypt", "strong", None),
+    ("$y$",  "yescrypt",      "strong", None),
+    ("$1$",  "MD5-crypt",     "weak",   "CWE-916"),
+]
+_HASH_ALGO_DEFAULT: tuple[str, str, str | None] = ("DES-crypt", "weak", "CWE-916")
+
+# Shells that prevent interactive login — users with these shells cannot authenticate
+_INVALID_SHELLS: frozenset[str] = frozenset({
+    "/bin/false", "/sbin/nologin", "/bin/nologin", "/usr/sbin/nologin",
+})
+
+# Service types that authenticate against system user accounts
+_SHELL_AUTH_SERVICES: frozenset[str] = frozenset({"ssh", "telnet"})
+
+
+def resolve_hash_algo(hash_val: str) -> tuple[str, str, str | None]:
+    """Return (algo_name, strength, cwe_id) for a /etc/shadow password hash value."""
+    for prefix, algo, strength, cwe_id in _HASH_ALGO:
+        if hash_val.startswith(prefix):
+            return algo, strength, cwe_id
+    return _HASH_ALGO_DEFAULT
+
+
 # ShellCheck code → (CWE-ID, description) for security-relevant codes only
 _SC_CWE: dict[int, tuple[str, str]] = {
     2059: ("CWE-134", "Variable used as printf format string — format string injection"),

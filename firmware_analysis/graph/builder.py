@@ -7,9 +7,10 @@ from core import (
     EXTRACTED, INFERRED,
     Graph,
     _CERT_ISSUE_CWE, _CRYPTO_CWE, _DANGEROUS_FUNC_CWE,
-    _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _PROTOCOL_META, _SC_CWE, _SEV_WEIGHT,
+    _HARDENING_SEVERITY, _HARDENING_WEAKNESSES, _INVALID_SHELLS, _PROTOCOL_META,
+    _SC_CWE, _SEV_WEIGHT, _SHELL_AUTH_SERVICES,
     _TLS_ISSUE_CWE, _TLS_ISSUE_DEFAULT, _TRUST_ZONES,
-    mkid, prov, strip_rootfs, sym_to_algo, zone_for,
+    mkid, prov, resolve_hash_algo, strip_rootfs, sym_to_algo, zone_for,
 )
 
 
@@ -21,6 +22,7 @@ def _derive_steps(
     svc_attrs: dict,
     runs_as_root: bool,
     crypto_algos: list[str],
+    weak_auth_users: list[str] | None = None,
 ) -> list[str]:
     steps = [
         f"Reach port {port_attrs['number']}/{port_attrs['protocol']} from {zone}",
@@ -32,6 +34,12 @@ def _derive_steps(
         steps.append(
             f"Binary uses broken cryptography ({', '.join(crypto_algos)}) — "
             "capture and crack session material or forged tokens"
+        )
+    if weak_auth_users:
+        users_str = ", ".join(f"'{u}'" for u in weak_auth_users[:3])
+        steps.append(
+            f"Auth backend uses weak password hash (MD5-crypt) for user(s) {users_str} — "
+            "offline brute-force yields plaintext credentials"
         )
     steps.append("Pivot to further targets or extract credentials/keys from filesystem")
     return steps
@@ -637,6 +645,73 @@ class GraphBuilder:
                     "role":    "ipc",
                 }, prov(EXTRACTED, "unix_sockets.json", 0.90))
 
+    # ── Users and credential links ────────────────────────────────────────────
+
+    def _build_users(self, surface: dict, svc_nids: dict[str, str]) -> None:
+        """Create User nodes, link to Credential nodes, and attach AUTHENTICATES_WITH edges.
+
+        For each system user:
+          - User node (uid, shell, login_possible)
+          - Credential node via HAS_CREDENTIAL (password hash, algo, strength)
+          - Weakness node via EXPOSES_WEAKNESS on the Credential if the hash is weak
+          - AUTHENTICATES_WITH edges from SSH/Telnet services to login-capable users
+        """
+        for user in surface.get("users", []):
+            name  = user.get("name", "")
+            shell = user.get("shell", "")
+            if not name:
+                continue
+
+            login_possible = bool(shell) and shell not in _INVALID_SHELLS
+
+            user_nid = mkid("User", name)
+            self.g.add_node(user_nid, "User", {
+                "name":           name,
+                "uid":            user.get("uid"),
+                "gid":            user.get("gid"),
+                "home":           user.get("home", ""),
+                "shell":          shell,
+                "login_possible": login_possible,
+            }, prov(EXTRACTED, "users_groups.json", 0.95))
+
+            if user.get("has_password") and user.get("password_hash"):
+                hash_val = user["password_hash"]
+                algo, strength, cwe_id = resolve_hash_algo(hash_val)
+
+                cred_nid = mkid("Credential", "user_hash", name)
+                self.g.add_node(cred_nid, "Credential", {
+                    "type":           "password_hash",
+                    "username":       name,
+                    "hash_algorithm": algo,
+                    "strength":       strength,
+                    "cwe":            cwe_id or "",
+                    "description":    f"Password hash for '{name}' using {algo}",
+                }, prov(EXTRACTED, "users_groups.json", 0.95))
+                self.g.add_edge(user_nid, cred_nid, "HAS_CREDENTIAL", {},
+                                prov(EXTRACTED, "users_groups.json", 0.95))
+
+                if cwe_id:  # weak hash algorithm
+                    w_nid = mkid("Weakness", "weak_hash", name)
+                    self.g.add_node(w_nid, "Weakness", {
+                        "type":        "weak_password_hash",
+                        "username":    name,
+                        "algorithm":   algo,
+                        "cwe":         cwe_id,
+                        "description": (
+                            f"Weak password hash ({algo}) for user '{name}' — "
+                            "offline brute-force with Hashcat/John feasible"
+                        ),
+                        "severity":    "high",
+                    }, prov(EXTRACTED, "users_groups.json", 0.95))
+                    self.g.add_edge(cred_nid, w_nid, "EXPOSES_WEAKNESS", {},
+                                    prov(EXTRACTED, "users_groups.json", 0.95))
+
+            if login_possible:
+                for svc_type, svc_nid in svc_nids.items():
+                    if svc_type in _SHELL_AUTH_SERVICES:
+                        self.g.add_edge(svc_nid, user_nid, "AUTHENTICATES_WITH", {},
+                                        prov(INFERRED, "users_groups.json", 0.80))
+
     # ── Attack path derivation ────────────────────────────────────────────────
 
     def derive_attack_paths(self, zones: dict[str, str]) -> list[dict]:
@@ -704,6 +779,24 @@ class GraphBuilder:
                                     wattrs.get("severity", "low"), 0.5
                                 )
 
+                    # Walk service → users → credentials → weaknesses (targeted auth context)
+                    weak_auth_users: list[str] = []
+                    for user_nid in g.successors(svc_nid, "AUTHENTICATES_WITH"):
+                        uattrs = g.nodes[user_nid]["attributes"]
+                        for cred_nid in g.successors(user_nid, "HAS_CREDENTIAL"):
+                            if g.nodes[cred_nid]["attributes"].get("strength") == "weak":
+                                uname = uattrs.get("name", "?")
+                                if uname not in weak_auth_users:
+                                    weak_auth_users.append(uname)
+                            for w_nid in g.successors(cred_nid, "EXPOSES_WEAKNESS"):
+                                wattrs = g.nodes[w_nid]["attributes"]
+                                wt = wattrs.get("type", "")
+                                if wt and wt not in weakness_types:
+                                    weakness_types.append(wt)
+                                    weakness_score += _SEV_WEIGHT.get(
+                                        wattrs.get("severity", "low"), 0.5
+                                    )
+
                     score: float = 0.0
                     if zone_name == "WAN":   score += 3
                     elif zone_name == "LAN": score += 1
@@ -739,9 +832,10 @@ class GraphBuilder:
                         "runs_as_root": runs_as_root,
                         "crypto_weaknesses": crypto_algos,
                         "structural_weaknesses": weakness_types,
+                        "weak_auth_users": weak_auth_users,
                         "steps": _derive_steps(
                             zone_name, port_attrs, svc_attrs,
-                            runs_as_root, crypto_algos,
+                            runs_as_root, crypto_algos, weak_auth_users,
                         ),
                         "provenance": prov(INFERRED, "graph_traversal", 0.80),
                     })
@@ -764,6 +858,7 @@ def build(surface: dict, firmware_id: str) -> tuple[Graph, list[dict]]:
     _, ep_svc_nids = builder._build_network_layer(surface, zones)
     svc_nids = {**proto_svc_nids, **ep_svc_nids}
     builder._build_process_contexts(surface, svc_nids)
+    builder._build_users(surface, svc_nids)
     builder._build_crypto(surface)
     builder._build_fs_and_weaknesses(surface)
     builder._build_credentials(surface)

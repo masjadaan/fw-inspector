@@ -1,0 +1,166 @@
+digraph AttackSurface {
+  label="Archer_A5V6 — Weak Randomness & Miscellaneous";
+  graph [rankdir=LR fontname="Helvetica" bgcolor="#1a1a2e" labelfontcolor=white fontcolor=white];
+  node [style=filled fontname="Helvetica" fontsize=10 fontcolor=white shape=box];
+  edge [fontname="Helvetica" fontsize=8 fontcolor="#aaaaaa" color="#666666"];
+
+  "6eadacfb-2da9-5ae3-9e3e-04ae958287ac" [label="FilesystemObject\n/etc/services
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "5a2caac4-3d93-526c-a029-7bc2b3d5ad2b" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/cos\n[E:0.9]" fillcolor="#bf360c"];
+  "b3a361ef-f008-5363-a2ca-df147e388d50" [label="Binary\nlibcmm.so
+lib/libcmm.so\n[E:0.9]" fillcolor="#6a1b9a"];
+  "7682ccd1-bd0c-57d6-b63c-e31516736a67" [label="FilesystemObject\n/etc/web/VN/frame/menu.htm
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "40abf3d5-7353-589a-8347-1baa32f862d9" [label="Binary\nlibupnp.so
+lib/libupnp.so\n[E:0.9]" fillcolor="#6a1b9a"];
+  "8859ecc9-f75c-5455-b05c-1d274290c9d2" [label="Binary\nlibthreadutil.so
+lib/libthreadutil.so\n[E:0.9]" fillcolor="#6a1b9a"];
+  "bf690f77-d9ec-5c0a-aa9d-46efb8cd59b2" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/sbin/radvd\n[E:0.9]" fillcolor="#bf360c"];
+  "95df3199-b3ad-55e1-9f46-15f3e74a7188" [label="Binary\ndhcpc
+usr/bin/dhcpc\n[E:0.95]" fillcolor="#6a1b9a"];
+  "ecb20ed7-43a6-5f5a-b34e-24bd0a67f06c" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/wanType\n[E:0.9]" fillcolor="#bf360c"];
+  "cae15a53-b312-5206-946c-dd57759c3c72" [label="Binary\nripd
+usr/sbin/ripd\n[E:0.95]" fillcolor="#6a1b9a"];
+  "889853b0-a02b-548c-8151-3d23710b76d3" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/bin/dhcpd\n[E:0.9]" fillcolor="#bf360c"];
+  "eb7ab25b-27de-5599-9c63-afc3d971f54c" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/wscd\n[E:0.9]" fillcolor="#bf360c"];
+  "ef8d205d-5533-5187-ba95-54879003664b" [label="FilesystemObject\n/etc/web/VN/locale/en_US/str.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "41543e3a-616f-5d6a-8870-3d767c555d2b" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/wscd_5G\n[E:0.9]" fillcolor="#bf360c"];
+  "613604ef-4f57-5c0e-bd85-1ec794b716fa" [label="FilesystemObject\n/etc/web/VN/locale/en_US/err.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "2881921c-f38c-55de-aaa6-d56c8711edee" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/bin/wscd\n[E:0.9]" fillcolor="#bf360c"];
+  "11a54f63-528a-5e1a-b75f-d0ea01cf9ca6" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/bin/dhcpc\n[E:0.9]" fillcolor="#bf360c"];
+  "a9b9cdff-f868-509d-8f48-7c383d875aa2" [label="Weakness\nCWE-489 debug_artifact
+/etc/web/VN/js/local.js\n[E:0.85]" fillcolor="#bf360c"];
+  "af59f384-7a84-5b4f-95d1-a9b79b4ac757" [label="Weakness\nCWE-338 dangerous_function_rand
+bin/busybox\n[E:0.9]" fillcolor="#bf360c"];
+  "8b15d166-08b2-5e39-a075-0e8870d799a6" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/sbin/ripd\n[E:0.9]" fillcolor="#bf360c"];
+  "e720aad1-83a9-5b35-b71e-681c8821cc89" [label="Weakness\nCWE-338 dangerous_function_srand
+bin/busybox\n[E:0.9]" fillcolor="#bf360c"];
+  "7f5c9d70-1a13-5372-96e9-581a85f30c90" [label="Weakness\nCWE-489 debug_artifact
+…tc/web/VN/locale/en_US/err.js\n[E:0.85]" fillcolor="#bf360c"];
+  "24ff5f5b-f937-5f92-bfce-cb3c4ecd8cb9" [label="Weakness\nCWE-338 dangerous_function_rand
+lib/libupnp.so\n[E:0.9]" fillcolor="#bf360c"];
+  "17559474-d2df-5452-9353-83d1f2f56638" [label="Weakness\nCWE-295 certificate_self_signed
+etc/cloud/2048_newroot.cer\n[E:0.95]" fillcolor="#bf360c"];
+  "68da230c-4365-5a17-b09e-823959a37e46" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/dhcpd\n[E:0.9]" fillcolor="#bf360c"];
+  "45230d73-e57d-5dbc-94ba-2c34a91e0c4b" [label="Certificate\netc/cloud/2048_newroot.cer
+file\n[E:0.95]" fillcolor="#f57f17"];
+  "788b924d-9e84-551b-86eb-564353f45944" [label="Binary\nradvd
+usr/sbin/radvd\n[E:0.95]" fillcolor="#6a1b9a"];
+  "aa82b849-0adc-57f8-b57c-f9c9b8e2326c" [label="Weakness\nCWE-489 debug_artifact
+/etc/web/VN/main/qsEnd.htm\n[E:0.85]" fillcolor="#bf360c"];
+  "13356900-6b38-59fa-924c-f2ec23ac73dd" [label="Weakness\nCWE-489 debug_artifact
+/etc/services\n[E:0.85]" fillcolor="#bf360c"];
+  "4334f2cc-be70-5b21-acfa-638d6712c3dd" [label="Binary\nwscd_5G
+usr/bin/wscd_5G\n[E:0.95]" fillcolor="#6a1b9a"];
+  "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a" [label="Binary\nxl2tpd
+usr/sbin/xl2tpd\n[E:0.95]" fillcolor="#6a1b9a"];
+  "4d5ecb96-4d6e-5224-9b67-0d49e4a7a09d" [label="Weakness\nCWE-338 dangerous_function_rand
+lib/libcmm.so\n[E:0.9]" fillcolor="#bf360c"];
+  "9613e9c0-505b-5f1d-be67-0877c230305f" [label="Weakness\nCWE-489 debug_artifact
+…tc/web/VN/locale/en_US/str.js\n[E:0.85]" fillcolor="#bf360c"];
+  "a82f5654-e925-5beb-a217-31c1f6c2f70e" [label="Weakness\nCWE-489 debug_artifact
+…tc/web/VN/locale/vi_VN/str.js\n[E:0.85]" fillcolor="#bf360c"];
+  "c10650e7-21cf-5168-bbc5-4e2d343706dc" [label="FilesystemObject\n/etc/web/VN/locale/en_US/help.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "6debcc39-594f-52f0-b414-6419a448ec7d" [label="Binary\nbusybox
+bin/busybox\n[E:0.95]" fillcolor="#6a1b9a"];
+  "7dd08870-ad1a-583a-95c1-e12044c04e34" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/bin/dhcpc\n[E:0.9]" fillcolor="#bf360c"];
+  "7a700322-1e74-5e77-b726-586c8265dcc6" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/sbin/ripd\n[E:0.9]" fillcolor="#bf360c"];
+  "27373fbf-fbfe-5755-8db9-db0f66be1eac" [label="Binary\nwanType
+usr/bin/wanType\n[E:0.95]" fillcolor="#6a1b9a"];
+  "e759137b-0c44-5b4b-9bb0-05975ed24a22" [label="FilesystemObject\n/etc/web/VN/locale/vi_VN/str.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "ad2725b6-673b-5c2b-a970-29616b12cca3" [label="Weakness\nCWE-489 debug_artifact
+/etc/cloud/cloud_https.cfg\n[E:0.85]" fillcolor="#bf360c"];
+  "95e617b8-d6d2-510b-b7f1-a0f5f8c3dc5d" [label="FilesystemObject\n/etc/web/VN/js/lib.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "63035ab1-62ac-52b2-80d9-5d8ae26b2b20" [label="Weakness\nCWE-489 debug_artifact
+…c/web/VN/locale/en_US/help.js\n[E:0.85]" fillcolor="#bf360c"];
+  "476459dd-e9a2-51af-87eb-44120fabac4d" [label="FilesystemObject\n/etc/web/VN/js/local.js
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "5bbc568d-62d3-5ced-973b-cfdcd1ccf8b5" [label="FilesystemObject\n/etc/web/VN/main/qsEnd.htm
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "7a443cb9-6081-5ab9-a55b-2d02d7388d67" [label="Weakness\nCWE-338 dangerous_function_srand
+lib/libthreadutil.so\n[E:0.9]" fillcolor="#bf360c"];
+  "bae7cd70-900b-56d4-a276-8394befa70ea" [label="Weakness\nCWE-489 debug_artifact
+/web/main/diagnostic.htm\n[E:0.85]" fillcolor="#bf360c"];
+  "dfe1469a-6831-5be4-9403-1f8e11807dff" [label="Binary\nwscd
+usr/bin/wscd\n[E:0.95]" fillcolor="#6a1b9a"];
+  "15502dcc-7f96-5667-933b-706293e96fa9" [label="Weakness\nCWE-489 debug_artifact
+/etc/web/VN/js/lib.js\n[E:0.85]" fillcolor="#bf360c"];
+  "fd674ed4-6442-5d47-b04e-b308eb5212e1" [label="Binary\ncos
+usr/bin/cos\n[E:0.95]" fillcolor="#6a1b9a"];
+  "6ef95ef3-8770-5faa-8873-4dd22a22fa73" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/sbin/xl2tpd\n[E:0.9]" fillcolor="#bf360c"];
+  "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c" [label="Binary\ndhcpd
+usr/bin/dhcpd\n[E:0.95]" fillcolor="#6a1b9a"];
+  "37ec8197-127f-5369-bbda-902d5b9f6b3a" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/sbin/xl2tpd\n[E:0.9]" fillcolor="#bf360c"];
+  "a6294af6-7ae8-56db-ab36-d6c39603e9d7" [label="FilesystemObject\n/etc/cloud/cloud_https.cfg
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "154992e5-8b98-50e3-be14-bd47926abd53" [label="FilesystemObject\n/web/main/diagnostic.htm
+debug\n[E:0.85]" fillcolor="#00695c"];
+  "38ed533e-89fb-56db-9e20-5cab8502be7c" [label="Weakness\nCWE-338 dangerous_function_srand
+lib/libupnp.so\n[E:0.9]" fillcolor="#bf360c"];
+  "9321e38c-576a-5cfb-b4ed-a2996a43859d" [label="Weakness\nCWE-338 dangerous_function_srand
+usr/sbin/radvd\n[E:0.9]" fillcolor="#bf360c"];
+  "403e8d16-0c30-5a1d-884f-b6ca7959ac6b" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/bin/cos\n[E:0.9]" fillcolor="#bf360c"];
+  "65c22798-23a2-5f44-93c8-a60788f47258" [label="Weakness\nCWE-489 debug_artifact
+/etc/web/VN/frame/menu.htm\n[E:0.85]" fillcolor="#bf360c"];
+  "c61ef72e-8c55-51ec-969a-fc0e5e56cfdd" [label="Weakness\nCWE-338 dangerous_function_rand
+usr/bin/wscd_5G\n[E:0.9]" fillcolor="#bf360c"];
+  "ca4823b6-43f7-56fc-a0a3-55d152f003b6" [label="Weakness\nCWE-338 dangerous_function_srand
+lib/libcmm.so\n[E:0.9]" fillcolor="#bf360c"];
+
+  "154992e5-8b98-50e3-be14-bd47926abd53" -> "bae7cd70-900b-56d4-a276-8394befa70ea" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "a6294af6-7ae8-56db-ab36-d6c39603e9d7" -> "ad2725b6-673b-5c2b-a970-29616b12cca3" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "6eadacfb-2da9-5ae3-9e3e-04ae958287ac" -> "13356900-6b38-59fa-924c-f2ec23ac73dd" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "5bbc568d-62d3-5ced-973b-cfdcd1ccf8b5" -> "aa82b849-0adc-57f8-b57c-f9c9b8e2326c" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "7682ccd1-bd0c-57d6-b63c-e31516736a67" -> "65c22798-23a2-5f44-93c8-a60788f47258" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "95e617b8-d6d2-510b-b7f1-a0f5f8c3dc5d" -> "15502dcc-7f96-5667-933b-706293e96fa9" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "476459dd-e9a2-51af-87eb-44120fabac4d" -> "a9b9cdff-f868-509d-8f48-7c383d875aa2" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "ef8d205d-5533-5187-ba95-54879003664b" -> "9613e9c0-505b-5f1d-be67-0877c230305f" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "c10650e7-21cf-5168-bbc5-4e2d343706dc" -> "63035ab1-62ac-52b2-80d9-5d8ae26b2b20" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "613604ef-4f57-5c0e-bd85-1ec794b716fa" -> "7f5c9d70-1a13-5372-96e9-581a85f30c90" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "e759137b-0c44-5b4b-9bb0-05975ed24a22" -> "a82f5654-e925-5beb-a217-31c1f6c2f70e" [label="EXPOSES_WEAKNESS\n[0.85]" style=solid];
+  "45230d73-e57d-5dbc-94ba-2c34a91e0c4b" -> "17559474-d2df-5452-9353-83d1f2f56638" [label="EXPOSES_WEAKNESS\n[0.95]" style=solid];
+  "6debcc39-594f-52f0-b414-6419a448ec7d" -> "af59f384-7a84-5b4f-95d1-a9b79b4ac757" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "6debcc39-594f-52f0-b414-6419a448ec7d" -> "e720aad1-83a9-5b35-b71e-681c8821cc89" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "b3a361ef-f008-5363-a2ca-df147e388d50" -> "4d5ecb96-4d6e-5224-9b67-0d49e4a7a09d" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "b3a361ef-f008-5363-a2ca-df147e388d50" -> "ca4823b6-43f7-56fc-a0a3-55d152f003b6" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "8859ecc9-f75c-5455-b05c-1d274290c9d2" -> "7a443cb9-6081-5ab9-a55b-2d02d7388d67" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "40abf3d5-7353-589a-8347-1baa32f862d9" -> "24ff5f5b-f937-5f92-bfce-cb3c4ecd8cb9" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "40abf3d5-7353-589a-8347-1baa32f862d9" -> "38ed533e-89fb-56db-9e20-5cab8502be7c" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "fd674ed4-6442-5d47-b04e-b308eb5212e1" -> "403e8d16-0c30-5a1d-884f-b6ca7959ac6b" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "fd674ed4-6442-5d47-b04e-b308eb5212e1" -> "5a2caac4-3d93-526c-a029-7bc2b3d5ad2b" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "95df3199-b3ad-55e1-9f46-15f3e74a7188" -> "11a54f63-528a-5e1a-b75f-d0ea01cf9ca6" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "95df3199-b3ad-55e1-9f46-15f3e74a7188" -> "7dd08870-ad1a-583a-95c1-e12044c04e34" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c" -> "889853b0-a02b-548c-8151-3d23710b76d3" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "116cfb7e-a6ff-5960-a21d-7ccb5a7b6f9c" -> "68da230c-4365-5a17-b09e-823959a37e46" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "27373fbf-fbfe-5755-8db9-db0f66be1eac" -> "ecb20ed7-43a6-5f5a-b34e-24bd0a67f06c" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "dfe1469a-6831-5be4-9403-1f8e11807dff" -> "2881921c-f38c-55de-aaa6-d56c8711edee" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "dfe1469a-6831-5be4-9403-1f8e11807dff" -> "eb7ab25b-27de-5599-9c63-afc3d971f54c" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "4334f2cc-be70-5b21-acfa-638d6712c3dd" -> "c61ef72e-8c55-51ec-969a-fc0e5e56cfdd" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "4334f2cc-be70-5b21-acfa-638d6712c3dd" -> "41543e3a-616f-5d6a-8870-3d767c555d2b" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "788b924d-9e84-551b-86eb-564353f45944" -> "bf690f77-d9ec-5c0a-aa9d-46efb8cd59b2" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "788b924d-9e84-551b-86eb-564353f45944" -> "9321e38c-576a-5cfb-b4ed-a2996a43859d" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "cae15a53-b312-5206-946c-dd57759c3c72" -> "8b15d166-08b2-5e39-a075-0e8870d799a6" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "cae15a53-b312-5206-946c-dd57759c3c72" -> "7a700322-1e74-5e77-b726-586c8265dcc6" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a" -> "6ef95ef3-8770-5faa-8873-4dd22a22fa73" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+  "6b8ace23-0d82-54ca-88fa-d0a8f8e3e20a" -> "37ec8197-127f-5369-bbda-902d5b9f6b3a" [label="EXPOSES_WEAKNESS\n[0.9]" style=solid];
+}

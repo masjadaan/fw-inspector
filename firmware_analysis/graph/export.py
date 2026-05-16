@@ -134,6 +134,126 @@ def _dot_label(t: str, attrs: dict) -> str:
     return attrs.get("name") or attrs.get("algorithm") or attrs.get("username") or t
 
 
+FOCUS_CONFIGS: dict[str, dict] = {
+    "entry_points": {
+        "title": "Entry Points",
+        "node_types": {"Firmware", "TrustZone", "Service", "Port", "Credential"},
+        "weakness_types": None,
+    },
+    "stack_hardening": {
+        "title": "Stack Hardening Gaps",
+        "node_types": None,
+        "weakness_types": {"canary_no", "nx_disabled", "relro_none", "pie_no"},
+    },
+    "memory_unsafe": {
+        "title": "Memory-Unsafe Functions",
+        "node_types": None,
+        "weakness_types": {
+            "dangerous_function_strcpy", "dangerous_function_sprintf",
+            "dangerous_function_sscanf", "dangerous_function_strcat",
+            "dangerous_function_vsprintf",
+        },
+    },
+    "command_injection": {
+        "title": "Command Injection Risk",
+        "node_types": None,
+        "weakness_types": {"dangerous_function_system", "dangerous_function_popen"},
+    },
+    "weak_randomness_misc": {
+        "title": "Weak Randomness & Miscellaneous",
+        "node_types": None,
+        "weakness_types": {
+            "dangerous_function_srand", "dangerous_function_rand",
+            "debug_artifact", "certificate_self_signed",
+        },
+    },
+}
+
+
+def to_focused_dot(g: Graph, firmware_id: str, focus_key: str) -> str:
+    cfg   = FOCUS_CONFIGS[focus_key]
+    title = cfg["title"]
+
+    included: set[str] = set()
+
+    if cfg["node_types"]:
+        allowed = cfg["node_types"]
+        included = {nid for nid, d in g.nodes.items() if d["type"] in allowed}
+    else:
+        wtypes = cfg["weakness_types"]
+
+        weakness_ids = {
+            nid for nid, d in g.nodes.items()
+            if d["type"] == "Weakness" and d["attributes"].get("type") in wtypes
+        }
+        included.update(weakness_ids)
+
+        # sources of EXPOSES_WEAKNESS edges (Binary or FilesystemObject)
+        parent_ids: set[str] = set()
+        for e in g.edges:
+            if e["target"] in weakness_ids:
+                parent_ids.add(e["source"])
+        included.update(parent_ids)
+
+        # one hop upstream from Binary parents: Service → Port → TrustZone
+        service_ids: set[str] = set()
+        for e in g.edges:
+            if e["source"] in parent_ids and g.nodes[e["target"]]["type"] == "Service":
+                service_ids.add(e["target"])
+        included.update(service_ids)
+
+        port_ids: set[str] = set()
+        for e in g.edges:
+            if e["source"] in service_ids and g.nodes[e["target"]]["type"] == "Port":
+                port_ids.add(e["target"])
+        included.update(port_ids)
+
+        for e in g.edges:
+            if e["source"] in port_ids and g.nodes[e["target"]]["type"] == "TrustZone":
+                included.add(e["target"])
+
+    included_edges = [
+        e for e in g.edges
+        if e["source"] in included and e["target"] in included
+    ]
+
+    lines = [
+        "digraph AttackSurface {",
+        f'  label="{firmware_id} — {title}";',
+        '  graph [rankdir=LR fontname="Helvetica" bgcolor="#1a1a2e" '
+        'labelfontcolor=white fontcolor=white];',
+        '  node [style=filled fontname="Helvetica" fontsize=10 fontcolor=white shape=box];',
+        '  edge [fontname="Helvetica" fontsize=8 fontcolor="#aaaaaa" color="#666666"];',
+        "",
+    ]
+
+    for nid in included:
+        data  = g.nodes[nid]
+        t     = data["type"]
+        attrs = data["attributes"]
+        label = _dot_label(t, attrs).replace('"', "'")
+        conf  = data["provenance"]["confidence"]
+        ptype = data["provenance"]["type"][0].upper()
+        color = _NODE_COLORS.get(t, "#555555")
+        lines.append(
+            f'  "{nid}" [label="{t}\\n{label}\\n[{ptype}:{conf}]" '
+            f'fillcolor="{color}"];'
+        )
+
+    lines.append("")
+    for e in included_edges:
+        rel   = e["relationship"]
+        style = _EDGE_STYLES.get(rel, "solid")
+        conf  = e["provenance"]["confidence"]
+        lines.append(
+            f'  "{e["source"]}" -> "{e["target"]}" '
+            f'[label="{rel}\\n[{conf}]" style={style}];'
+        )
+
+    lines.append("}")
+    return "\n".join(lines)
+
+
 def to_dot(g: Graph, firmware_id: str) -> str:
     lines = [
         "digraph AttackSurface {",

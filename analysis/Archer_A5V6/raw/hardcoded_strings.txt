@@ -70,13 +70,13 @@ Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 --- usr/bin/rtinicapd ---
  secret_len = %d, secret= %s
 
---- usr/bin/rt2860apd ---
- secret_len = %d, secret= %s
-
 --- usr/bin/httpd ---
 Location: https://%s:%d
 Location: https://%s
 http://
+
+--- usr/bin/rt2860apd ---
+ secret_len = %d, secret= %s
 
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/

@@ -195,14 +195,15 @@ def main() -> None:
     attack_surface_json = analysis_dir / "attack_surface" / "attack_surface.json"
     _run_stage(
         "3_graph", "Stage 3 — Entity-Relationship Graph",
-        [py, str(here / "firmware_analysis/graph/graph.py"), str(attack_surface_json), "--dot"],
+        [py, str(here / "firmware_analysis/graph/graph.py"), str(attack_surface_json), "--dot", "--focused-graphs"],
         stages, blocked_by="2_surface",
     )
     flush()
 
-    # ── Stage 4: Render graph to SVG (optional — graphviz may not be installed) ─
-    dot_file = analysis_dir / "attack_surface" / "graph.dot"
-    svg_file = analysis_dir / "attack_surface" / "graph.svg"
+    # ── Stage 4: Render graphs to SVG (optional — graphviz may not be installed) ─
+    as_dir   = analysis_dir / "attack_surface"
+    dot_file = as_dir / "graph.dot"
+    svg_file = as_dir / "graph.svg"
     r4 = _run_stage(
         "4_svg", "Stage 4 — Render Graph SVG",
         ["dot", "-Tsvg", str(dot_file), "-o", str(svg_file)],
@@ -210,6 +211,19 @@ def main() -> None:
     )
     if r4.status == "partial":
         stages["4_svg"].notes.append("install graphviz: sudo apt install graphviz")
+
+    _focused_keys = [
+        "entry_points", "stack_hardening", "memory_unsafe",
+        "command_injection", "weak_randomness_misc",
+    ]
+    for focus_key in _focused_keys:
+        focused_dot = as_dir / f"graph_{focus_key}.dot"
+        focused_svg = as_dir / f"graph_{focus_key}.svg"
+        _run_stage(
+            f"4_svg_{focus_key}", f"Stage 4 — Render {focus_key} SVG",
+            ["dot", "-Tsvg", str(focused_dot), "-o", str(focused_svg)],
+            stages, required=False, blocked_by="3_graph",
+        )
     flush()
 
     # ── Stage 5: CVE Enrichment ───────────────────────────────────────────────

@@ -2,7 +2,7 @@
   "metadata": {
     "firmware_id": "Archer_A5V6",
     "schema_version": "1.0",
-    "generated_at": "2026-05-16T05:51:55.129053+00:00",
+    "generated_at": "2026-05-16T07:20:32.149866+00:00",
     "node_count": 608,
     "edge_count": 498,
     "node_type_counts": {
@@ -15862,37 +15862,10 @@
   ],
   "derived_attack_paths": [
     {
-      "id": "74486eb1-fa3c-5d36-a902-8e5812473af2",
-      "title": "LAN \u2192 SSH :22/tcp",
-      "severity": "critical",
-      "score": 6.0,
-      "zone": "LAN",
-      "port": 22,
-      "protocol": "tcp",
-      "service": "ssh",
-      "runs_as_root": true,
-      "crypto_weaknesses": [],
-      "structural_weaknesses": [
-        "debug_artifact",
-        "certificate_self_signed"
-      ],
-      "steps": [
-        "Reach port 22/tcp from LAN",
-        "Interact with ssh service",
-        "Service runs as root \u2014 successful exploitation yields root shell",
-        "Pivot to further targets or extract credentials/keys from filesystem"
-      ],
-      "provenance": {
-        "type": "inferred",
-        "source": "graph_traversal",
-        "confidence": 0.8
-      }
-    },
-    {
       "id": "a7dbcd5d-02f2-5799-8499-7af1a85d57bf",
       "title": "LAN \u2192 HTTP :80/tcp",
       "severity": "critical",
-      "score": 6.0,
+      "score": 9.0,
       "zone": "LAN",
       "port": 80,
       "protocol": "tcp",
@@ -15903,10 +15876,65 @@
         "debug_artifact",
         "certificate_self_signed"
       ],
+      "weak_auth_users": [],
+      "dangerous_funcs": [
+        "fscanf",
+        "popen",
+        "sprintf",
+        "sscanf",
+        "strcat",
+        "strcpy"
+      ],
+      "cert_issues": [],
+      "exposed_cred_types": [
+        "default_credential_reference"
+      ],
+      "dangerous_func_score": 7.0,
+      "cert_issue_score": 0.0,
+      "cred_exposure_score": 1.0,
       "steps": [
         "Reach port 80/tcp from LAN",
         "Interact with http service",
         "Service runs as root \u2014 successful exploitation yields root shell",
+        "Binary imports dangerous functions (fscanf(), popen(), sprintf(), sscanf()) \u2014 memory corruption or command injection may allow pre-auth exploitation",
+        "Hardcoded or default credentials present in firmware \u2014 static passwords enable credential stuffing or direct login",
+        "Pivot to further targets or extract credentials/keys from filesystem"
+      ],
+      "provenance": {
+        "type": "inferred",
+        "source": "graph_traversal",
+        "confidence": 0.8
+      }
+    },
+    {
+      "id": "74486eb1-fa3c-5d36-a902-8e5812473af2",
+      "title": "LAN \u2192 SSH :22/tcp",
+      "severity": "critical",
+      "score": 7.0,
+      "zone": "LAN",
+      "port": 22,
+      "protocol": "tcp",
+      "service": "ssh",
+      "runs_as_root": true,
+      "crypto_weaknesses": [],
+      "structural_weaknesses": [
+        "debug_artifact",
+        "certificate_self_signed"
+      ],
+      "weak_auth_users": [],
+      "dangerous_funcs": [],
+      "cert_issues": [],
+      "exposed_cred_types": [
+        "default_credential_reference"
+      ],
+      "dangerous_func_score": 0.0,
+      "cert_issue_score": 0.0,
+      "cred_exposure_score": 1.0,
+      "steps": [
+        "Reach port 22/tcp from LAN",
+        "Interact with ssh service",
+        "Service runs as root \u2014 successful exploitation yields root shell",
+        "Hardcoded or default credentials present in firmware \u2014 static passwords enable credential stuffing or direct login",
         "Pivot to further targets or extract credentials/keys from filesystem"
       ],
       "provenance": {

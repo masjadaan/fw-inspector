@@ -26,7 +26,7 @@ import json
 from pathlib import Path
 
 from builder import build
-from export import to_dict, to_dot
+from export import FOCUS_CONFIGS, to_dict, to_dot, to_focused_dot
 
 
 def main() -> None:
@@ -48,6 +48,11 @@ def main() -> None:
         "--dot",
         action="store_true",
         help="Also write a Graphviz DOT file alongside the JSON",
+    )
+    parser.add_argument(
+        "--focused-graphs",
+        action="store_true",
+        help="Write 5 focused DOT files (entry_points, stack_hardening, etc.)",
     )
     args = parser.parse_args()
 
@@ -87,6 +92,14 @@ def main() -> None:
         dot_path.write_text(to_dot(g, firmware_id))
         print(f"\n[+] DOT written → {dot_path}")
         print(f"    Render: dot -Tsvg {dot_path} -o {dot_path.with_suffix('.svg')}")
+
+    if args.focused_graphs:
+        print()
+        for focus_key, cfg in FOCUS_CONFIGS.items():
+            focused_dot  = to_focused_dot(g, firmware_id, focus_key)
+            focused_path = out_path.with_name(f"graph_{focus_key}.dot")
+            focused_path.write_text(focused_dot)
+            print(f"[+] Focused DOT ({cfg['title']}) → {focused_path}")
 
 
 if __name__ == "__main__":

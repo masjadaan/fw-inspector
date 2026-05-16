@@ -199,6 +199,26 @@ CVE severity is adjusted beyond the base CVSS score using two firmware-specific 
 | No RELRO | +1 level |
 | No stack canary | +1 level |
 
+### Reading the heatmap
+
+![CVE Severity Heatmap](analysis/Archer_A5V6/sbom/cve_heatmap.png)
+
+Each cell shows the count of unique CVEs at that severity level for the component — it tells you how many distinct problems exist and gives a sense of remediation scope. A component with 67 critical CVEs requires closing 67 findings; patching it in one update resolves all of them at once.
+
+Severity levels here reflect device-specific escalation, not raw NVD values. The enrichment step promotes a CVE upward when the affected binary is missing hardening protections (no stack canary, no NX, no RELRO, no PIE). A CVE originally rated medium by NVD can appear as critical on this device because the missing protections make it directly exploitable — on this firmware, 71% of CVEs were escalated for this reason.
+
+The **ESCALATED** column counts how many of that component's CVEs were raised above their NVD base severity by the device context. A high ESCALATED count relative to the total CVE count signals that the device's specific posture — open network ports, missing hardening — is the primary risk amplifier, not the raw vulnerability alone.
+
+The **SCORE** column captures the accumulated weight of those CVEs:
+
+```
+SCORE = Σ CVSS × (1.5 if network-reachable, else 1.0)  across all unique CVEs for that component
+```
+
+Two components can have the same count but very different scores — for example, a component with 10 CVEs all at CVSS 9.8 (score ≈ 147) is a more urgent target than one with 10 CVEs all at CVSS 4.0 (score = 40), even though both show "10" in the count cell. The ×1.5 multiplier reflects that a vulnerability exposed through a live network port on this device carries higher exploitability than one requiring local access.
+
+Use the **count** to estimate remediation effort — which single patch closes the most findings. Use **ESCALATED** to identify where the device's posture is the risk driver. Use the **score** to set priority order — which component poses the greatest accumulated risk to this specific device right now. The underlying data is also available as a CSV export for direct import into Jira tickets, Confluence pages, or downstream scripts.
+
 ---
 
 ## Docker Environment

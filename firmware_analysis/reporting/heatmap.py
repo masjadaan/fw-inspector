@@ -261,7 +261,7 @@ def main() -> None:
     )
     parser.add_argument(
         "analysis_dir", type=Path,
-        help="Analysis directory produced by cve.py (must contain cve_report.json).",
+        help="Analysis directory produced by cve.py (must contain sbom/cve_report.json).",
     )
     parser.add_argument(
         "--top", "-n", type=int, default=40,

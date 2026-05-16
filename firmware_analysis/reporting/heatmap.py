@@ -209,16 +209,27 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    _annotate = dict(
-        xy=(0.5, 0), xycoords="axes fraction",
-        textcoords="offset points", ha="center", va="top", fontsize=8,
+    # x-centres in axes-fraction for each column group.
+    sev_x   = n_sev_cols / (2 * n_cols)        # centre of CRITICAL…LOW block
+    esc_x   = (n_sev_cols + 0.5) / n_cols      # ESC column
+    score_x = (n_sev_cols + 1.5) / n_cols      # SCORE column
+
+    _ann = dict(
+        xycoords="axes fraction", textcoords="offset points",
+        ha="center", va="top", fontsize=8,
     )
-    ax.annotate("Device-adjusted severity",
-                xytext=(0, -20), color="#555555", **_annotate)
-    ax.annotate("ESC = # CVEs escalated beyond NVD base",
-                xytext=(0, -34), color="#ae017e", **_annotate)
-    ax.annotate("SCORE = Σ CVSS scores (×1.5 if network-reachable)",
-                xytext=(0, -48), color="#54278f", **_annotate)
+    ax.annotate(
+        "Device-adjusted severity\n(binary hardening + network exposure factored in)",
+        xy=(sev_x, 0), xytext=(0, -20), color="#555555", **_ann,
+    )
+    ax.annotate(
+        "ESC = # CVEs escalated\nbeyond NVD base",
+        xy=(esc_x, 0), xytext=(0, -20), color="#ae017e", **_ann,
+    )
+    ax.annotate(
+        "SCORE = Σ CVSS scores\n(×1.5 if network-reachable)",
+        xy=(score_x, 0), xytext=(0, -20), color="#54278f", **_ann,
+    )
 
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight")

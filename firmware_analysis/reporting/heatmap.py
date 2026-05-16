@@ -269,7 +269,7 @@ def main() -> None:
     _draw(components, matrix, scores, escalated_counts, active_sevs, firmware_id, out_path)
 
     print(f"[+] Heatmap written → {out_path}")
-    print(f"    {len(components)} components × {len(_SEVERITIES)} severity levels  "
+    print(f"    {len(components)} components × {len(active_sevs)} severity levels  "
           f"({int(matrix.sum())} unique findings, deduplicated by CVE ID)")
 
     if args.csv:

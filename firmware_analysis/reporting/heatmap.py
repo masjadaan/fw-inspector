@@ -269,7 +269,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output", "-o", type=Path, default=None,
-        help="Output PNG path (default: <analysis_dir>/cve_heatmap.png).",
+        help="Output PNG path (default: <analysis_dir>/sbom/cve_heatmap.png).",
     )
     parser.add_argument(
         "--csv", action="store_true",

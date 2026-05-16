@@ -31,7 +31,6 @@ except ImportError:
 
 
 _SEVERITIES = ["critical", "high", "medium", "low", "info"]
-_WEIGHTS    = {"critical": 5, "high": 4, "medium": 3, "low": 2, "info": 1}
 
 # One colour scale per severity column so intensity encodes count within column.
 _COL_CMAPS = {
@@ -86,25 +85,29 @@ def _load_report(analysis_dir: Path) -> dict:
 
 def _build_matrix(
     vulnerabilities: list[dict], top: int
-) -> tuple[list[str], np.ndarray, list[int]]:
-    # Deduplicate: canonical_label → severity → set of unique CVE IDs.
-    groups: dict[str, dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
+) -> tuple[list[str], np.ndarray, list[float]]:
+    # Deduplicate: canonical_label → cve_id → (severity, cvss_score).
+    cve_data: dict[str, dict[str, tuple[str, float]]] = defaultdict(dict)
     for v in vulnerabilities:
         label  = _canonical(v.get("component", "unknown"), v.get("version", ""))
-        sev    = v.get("base_severity", "info").lower()
         cve_id = v.get("cve", "unknown")
-        groups[label][sev].add(cve_id)
+        if cve_id not in cve_data[label]:
+            cve_data[label][cve_id] = (
+                v.get("base_severity", "info").lower(),
+                float(v.get("cvss_score", 0.0)),
+            )
 
-    counts = {
-        label: {sev: len(cves) for sev, cves in sevs.items()}
-        for label, sevs in groups.items()
-    }
+    # Severity counts from deduplicated CVEs.
+    counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    for label, cves in cve_data.items():
+        for sev, _ in cves.values():
+            counts[label][sev] += 1
 
-    def score(comp: str) -> int:
-        return sum(_WEIGHTS.get(s, 0) * n for s, n in counts[comp].items())
+    def score(comp: str) -> float:
+        return sum(cvss for _, cvss in cve_data[comp].values())
 
-    components = sorted(counts, key=lambda c: (-score(c), c))[:top]
-    scores     = [score(c) for c in components]
+    components = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
+    scores     = [round(score(c), 1) for c in components]
 
     matrix = np.array(
         [[counts[comp].get(sev, 0) for sev in _SEVERITIES] for comp in components],
@@ -178,7 +181,7 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("NVD base severity  ·  SCORE = Σ(critical×5 + high×4 + medium×3 + low×2 + info×1)",
+    ax.set_xlabel("NVD base severity  ·  SCORE = Σ CVSS scores across unique CVEs",
                   fontsize=8, labelpad=8)
 
     plt.tight_layout()

@@ -86,8 +86,8 @@ def _load_report(analysis_dir: Path) -> dict:
 def _build_matrix(
     vulnerabilities: list[dict], top: int
 ) -> tuple[list[str], np.ndarray, list[float]]:
-    # Deduplicate: canonical_label → cve_id → (severity, cvss_score).
-    cve_data: dict[str, dict[str, tuple[str, float]]] = defaultdict(dict)
+    # Deduplicate: canonical_label → cve_id → (severity, cvss_score, network_reachable).
+    cve_data: dict[str, dict[str, tuple[str, float, bool]]] = defaultdict(dict)
     for v in vulnerabilities:
         label  = _canonical(v.get("component", "unknown"), v.get("version", ""))
         cve_id = v.get("cve", "unknown")
@@ -95,16 +95,20 @@ def _build_matrix(
             cve_data[label][cve_id] = (
                 v.get("base_severity", "info").lower(),
                 float(v.get("cvss_score", 0.0)),
+                bool(v.get("network_reachable", False)),
             )
 
     # Severity counts from deduplicated CVEs.
     counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for label, cves in cve_data.items():
-        for sev, _ in cves.values():
+        for sev, _, _ in cves.values():
             counts[label][sev] += 1
 
     def score(comp: str) -> float:
-        return sum(cvss for _, cvss in cve_data[comp].values())
+        return sum(
+            cvss * (1.5 if reachable else 1.0)
+            for _, cvss, reachable in cve_data[comp].values()
+        )
 
     components = sorted(cve_data, key=lambda c: (-score(c), c))[:top]
     scores     = [round(score(c), 1) for c in components]
@@ -181,7 +185,7 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("NVD base severity  ·  SCORE = Σ CVSS scores across unique CVEs",
+    ax.set_xlabel("NVD base severity  ·  SCORE = Σ CVSS scores (×1.5 if network-reachable)",
                   fontsize=8, labelpad=8)
 
     plt.tight_layout()

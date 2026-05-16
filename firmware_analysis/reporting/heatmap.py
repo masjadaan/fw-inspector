@@ -209,8 +209,16 @@ def _draw(
         f"{firmware_id} — CVE severity heatmap  ({total} unique findings, {n_rows} components)",
         fontsize=11, fontweight="bold", pad=12,
     )
-    ax.set_xlabel("Device-adjusted severity  ·  ESC = # CVEs escalated beyond NVD base  ·  SCORE = Σ CVSS scores (×1.5 if network-reachable)",
-                  fontsize=8, labelpad=8)
+    _annotate = dict(
+        xy=(0.5, 0), xycoords="axes fraction",
+        textcoords="offset points", ha="center", va="top", fontsize=8,
+    )
+    ax.annotate("Device-adjusted severity",
+                xytext=(0, -20), color="#555555", **_annotate)
+    ax.annotate("ESC = # CVEs escalated beyond NVD base",
+                xytext=(0, -34), color="#ae017e", **_annotate)
+    ax.annotate("SCORE = Σ CVSS scores (×1.5 if network-reachable)",
+                xytext=(0, -48), color="#54278f", **_annotate)
 
     plt.tight_layout()
     fig.savefig(out_path, dpi=150, bbox_inches="tight")

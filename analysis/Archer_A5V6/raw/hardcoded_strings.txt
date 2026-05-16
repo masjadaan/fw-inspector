@@ -35,10 +35,6 @@ More details here: https://curl.se/docs/sslcerts.html
 @http://
 https://
 
---- usr/bin/openssl ---
-<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
-http://
-
 --- usr/bin/wscd ---
 http://%s:%d/description.xml
 http://
@@ -63,6 +59,10 @@ http://www.w3.org/2000/xmlns/
 http://%s:%d/%s
 http://%d.%d.%d.%d:%d/
 
+--- usr/bin/openssl ---
+<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'>
+http://
+
 --- usr/bin/dropbearmulti ---
 Dropbear SSH client v%s https://matt.ucc.asn.au/dropbear/dropbear.html
 Dropbear server v%s https://matt.ucc.asn.au/dropbear/dropbear.html
@@ -81,6 +81,10 @@ http://
 --- usr/bin/xtables-multi ---
 xt_recent by: Stephen Frost <sfrost@snowman.net>.  http://snowman.net/projects/ipt_recent/
 
+--- lib/libixml.so ---
+http://www.w3.org/XML/1998/namespace
+http://www.w3.org/2000/xmlns/
+
 --- lib/libcurl.so.4.7.0 ---
 # Your alt-svc cache. https://curl.se/docs/alt-svc.html
 # https://curl.se/docs/http-cookies.html
@@ -89,10 +93,6 @@ Authorization: Bearer %s
 auth=Bearer %s
 auth=Bearer %s
 auth=Bearer %s
-
---- lib/libixml.so ---
-http://www.w3.org/XML/1998/namespace
-http://www.w3.org/2000/xmlns/
 
 --- lib/libupnp.so ---
 http://schemas.xmlsoap.org/soap/envelope/

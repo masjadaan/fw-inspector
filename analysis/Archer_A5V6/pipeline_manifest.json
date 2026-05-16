@@ -1,11 +1,11 @@
 {
   "firmware_id": "Archer_A5V6",
-  "run_at": "2026-05-16T06:53:42.516683+00:00",
+  "run_at": "2026-05-16T07:22:00.686493+00:00",
   "stages": {
     "1_extract": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 5.4,
+      "duration_s": 5.3,
       "notes": []
     },
     "2_surface": {
@@ -17,7 +17,7 @@
     "3_graph": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 0.1,
+      "duration_s": 0.0,
       "notes": []
     },
     "4_svg": {
@@ -26,10 +26,40 @@
       "duration_s": 0.1,
       "notes": []
     },
+    "4_svg_entry_points": {
+      "status": "success",
+      "exit_code": 0,
+      "duration_s": 0.0,
+      "notes": []
+    },
+    "4_svg_stack_hardening": {
+      "status": "success",
+      "exit_code": 0,
+      "duration_s": 0.1,
+      "notes": []
+    },
+    "4_svg_memory_unsafe": {
+      "status": "success",
+      "exit_code": 0,
+      "duration_s": 0.1,
+      "notes": []
+    },
+    "4_svg_command_injection": {
+      "status": "success",
+      "exit_code": 0,
+      "duration_s": 0.0,
+      "notes": []
+    },
+    "4_svg_weak_randomness_misc": {
+      "status": "success",
+      "exit_code": 0,
+      "duration_s": 0.0,
+      "notes": []
+    },
     "5_cve": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 1.2,
+      "duration_s": 1.1,
       "notes": []
     },
     "6_heatmap": {

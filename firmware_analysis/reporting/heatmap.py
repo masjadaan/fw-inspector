@@ -92,12 +92,21 @@ def _build_matrix(
     for v in vulnerabilities:
         label  = _canonical(v.get("component", "unknown"), v.get("version", ""))
         cve_id = v.get("cve", "unknown")
+        incoming_reachable = bool(v.get("network_reachable", False))
+        incoming_escalated = bool(v.get("escalated", False))
         if cve_id not in cve_data[label]:
             cve_data[label][cve_id] = (
                 v.get("adjusted_severity", v.get("base_severity", "info")).lower(),
                 float(v.get("cvss_score", 0.0)),
-                bool(v.get("network_reachable", False)),
-                bool(v.get("escalated", False)),
+                incoming_reachable,
+                incoming_escalated,
+            )
+        else:
+            sev, cvss, reachable, escalated = cve_data[label][cve_id]
+            cve_data[label][cve_id] = (
+                sev, cvss,
+                reachable or incoming_reachable,
+                escalated or incoming_escalated,
             )
 
     # Severity counts from deduplicated CVEs.

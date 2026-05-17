@@ -248,6 +248,83 @@ def analyze_hardening(ctx: AnalysisContext):
     print(f"    Fortify : {summary['fortify_yes']} yes / {summary['fortify_no']} no")
 
 
+# Absolute directories where an RPATH entry is always risky regardless of permissions.
+_RISKY_ABS_DIRS = frozenset({"/tmp", "/var/tmp", "/dev/shm"})
+
+
+def _unsafe_rpath_components(paths: list[str]) -> list[str]:
+    """Return the subset of RPATH/RUNPATH components that are unsafe library search paths.
+
+    Unsafe means:
+      - empty string  → resolves to CWD at runtime
+      - relative path (not starting with / or $ORIGIN) → attacker-controlled if CWD is writable
+      - known world-writable absolute dirs (/tmp, /var/tmp, /dev/shm)
+    $ORIGIN and ${ORIGIN} are glibc's self-relative token and are treated as safe.
+    """
+    unsafe = []
+    for p in paths:
+        if not p:
+            unsafe.append("(empty — resolves to CWD)")
+        elif p in _RISKY_ABS_DIRS or any(p.startswith(d + "/") for d in _RISKY_ABS_DIRS):
+            unsafe.append(p)
+        elif not (p.startswith("/") or p.startswith("$ORIGIN") or p.startswith("${ORIGIN}")):
+            unsafe.append(p)
+    return unsafe
+
+
+def analyze_rpath(ctx: AnalysisContext):
+    """Report ELF binaries with RPATH/RUNPATH entries that can enable library hijacking."""
+    out_file  = ctx.out_dir / "rpath.txt"
+    json_file = ctx.out_dir / "rpath.json"
+
+    all_entries: list[dict] = []
+    unsafe_entries: list[dict] = []
+
+    for path, rec in sorted(ctx.elf_cache.items(), key=lambda x: x[0]):
+        if not rec.rpath:
+            continue
+        rel    = str(path.relative_to(ctx.rootfs))
+        unsafe = _unsafe_rpath_components(rec.rpath)
+        entry  = {"binary": rel, "rpath": rec.rpath, "unsafe_paths": unsafe}
+        all_entries.append(entry)
+        if unsafe:
+            unsafe_entries.append(entry)
+
+    unsafe_lines = []
+    if unsafe_entries:
+        for e in unsafe_entries:
+            unsafe_lines.append(f"  {e['binary']}")
+            unsafe_lines.append(f"    rpath        : {':'.join(e['rpath'])}")
+            unsafe_lines.append(f"    unsafe paths : {', '.join(e['unsafe_paths'])}")
+            unsafe_lines.append("")
+
+    all_lines = [f"  {e['binary']}: {':'.join(e['rpath'])}" for e in all_entries]
+
+    out_file.write_text(
+        section(
+            f"Unsafe RPATH/RUNPATH  [relative / /tmp paths — library hijacking]  ({len(unsafe_entries)})",
+            "\n".join(unsafe_lines) if unsafe_lines else "(none)",
+        ) +
+        section(
+            f"All binaries with RPATH/RUNPATH  ({len(all_entries)} total)",
+            "\n".join(all_lines) if all_lines else "(none — no RPATH/RUNPATH found)",
+        )
+    )
+
+    json_file.write_text(json.dumps({
+        "total_with_rpath": len(all_entries),
+        "unsafe_count":     len(unsafe_entries),
+        "unsafe":           unsafe_entries,
+        "all":              all_entries,
+    }, indent=2))
+
+    n_unsafe = len(unsafe_entries)
+    n_all    = len(all_entries)
+    print(f"  {'rpath.json':45s}  {n_all} binaries with RPATH/RUNPATH  ({n_unsafe} unsafe)")
+    if n_unsafe:
+        print(f"    !! {n_unsafe} binaries with relative or world-writable RPATH — library hijacking risk")
+
+
 def analyze_busybox(ctx: AnalysisContext):
     out_file = ctx.out_dir / "busybox.txt"
     bb_bins = [p for p in ctx.rootfs.rglob("busybox") if p.is_file() and not p.is_symlink()]

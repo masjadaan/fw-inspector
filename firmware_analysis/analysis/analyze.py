@@ -25,6 +25,7 @@ from analyzers.binary import (
     analyze_library_versions,
     analyze_linker_config,
     analyze_network_binaries,
+    analyze_rpath,
     analyze_shellcheck,
     analyze_symlinks,
     analyze_weak_crypto,
@@ -154,8 +155,9 @@ STEPS: list[Analyzer] = [
     # ── ELF-dependent (phase 3) ────────────────────────────────────────────────
     Analyzer("[*] Architecture and endianness detection",  analyze_architecture,    needs_elf=True),
     Analyzer("[*] Binary inventory",                       analyze_binary_inventory, needs_elf=True),
-    Analyzer("[*] Binary hardening (NX / PIE / RELRO / stack canary)",
+    Analyzer("[*] Binary hardening (NX / PIE / RELRO / stack canary / FORTIFY_SOURCE)",
              analyze_hardening,                                                      needs_elf=True),
+    Analyzer("[*] RPATH / RUNPATH injection vectors",      analyze_rpath,            needs_elf=True),
     Analyzer("[*] Network-capable binaries",               analyze_network_binaries, needs_elf=True),
     Analyzer("[*] Hardcoded strings in binaries",          analyze_hardcoded_strings, needs_elf=True),
     Analyzer("[*] Weak cryptography",                      analyze_weak_crypto,       needs_elf=True),

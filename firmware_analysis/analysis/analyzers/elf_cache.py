@@ -64,7 +64,7 @@ def _readelf_crypto_imports(path: Path) -> list:
 
 class _ElfRecord:
     """Holds all per-binary data collected in one pass."""
-    __slots__ = ("file_type", "needed_libs", "crypto_imports", "dangerous_imports", "strings_lines", "hardening")
+    __slots__ = ("file_type", "needed_libs", "crypto_imports", "dangerous_imports", "strings_lines", "hardening", "rpath")
 
     def __init__(self):
         self.file_type         = ""
@@ -73,6 +73,7 @@ class _ElfRecord:
         self.dangerous_imports = []
         self.strings_lines     = []
         self.hardening         = {}
+        self.rpath             = []
 
 
 def _process_one_elf(path: Path) -> tuple:
@@ -105,6 +106,9 @@ def _process_one_elf(path: Path) -> tuple:
         _bind_now = bool(re.search(r"\(BIND_NOW\)", r.stdout)) or bool(
             re.search(r"\(FLAGS_1\)[^\n]*\bNOW\b", r.stdout)
         )
+        # Collect all RPATH/RUNPATH components (colon-separated within each entry).
+        rpath_raw = re.findall(r"\(R(?:UN)?PATH\)\s+Library r(?:un)?path: \[(.+?)\]", r.stdout)
+        rec.rpath = [comp for entry in rpath_raw for comp in entry.split(":")]
     except Exception:
         pass
 

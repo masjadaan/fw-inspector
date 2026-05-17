@@ -779,6 +779,167 @@ def analyze_sysctl(ctx: AnalysisContext):
         print(f"    → {parts}")
 
 
+# ── Sensitive file permission checks ─────────────────────────────────────────
+
+def _octal_str(mode: int) -> str:
+    """Return Unix permission bits as a '0NNN' octal string (e.g. '0644')."""
+    return f"0{mode:03o}"
+
+
+def _stat_mode(path: Path) -> int | None:
+    """Return the lower 9 permission bits of path, or None on stat error."""
+    try:
+        return path.stat().st_mode & 0o777
+    except OSError:
+        return None
+
+
+def analyze_sensitive_permissions(ctx: AnalysisContext):
+    """Check sensitive files for overly permissive filesystem permissions.
+
+    Three categories:
+      1. Authentication database files (/etc/shadow, /etc/gshadow) — world or
+         group readable/writable.
+      2. SSH / dropbear host private keys — permissions wider than 0600.
+      3. World-readable private-key and credential-named files (.key, .pem,
+         .p12, .pfx; or names containing password/passwd/secret/credential/
+         private).
+    """
+    out_file  = ctx.out_dir / "sensitive_permissions.txt"
+    json_file = ctx.out_dir / "sensitive_permissions.json"
+    findings: list[dict] = []
+
+    # ── 1. Authentication database files ────────────────────────────────────
+    for rel in ("etc/shadow", "etc/gshadow"):
+        path = ctx.rootfs / rel
+        if not path.is_file():
+            continue
+        mode = _stat_mode(path)
+        if mode is None:
+            continue
+        if mode & 0o004:
+            findings.append({
+                "file":     rel,
+                "check":    "world_readable_auth_file",
+                "mode":     _octal_str(mode),
+                "severity": "critical",
+                "note":     f"{rel} is world-readable — password hashes exposed to all local users",
+            })
+        elif mode & 0o040:
+            findings.append({
+                "file":     rel,
+                "check":    "group_readable_auth_file",
+                "mode":     _octal_str(mode),
+                "severity": "high",
+                "note":     f"{rel} is group-readable — password hashes accessible by group members",
+            })
+        if mode & 0o002:
+            findings.append({
+                "file":     rel,
+                "check":    "world_writable_auth_file",
+                "mode":     _octal_str(mode),
+                "severity": "critical",
+                "note":     f"{rel} is world-writable — authentication database can be tampered with",
+            })
+
+    # ── 2. SSH / dropbear host private keys ─────────────────────────────────
+    seen_ssh_keys: set[Path] = set()
+    for pattern in ("ssh_host_*_key", "dropbear_*_host_key"):
+        for p in ctx.rootfs.rglob(pattern):
+            if p.is_file() and not p.name.endswith(".pub"):
+                seen_ssh_keys.add(p)
+
+    for path in sorted(seen_ssh_keys):
+        mode = _stat_mode(path)
+        if mode is None or (mode & 0o077) == 0:
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        if mode & 0o004:
+            severity = "critical"
+            detail   = "world-readable — private key exposed to all local users"
+        elif mode & 0o040:
+            severity = "high"
+            detail   = "group-readable — private key exposed to group members"
+        else:
+            severity = "medium"
+            detail   = f"permissions too permissive ({_octal_str(mode)}) — should be 0600"
+        findings.append({
+            "file":     rel,
+            "check":    "ssh_host_key_permissions",
+            "mode":     _octal_str(mode),
+            "severity": severity,
+            "note":     f"SSH host private key is {detail}",
+        })
+
+    # ── 3. World-readable private-key and credential-named files ─────────────
+    _reported: set[str] = {f["file"] for f in findings}
+    seen_cred: set[Path] = set()
+
+    for glob_pat in ("*.key", "*.pem", "*.p12", "*.pfx"):
+        for p in ctx.rootfs.rglob(glob_pat):
+            if p.is_file() and not p.name.endswith(".pub"):
+                seen_cred.add(p)
+
+    _CRED_WORDS = frozenset({"password", "passwd", "secret", "credential", "private"})
+    for p in ctx.rootfs.rglob("*"):
+        if p.is_file() and any(w in p.name.lower() for w in _CRED_WORDS):
+            seen_cred.add(p)
+
+    for path in sorted(seen_cred):
+        mode = _stat_mode(path)
+        if mode is None or not (mode & 0o004):
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        if rel in _reported:
+            continue
+        findings.append({
+            "file":     rel,
+            "check":    "world_readable_credential_file",
+            "mode":     _octal_str(mode),
+            "severity": "high",
+            "note":     "Credential or private key file is world-readable — key material may be extracted",
+        })
+
+    # ── Output ───────────────────────────────────────────────────────────────
+    summary: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    for f in findings:
+        summary[f["severity"]] += 1
+
+    lines_out: list[str] = []
+    for f in findings:
+        lines_out.extend([
+            f"  {f['file']}  ({f['mode']})",
+            f"    check    : {f['check']}",
+            f"    severity : {f['severity']}",
+            f"    note     : {f['note']}",
+            "",
+        ])
+
+    out_file.write_text(
+        section(
+            "Sensitive File Permission Issues",
+            "\n".join(lines_out) if lines_out else "(none — no permission issues found)",
+        )
+    )
+
+    json_file.write_text(json.dumps({
+        "findings": findings,
+        "summary":  summary,
+    }, indent=2))
+
+    n = len(findings)
+    print(f"  {'sensitive_permissions.txt':45s}  {n} finding(s)")
+    if n:
+        parts = "  ".join(f"{v} {k}" for k, v in sorted(summary.items()) if v)
+        print(f"    → {parts}")
+
+
 def analyze_credentials(ctx: AnalysisContext):
     json_file = ctx.out_dir / "credentials.json"
     captured = multi_section_file([

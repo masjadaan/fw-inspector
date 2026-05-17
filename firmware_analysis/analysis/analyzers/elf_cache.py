@@ -13,6 +13,10 @@ _CRYPTO_SYM_PAT = re.compile(
 
 _WEAK_SYM_PAT = re.compile(r"^(MD[245]|DES|RC[24]|MD4)_", re.IGNORECASE)
 
+# Matches glibc FORTIFY_SOURCE wrappers imported by the binary (e.g. __strcpy_chk,
+# __sprintf_chk). Any UND symbol with this shape means -D_FORTIFY_SOURCE>=1 was used.
+_FORTIFY_SYM_PAT = re.compile(r"^__[a-z_]+_chk$")
+
 _DANGEROUS_SYM_PAT = re.compile(
     r"^(gets|strcpy|strcat|sprintf|vsprintf|scanf|fscanf|sscanf|mktemp|tmpnam|tempnam|system|popen|rand|srand)$"
 )
@@ -78,11 +82,12 @@ def _process_one_elf(path: Path) -> tuple:
     """
     rec = _ElfRecord()
 
-    _bind_now   = False
-    _has_canary = False
-    _nx         = None
-    _has_relro  = False
-    _has_interp = False
+    _bind_now    = False
+    _has_canary  = False
+    _has_fortify = False
+    _nx          = None
+    _has_relro   = False
+    _has_interp  = False
 
     try:
         r = subprocess.run(
@@ -120,6 +125,8 @@ def _process_one_elf(path: Path) -> tuple:
                     crypto_syms.append(name)
                 if _DANGEROUS_SYM_PAT.match(name):
                     danger_syms.append(name)
+                if _FORTIFY_SYM_PAT.match(name):
+                    _has_fortify = True
         rec.crypto_imports    = sorted(set(crypto_syms))
         rec.dangerous_imports = sorted(set(danger_syms))
     except Exception:
@@ -166,10 +173,11 @@ def _process_one_elf(path: Path) -> tuple:
         relro = "none"
 
     rec.hardening = {
-        "nx":     _nx,
-        "pie":    pie,
-        "relro":  relro,
-        "canary": _has_canary,
+        "nx":      _nx,
+        "pie":     pie,
+        "relro":   relro,
+        "canary":  _has_canary,
+        "fortify": _has_fortify,
     }
 
     return path, rec

@@ -213,11 +213,12 @@ def analyze_hardening(ctx: AnalysisContext):
         if not h or h.get("pie") == "so":
             continue
         binaries.append({
-            "path":   str(path.relative_to(ctx.rootfs)),
-            "nx":     h.get("nx"),
-            "pie":    h.get("pie", "unknown"),
-            "relro":  h.get("relro", "unknown"),
-            "canary": h.get("canary"),
+            "path":    str(path.relative_to(ctx.rootfs)),
+            "nx":      h.get("nx"),
+            "pie":     h.get("pie", "unknown"),
+            "relro":   h.get("relro", "unknown"),
+            "canary":  h.get("canary"),
+            "fortify": h.get("fortify"),
         })
 
     summary = {
@@ -233,15 +234,18 @@ def analyze_hardening(ctx: AnalysisContext):
         "relro_none":    sum(1 for b in binaries if b["relro"] == "none"),
         "canary_yes":    sum(1 for b in binaries if b["canary"] is True),
         "canary_no":     sum(1 for b in binaries if b["canary"] is False),
+        "fortify_yes":   sum(1 for b in binaries if b["fortify"] is True),
+        "fortify_no":    sum(1 for b in binaries if b["fortify"] is False),
     }
 
     out_file.write_text(json.dumps({"summary": summary, "binaries": binaries}, indent=2))
     n = summary["total"]
     print(f"  {'hardening.json':45s}  {n} executables")
-    print(f"    NX     : {summary['nx_enabled']} on / {summary['nx_disabled']} off / {summary['nx_unknown']} unknown")
-    print(f"    PIE    : {summary['pie_yes']} yes / {summary['pie_no']} no / {summary['pie_unknown']} unknown")
-    print(f"    RELRO  : {summary['relro_full']} full / {summary['relro_partial']} partial / {summary['relro_none']} none")
-    print(f"    Canary : {summary['canary_yes']} yes / {summary['canary_no']} no")
+    print(f"    NX      : {summary['nx_enabled']} on / {summary['nx_disabled']} off / {summary['nx_unknown']} unknown")
+    print(f"    PIE     : {summary['pie_yes']} yes / {summary['pie_no']} no / {summary['pie_unknown']} unknown")
+    print(f"    RELRO   : {summary['relro_full']} full / {summary['relro_partial']} partial / {summary['relro_none']} none")
+    print(f"    Canary  : {summary['canary_yes']} yes / {summary['canary_no']} no")
+    print(f"    Fortify : {summary['fortify_yes']} yes / {summary['fortify_no']} no")
 
 
 def analyze_busybox(ctx: AnalysisContext):

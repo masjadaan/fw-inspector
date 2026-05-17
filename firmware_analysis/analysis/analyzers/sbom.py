@@ -242,10 +242,11 @@ def _collect_executables(ctx: AnalysisContext) -> list[dict]:
         h = rec.hardening
         if h:
             props += [
-                {"name": "firmware:nx",     "value": str(h.get("nx"))},
-                {"name": "firmware:pie",    "value": str(h.get("pie",   "unknown"))},
-                {"name": "firmware:relro",  "value": str(h.get("relro", "unknown"))},
-                {"name": "firmware:canary", "value": str(h.get("canary"))},
+                {"name": "firmware:nx",      "value": str(h.get("nx"))},
+                {"name": "firmware:pie",     "value": str(h.get("pie",     "unknown"))},
+                {"name": "firmware:relro",   "value": str(h.get("relro",   "unknown"))},
+                {"name": "firmware:canary",  "value": str(h.get("canary"))},
+                {"name": "firmware:fortify", "value": str(h.get("fortify"))},
             ]
         if rec.needed_libs:
             props.append({"name": "firmware:needed_libs",

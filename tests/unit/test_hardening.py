@@ -56,11 +56,11 @@ def _hardening_json(tmp_path) -> dict:
 
 
 def _fully_unprotected():
-    return {"nx": False, "pie": "no", "relro": "none", "canary": False}
+    return {"nx": False, "pie": "no", "relro": "none", "canary": False, "fortify": False}
 
 
 def _fully_protected():
-    return {"nx": True, "pie": "yes", "relro": "full", "canary": True}
+    return {"nx": True, "pie": "yes", "relro": "full", "canary": True, "fortify": True}
 
 
 # ── analyze_hardening: filtering ──────────────────────────────────────────────
@@ -210,6 +210,53 @@ class TestAnalyzeHardeningCanary:
         assert _hardening_json(tmp_path)["summary"]["canary_no"] == 1
 
 
+# ── analyze_hardening: FORTIFY_SOURCE counts ─────────────────────────────────
+
+class TestAnalyzeHardeningFortify:
+    def test_fortify_yes_counted(self, tmp_path):
+        ctx = _make_ctx(tmp_path, {"bin/a": _fully_protected()})
+        analyze_hardening(ctx)
+        assert _hardening_json(tmp_path)["summary"]["fortify_yes"] == 1
+        assert _hardening_json(tmp_path)["summary"]["fortify_no"] == 0
+
+    def test_fortify_no_counted(self, tmp_path):
+        ctx = _make_ctx(tmp_path, {"bin/a": _fully_unprotected()})
+        analyze_hardening(ctx)
+        assert _hardening_json(tmp_path)["summary"]["fortify_no"] == 1
+        assert _hardening_json(tmp_path)["summary"]["fortify_yes"] == 0
+
+    def test_fortify_counts_sum_to_total_when_all_known(self, tmp_path):
+        ctx = _make_ctx(tmp_path, {
+            "bin/a": _fully_protected(),
+            "bin/b": _fully_unprotected(),
+        })
+        analyze_hardening(ctx)
+        s = _hardening_json(tmp_path)["summary"]
+        assert s["fortify_yes"] + s["fortify_no"] == s["total"]
+
+    def test_fortify_none_not_counted_in_yes_or_no(self, tmp_path):
+        # fortify key absent → h.get("fortify") is None → neither yes nor no
+        ctx = _make_ctx(tmp_path, {
+            "bin/a": {"nx": True, "pie": "yes", "relro": "full", "canary": True},
+        })
+        analyze_hardening(ctx)
+        s = _hardening_json(tmp_path)["summary"]
+        assert s["fortify_yes"] == 0
+        assert s["fortify_no"] == 0
+
+    def test_fortify_field_present_in_binary_record(self, tmp_path):
+        ctx = _make_ctx(tmp_path, {"bin/a": _fully_protected()})
+        analyze_hardening(ctx)
+        b = _hardening_json(tmp_path)["binaries"][0]
+        assert b["fortify"] is True
+
+    def test_fortify_false_in_binary_record(self, tmp_path):
+        ctx = _make_ctx(tmp_path, {"bin/a": _fully_unprotected()})
+        analyze_hardening(ctx)
+        b = _hardening_json(tmp_path)["binaries"][0]
+        assert b["fortify"] is False
+
+
 # ── analyze_hardening: JSON output ───────────────────────────────────────────
 
 class TestAnalyzeHardeningOutput:
@@ -228,7 +275,7 @@ class TestAnalyzeHardeningOutput:
         ctx = _make_ctx(tmp_path, {"bin/a": _fully_unprotected()})
         analyze_hardening(ctx)
         b = _hardening_json(tmp_path)["binaries"][0]
-        for key in ("path", "nx", "pie", "relro", "canary"):
+        for key in ("path", "nx", "pie", "relro", "canary", "fortify"):
             assert key in b
 
     def test_multiple_binaries_all_appear(self, tmp_path):
@@ -304,12 +351,32 @@ class TestEscalateHardeningFlags:
         assert sev == "high"
         assert "no stack canary" in reasons
 
+    def test_fortify_string_false_adds_one_level(self):
+        # medium(3) + 1 = 4 = high
+        sev, reasons = _escalate("medium", {"fortify": "False"}, False)
+        assert sev == "high"
+        assert "no FORTIFY_SOURCE" in reasons
+
+    def test_fortify_bool_false_does_not_escalate(self):
+        # _escalate checks == "False" (string); Python bool False must NOT trigger
+        sev, reasons = _escalate("medium", {"fortify": False}, False)
+        assert sev == "medium"
+        assert "no FORTIFY_SOURCE" not in reasons
+
     def test_all_four_flags_add_four_levels(self):
         h = {"nx": "False", "pie": "no", "relro": "none", "canary": "False"}
         # low(2) + 4 = 6, capped at critical(5)
         sev, reasons = _escalate("low", h, False)
         assert sev == "critical"
         assert len(reasons) == 4
+
+    def test_all_five_flags_add_five_levels(self):
+        h = {"nx": "False", "pie": "no", "relro": "none", "canary": "False", "fortify": "False"}
+        # low(2) + 5 = 7, capped at critical(5)
+        sev, reasons = _escalate("low", h, False)
+        assert sev == "critical"
+        assert len(reasons) == 5
+        assert "no FORTIFY_SOURCE" in reasons
 
     def test_none_hardening_adds_nothing(self):
         sev, reasons = _escalate("high", None, False)

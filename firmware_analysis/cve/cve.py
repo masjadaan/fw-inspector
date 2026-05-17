@@ -55,6 +55,9 @@ def _escalate(base: str, hardening: dict | None, reachable: bool) -> tuple[str, 
         if hardening.get("canary") == "False":
             weight += 1
             reasons.append("no stack canary")
+        if hardening.get("fortify") == "False":
+            weight += 1
+            reasons.append("no FORTIFY_SOURCE")
 
     return _LEVELS[min(weight, len(_LEVELS) - 1)], reasons
 

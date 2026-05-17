@@ -233,10 +233,14 @@ The **ESCALATED** column counts how many of that component's CVEs were raised ab
 The **SCORE** column captures the accumulated weight of those CVEs:
 
 ```
-SCORE = Σ CVSS × (1.5 if network-reachable, else 1.0)  across all unique CVEs for that component
+SCORE = Σ (CVSS_i × 1.5 if network-reachable_i, else CVSS_i × 1.0)  — applied per CVE, then summed
 ```
 
-Two components can have the same count but very different scores — for example, a component with 10 CVEs all at CVSS 9.8 (score ≈ 147) is a more urgent target than one with 10 CVEs all at CVSS 4.0 (score = 40), even though both show "10" in the count cell. The ×1.5 multiplier reflects that a vulnerability exposed through a live network port on this device carries higher exploitability than one requiring local access.
+The multiplier is applied individually to each CVE before summing, so a component with a mix of reachable and non-reachable CVEs is scored accordingly — not with a blanket boost across all findings.
+
+Two components can have the same count but very different scores — for example, a component with 10 CVEs all at CVSS 9.8 (score ≈ 147) is a more urgent target than one with 10 CVEs all at CVSS 4.0 (score = 40), even though both show "10" in the count cell.
+
+**Why ×1.5 if CVSS already encodes network reachability?** CVSS's Attack Vector metric (`AV:N`) reflects whether a vulnerability class is exploitable over a network in some environment. The pipeline's `network_reachable` flag is different: it reflects whether the specific binary carrying that CVE is actually linked by a network-facing service (httpd, dropbear) and exposed on a live port on this device. A library could have `AV:L` CVEs yet still be loaded by a network-facing process, making it more exposed than CVSS alone suggests — and vice versa. The ×1.5 boost captures that firmware-specific runtime observation, not a repeat of what CVSS already says.
 
 Use the **count** to estimate remediation effort — which single patch closes the most findings. Use **ESCALATED** to identify where the device's posture is the risk driver. Use the **score** to set priority order — which component poses the greatest accumulated risk to this specific device right now. The underlying data is also available as a CSV export for direct import into Jira tickets, Confluence pages, or downstream scripts.
 

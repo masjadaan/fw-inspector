@@ -18,6 +18,40 @@ _MAX_EVIDENCE = 5
 _MAX_ITEMS    = 10
 _MAX_LIST     = 20
 
+# ── SSH server config checks ──────────────────────────────────────────────────
+
+# Each tuple: (canonical_directive, risky_value, severity, note).
+# Matching is case-insensitive on both directive and value.
+_SSHD_CHECKS: list[tuple[str, str, str, str]] = [
+    ("PermitRootLogin",
+     "yes",    "critical",
+     "Direct root login enabled — credential compromise grants immediate root shell"),
+    ("PermitEmptyPasswords",
+     "yes",    "critical",
+     "Accounts with empty passwords can log in — no credentials required"),
+    ("Protocol",
+     "1",      "high",
+     "SSH protocol version 1 is cryptographically broken (weak key exchange, BEAST)"),
+    ("PasswordAuthentication",
+     "yes",    "medium",
+     "Password-based auth enabled — exposes service to brute-force and credential-stuffing"),
+    ("GatewayPorts",
+     "yes",    "medium",
+     "Remote port forwarding binds on all interfaces — can bypass firewall rules"),
+    ("StrictModes",
+     "no",     "medium",
+     "Permission checks on key files disabled — world-writable authorized_keys accepted"),
+    ("PermitUserEnvironment",
+     "yes",    "medium",
+     "Users may set env vars via authorized_keys — bypasses LD_PRELOAD / PATH restrictions"),
+    ("IgnoreRhosts",
+     "no",     "medium",
+     "Rhosts/shosts files trusted — host-based authentication without passwords"),
+    ("X11Forwarding",
+     "yes",    "low",
+     "X11 forwarding enabled — rarely needed on embedded devices, extends attack surface"),
+]
+
 
 def analyze_scripts(ctx: AnalysisContext):
     EXTENSIONS = {".sh", ".py", ".lua", ".pl", ".rb", ".php", ".js", ".expect"}
@@ -223,6 +257,105 @@ def analyze_ssh_keys(ctx: AnalysisContext):
     print(f"  {'ssh_keys.txt':45s}  {sum(len(s.splitlines()) for s in sections)} lines")
 
     json_file.write_text(json.dumps({"files": key_files}, indent=2))
+
+
+def _parse_sshd_directives(text: str) -> dict[str, tuple[str, int]]:
+    """Return {directive_lower: (value_lower, first_lineno)} from sshd_config text.
+
+    First-occurrence-wins mirrors sshd behaviour: subsequent duplicate keys are ignored.
+    Comment lines, blank lines, and lines without a value are skipped.
+    Inline comments (everything after the first unquoted #) are stripped.
+    """
+    directives: dict[str, tuple[str, int]] = {}
+    for lineno, raw_line in enumerate(text.splitlines(), 1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        code = stripped.split("#")[0].strip()
+        parts = code.split(None, 1)
+        if len(parts) < 2:
+            continue
+        key = parts[0].lower()
+        if key not in directives:
+            directives[key] = (parts[1].strip().lower(), lineno)
+    return directives
+
+
+def analyze_sshd_config(ctx: AnalysisContext):
+    """Parse sshd_config files for dangerous SSH server settings."""
+    out_file  = ctx.out_dir / "sshd_config.txt"
+    json_file = ctx.out_dir / "sshd_config.json"
+
+    config_paths = sorted(ctx.rootfs.rglob("sshd_config"))
+
+    _empty = {
+        "config_files": [],
+        "findings":     [],
+        "summary":      {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    }
+    if not config_paths:
+        out_file.write_text(section("SSH Server Configuration", "(no sshd_config found)"))
+        json_file.write_text(json.dumps(_empty, indent=2))
+        print(f"  {'sshd_config.txt':45s}  no sshd_config found")
+        return
+
+    config_files: list[str] = []
+    findings: list[dict] = []
+
+    for path in config_paths:
+        try:
+            content = path.read_text(errors="replace")
+        except Exception:
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        config_files.append(rel)
+
+        directives = _parse_sshd_directives(content)
+        for canonical, risky_val, severity, note in _SSHD_CHECKS:
+            val_lineno = directives.get(canonical.lower())
+            if val_lineno and val_lineno[0] == risky_val:
+                findings.append({
+                    "file":      rel,
+                    "line":      val_lineno[1],
+                    "directive": canonical,
+                    "value":     val_lineno[0],
+                    "severity":  severity,
+                    "note":      note,
+                })
+
+    lines_out = []
+    for f in findings:
+        lines_out.append(f"  {f['file']}:{f['line']}")
+        lines_out.append(f"    directive : {f['directive']} = {f['value']}")
+        lines_out.append(f"    severity  : {f['severity']}")
+        lines_out.append(f"    note      : {f['note']}")
+        lines_out.append("")
+
+    out_file.write_text(
+        section(
+            "SSH Server Configuration Issues  [dangerous sshd_config directives]",
+            "\n".join(lines_out) if lines_out else "(none — no dangerous settings found)",
+        )
+    )
+
+    summary: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    for f in findings:
+        summary[f["severity"]] += 1
+
+    json_file.write_text(json.dumps({
+        "config_files": config_files,
+        "findings":     findings,
+        "summary":      summary,
+    }, indent=2))
+
+    n = len(findings)
+    print(f"  {'sshd_config.txt':45s}  {len(config_files)} config file(s)  {n} finding(s)")
+    if n:
+        parts = "  ".join(f"{v} {k}" for k, v in sorted(summary.items()) if v)
+        print(f"    → {parts}")
 
 
 def analyze_credentials(ctx: AnalysisContext):

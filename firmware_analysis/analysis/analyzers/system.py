@@ -583,6 +583,202 @@ def analyze_inetd(ctx: AnalysisContext):
         print(f"    → {parts}")
 
 
+# ── Kernel sysctl hardening parameters ───────────────────────────────────────
+
+# Each entry: (param, insecure_value, severity, note).
+# Flagged when the parameter IS present with the insecure value.
+_SYSCTL_CHECKS: list[tuple[str, str, str, str]] = [
+    ("kernel.randomize_va_space",
+     "0", "critical",
+     "ASLR disabled — memory layout is predictable, exploit mitigations ineffective"),
+    ("net.ipv4.tcp_syncookies",
+     "0", "high",
+     "SYN cookies disabled — host is vulnerable to SYN flood DoS attacks"),
+    ("net.ipv4.conf.all.accept_redirects",
+     "1", "high",
+     "ICMP redirect acceptance enabled — routing table can be manipulated by a MITM"),
+    ("net.ipv4.conf.default.accept_redirects",
+     "1", "high",
+     "ICMP redirect acceptance enabled on default interface — routing table manipulable"),
+    ("net.ipv6.conf.all.accept_redirects",
+     "1", "high",
+     "IPv6 ICMP redirect acceptance enabled — routing table can be manipulated"),
+    ("net.ipv4.conf.all.send_redirects",
+     "1", "medium",
+     "Host sends ICMP redirects — can redirect traffic on the local network segment"),
+    ("net.ipv4.conf.all.rp_filter",
+     "0", "medium",
+     "Reverse path filtering disabled — IP source address spoofing not mitigated"),
+    ("kernel.dmesg_restrict",
+     "0", "medium",
+     "Kernel log readable by unprivileged users — may expose kernel addresses and info"),
+    ("kernel.kptr_restrict",
+     "0", "medium",
+     "Kernel pointer values exposed in /proc — aids exploitation of kernel vulnerabilities"),
+    ("net.ipv4.conf.all.accept_source_route",
+     "1", "medium",
+     "IP source routing accepted — attacker can specify packet path, bypassing firewalls"),
+    ("net.ipv4.conf.all.log_martians",
+     "0", "low",
+     "Martian packet logging disabled — spoofed or invalid source packets not logged"),
+    ("kernel.sysrq",
+     "1", "low",
+     "SysRq keys fully enabled — physical attacker can crash/reboot/dump the system"),
+]
+
+# Each entry: (param, severity, note).
+# Flagged when the parameter is absent from ALL sysctl config files found.
+# Embedded kernels often ship with these parameters at their unsafe defaults.
+_SYSCTL_ABSENT_CHECKS: list[tuple[str, str, str]] = [
+    ("kernel.randomize_va_space", "critical",
+     "ASLR (kernel.randomize_va_space) not configured — embedded kernels often default "
+     "to 0 (disabled), making memory layout predictable and exploit mitigations ineffective"),
+    ("net.ipv4.tcp_syncookies", "high",
+     "SYN cookies (net.ipv4.tcp_syncookies) not configured — host may be vulnerable "
+     "to SYN flood DoS attacks if the kernel default is 0"),
+]
+
+
+def _parse_sysctl_conf(text: str) -> dict[str, tuple[str, int]]:
+    """Return {param: (value, first_lineno)} from sysctl.conf-format text.
+
+    Supports 'key = value' and 'key=value'. Comments (#, ;) and blank lines skipped.
+    Inline # and ; comments stripped. First-occurrence-wins per file.
+    """
+    params: dict[str, tuple[str, int]] = {}
+    for lineno, raw in enumerate(text.splitlines(), 1):
+        stripped = raw.strip()
+        if not stripped or stripped[0] in ("#", ";"):
+            continue
+        code = stripped.split("#")[0].split(";")[0].strip()
+        if "=" not in code:
+            continue
+        key, _, val = code.partition("=")
+        key = key.strip().lower()
+        val = val.strip()
+        if key and val and key not in params:
+            params[key] = (val, lineno)
+    return params
+
+
+def analyze_sysctl(ctx: AnalysisContext):
+    """Scan sysctl config files for insecure or absent kernel hardening parameters."""
+    out_file  = ctx.out_dir / "sysctl.txt"
+    json_file = ctx.out_dir / "sysctl.json"
+
+    seen: set[Path] = set()
+    config_paths: list[Path] = []
+
+    def _add(p: Path) -> None:
+        if p not in seen and p.is_file():
+            seen.add(p)
+            config_paths.append(p)
+
+    for p in sorted(ctx.rootfs.rglob("sysctl.conf")):
+        _add(p)
+
+    for sysctl_d in [
+        ctx.rootfs / "etc/sysctl.d",
+        ctx.rootfs / "usr/lib/sysctl.d",
+        ctx.rootfs / "lib/sysctl.d",
+    ]:
+        if sysctl_d.is_dir():
+            for p in sorted(sysctl_d.iterdir()):
+                if p.suffix == ".conf":
+                    _add(p)
+
+    config_files: list[str] = []
+    findings: list[dict] = []
+    all_params: set[str] = set()
+
+    for path in config_paths:
+        try:
+            content = path.read_text(errors="replace")
+        except Exception:
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        config_files.append(rel)
+
+        parsed = _parse_sysctl_conf(content)
+        all_params.update(parsed.keys())
+
+        for param, insecure_val, severity, note in _SYSCTL_CHECKS:
+            val_lineno = parsed.get(param.lower())
+            if val_lineno and val_lineno[0] == insecure_val:
+                findings.append({
+                    "type":      "explicit",
+                    "file":      rel,
+                    "line":      val_lineno[1],
+                    "parameter": param,
+                    "value":     val_lineno[0],
+                    "severity":  severity,
+                    "note":      note,
+                })
+
+    # Always run absent checks — embedded kernels default to unsafe values.
+    for param, severity, note in _SYSCTL_ABSENT_CHECKS:
+        if param.lower() not in all_params:
+            findings.append({
+                "type":      "absent",
+                "parameter": param,
+                "severity":  severity,
+                "note":      note,
+            })
+
+    summary: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    for f in findings:
+        summary[f["severity"]] += 1
+
+    lines_out: list[str] = []
+    for f in findings:
+        if f["type"] == "explicit":
+            lines_out.extend([
+                f"  {f['file']}:{f['line']}",
+                f"    parameter : {f['parameter']} = {f['value']}",
+                f"    severity  : {f['severity']}",
+                f"    note      : {f['note']}",
+                "",
+            ])
+        else:
+            lines_out.extend([
+                f"  [NOT CONFIGURED]",
+                f"    parameter : {f['parameter']}",
+                f"    severity  : {f['severity']}",
+                f"    note      : {f['note']}",
+                "",
+            ])
+
+    header = (
+        "Kernel sysctl Hardening Issues  [insecure / absent parameters]"
+        if config_files else
+        "Kernel sysctl Hardening  [no sysctl config found — absent-parameter checks still apply]"
+    )
+    out_file.write_text(
+        section(header, "\n".join(lines_out) if lines_out else "(none — no dangerous settings found)")
+    )
+
+    json_file.write_text(json.dumps({
+        "config_files": config_files,
+        "findings":     findings,
+        "summary":      summary,
+    }, indent=2))
+
+    n         = len(findings)
+    explicit_n = sum(1 for f in findings if f["type"] == "explicit")
+    absent_n   = sum(1 for f in findings if f["type"] == "absent")
+
+    if config_files:
+        print(f"  {'sysctl.txt':45s}  {len(config_files)} config file(s)  {n} finding(s)  ({explicit_n} explicit  {absent_n} absent)")
+    else:
+        print(f"  {'sysctl.txt':45s}  no sysctl config found  {absent_n} absent finding(s)")
+    if n:
+        parts = "  ".join(f"{v} {k}" for k, v in sorted(summary.items()) if v)
+        print(f"    → {parts}")
+
+
 def analyze_credentials(ctx: AnalysisContext):
     json_file = ctx.out_dir / "credentials.json"
     captured = multi_section_file([

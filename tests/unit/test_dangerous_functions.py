@@ -56,17 +56,24 @@ def _txt(tmp_path) -> str:
 
 class TestDangerousSymPattern:
     @pytest.mark.parametrize("name", [
+        # original set
         "gets", "strcpy", "strcat", "sprintf", "vsprintf",
         "scanf", "fscanf", "sscanf", "mktemp", "tmpnam",
         "tempnam", "system", "popen", "rand", "srand",
+        # added: format-string sinks, unbounded stack alloc, non-thread-safe tokeniser
+        "printf", "fprintf", "alloca", "strtok",
     ])
     def test_known_dangerous_symbols_match(self, name):
         assert _DANGEROUS_SYM_PAT.match(name)
 
     @pytest.mark.parametrize("name", [
-        "fgets", "strncpy", "snprintf", "printf", "memcpy",
+        "fgets", "strncpy", "snprintf", "memcpy",
         "strlen", "AES_encrypt", "gets_s", "rand_bytes",
         "system_call", "getenv",
+        # safe variants of the newly added symbols
+        "vprintf", "vfprintf", "fprintf_unlocked",
+        "strtok_r", "strtok_s",
+        "__alloca", "alloca_with_align",
     ])
     def test_safe_or_unrelated_symbols_do_not_match(self, name):
         assert not _DANGEROUS_SYM_PAT.match(name)
@@ -78,6 +85,70 @@ class TestDangerousSymPattern:
     def test_pattern_is_case_sensitive(self):
         assert not _DANGEROUS_SYM_PAT.match("GETS")
         assert not _DANGEROUS_SYM_PAT.match("Strcpy")
+
+
+class TestNewDangerousSymbols:
+    """Targeted tests for the four symbols added to _DANGEROUS_SYM_PAT.
+
+    printf / fprintf  — format-string sinks; attacker-controlled format arg enables
+                        arbitrary reads/writes (%n) and info leaks (%s/%x/%p).
+    alloca            — stack allocation without bounds; stack overflow / stack clash
+                        when the size argument is attacker-controlled.
+    strtok            — uses a hidden static buffer; not thread-safe and unsafe
+                        in any reentrant context; strtok_r is the correct replacement.
+    """
+
+    # ── printf ────────────────────────────────────────────────────────────────
+
+    def test_printf_matches(self):
+        assert _DANGEROUS_SYM_PAT.match("printf")
+
+    def test_vprintf_does_not_match(self):
+        # va_list form — flag the direct sink, not the variadic wrapper
+        assert not _DANGEROUS_SYM_PAT.match("vprintf")
+
+    def test_dprintf_does_not_match(self):
+        assert not _DANGEROUS_SYM_PAT.match("dprintf")
+
+    def test_snprintf_still_does_not_match(self):
+        # length-limited — not a sink in the same sense
+        assert not _DANGEROUS_SYM_PAT.match("snprintf")
+
+    # ── fprintf ───────────────────────────────────────────────────────────────
+
+    def test_fprintf_matches(self):
+        assert _DANGEROUS_SYM_PAT.match("fprintf")
+
+    def test_vfprintf_does_not_match(self):
+        assert not _DANGEROUS_SYM_PAT.match("vfprintf")
+
+    def test_fprintf_unlocked_does_not_match(self):
+        assert not _DANGEROUS_SYM_PAT.match("fprintf_unlocked")
+
+    # ── alloca ────────────────────────────────────────────────────────────────
+
+    def test_alloca_matches(self):
+        assert _DANGEROUS_SYM_PAT.match("alloca")
+
+    def test_dunder_alloca_does_not_match(self):
+        # __alloca / __builtin_alloca are compiler-internal variants
+        assert not _DANGEROUS_SYM_PAT.match("__alloca")
+
+    def test_alloca_with_align_does_not_match(self):
+        assert not _DANGEROUS_SYM_PAT.match("alloca_with_align")
+
+    # ── strtok ────────────────────────────────────────────────────────────────
+
+    def test_strtok_matches(self):
+        assert _DANGEROUS_SYM_PAT.match("strtok")
+
+    def test_strtok_r_does_not_match(self):
+        # thread-safe replacement — must not be flagged as dangerous
+        assert not _DANGEROUS_SYM_PAT.match("strtok_r")
+
+    def test_strtok_s_does_not_match(self):
+        # C11 / MSVC bounds-checking variant
+        assert not _DANGEROUS_SYM_PAT.match("strtok_s")
 
 
 # ── analyze_dangerous_functions: output files ─────────────────────────────────

@@ -18,7 +18,12 @@ _WEAK_SYM_PAT = re.compile(r"^(MD[245]|DES|RC[24]|MD4)_", re.IGNORECASE)
 _FORTIFY_SYM_PAT = re.compile(r"^__[a-z_]+_chk$")
 
 _DANGEROUS_SYM_PAT = re.compile(
-    r"^(gets|strcpy|strcat|sprintf|vsprintf|scanf|fscanf|sscanf|mktemp|tmpnam|tempnam|system|popen|rand|srand)$"
+    r"^(gets|strcpy|strcat|sprintf|vsprintf|scanf|fscanf|sscanf|mktemp|tmpnam|tempnam"
+    r"|system|popen|rand|srand"
+    r"|printf|fprintf"      # format-string sinks when format arg is attacker-controlled
+    r"|alloca"              # stack allocation without bounds; overflow if size is attacker-controlled
+    r"|strtok"              # not thread-safe; strtok_r is the correct replacement
+    r")$"
 )
 
 _STRINGS_TIMEOUT = 30

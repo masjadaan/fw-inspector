@@ -358,6 +358,231 @@ def analyze_sshd_config(ctx: AnalysisContext):
         print(f"    → {parts}")
 
 
+# ── inetd / xinetd service detection ─────────────────────────────────────────
+
+# (service_name: (severity, note)) — matched case-insensitively.
+_INETD_DANGEROUS: dict[str, tuple[str, str]] = {
+    "telnet":  ("critical", "Telnet transmits credentials in plaintext — trivial MITM/sniff"),
+    "rsh":     ("critical", "BSD rsh — unauthenticated remote shell, no encryption"),
+    "rlogin":  ("critical", "BSD rlogin — host-based auth only, no encryption"),
+    "rexec":   ("critical", "BSD rexec — password sent in cleartext over the wire"),
+    "shell":   ("critical", "BSD rsh alias — unauthenticated remote shell, no encryption"),
+    "login":   ("critical", "BSD rlogin alias — host-based auth only, no encryption"),
+    "exec":    ("critical", "BSD rexec alias — plaintext password"),
+    "ftp":     ("high",     "FTP transmits credentials in plaintext"),
+    "tftp":    ("high",     "TFTP has no authentication — arbitrary file read/write possible"),
+    "finger":  ("medium",   "Finger service discloses user account information"),
+    "chargen": ("medium",   "Character generator — UDP reflection/amplification attack vector"),
+    "echo":    ("medium",   "Echo service — reflection and amplification attack vector"),
+    "pop2":    ("medium",   "POP2 — legacy plaintext mail protocol"),
+    "pop3":    ("medium",   "POP3 — plaintext credentials unless STARTTLS is configured"),
+    "imap":    ("medium",   "IMAP — plaintext credentials unless STARTTLS is configured"),
+    "comsat":  ("low",      "Comsat/biff — may disclose mail activity, rarely needed"),
+    "talk":    ("low",      "Talk service — unnecessary attack surface on embedded devices"),
+    "ntalk":   ("low",      "Ntalk service — unnecessary attack surface on embedded devices"),
+    "daytime": ("low",      "Daytime service — discloses system clock, unnecessary"),
+    "time":    ("low",      "Time protocol (port 37) — unnecessary attack surface"),
+    "discard": ("low",      "Discard service — unnecessary attack surface"),
+}
+
+
+def _parse_inetd_conf(text: str, source: str) -> list[dict]:
+    """Parse /etc/inetd.conf format into a list of service dicts.
+
+    Each non-comment, non-blank line: service socket_type protocol wait user server [args...]
+    Lines with fewer than 6 fields are skipped (malformed or comments with leading spaces).
+    Service names may carry a /protocol suffix (e.g. "ftp/tcp") — only the base name is kept.
+    """
+    services = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        parts = stripped.split()
+        if len(parts) < 6:
+            continue
+        name_raw, socket_type, protocol, wait, user, server = parts[:6]
+        args = parts[6:]
+        services.append({
+            "source":      source,
+            "format":      "inetd",
+            "name":        name_raw.lower().split("/")[0],
+            "socket_type": socket_type,
+            "protocol":    protocol,
+            "wait":        wait,
+            "user":        user,
+            "server":      server,
+            "args":        args,
+            "disabled":    False,
+        })
+    return services
+
+
+def _parse_xinetd_blocks(text: str, source: str) -> list[dict]:
+    """Parse xinetd config format into a list of service dicts.
+
+    Extracts "service <name> { ... }" blocks. Within each block, "disable = yes"
+    marks the service as inactive (mirroring xinetd runtime behaviour).
+    """
+    services = []
+    for block in re.finditer(r"service\s+(\S+)\s*\{([^}]*)\}", text, re.DOTALL | re.IGNORECASE):
+        name = block.group(1).lower()
+        body = block.group(2)
+
+        directives: dict[str, str] = {}
+        for line in body.splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            if "=" in stripped:
+                k, _, v = stripped.partition("=")
+                key = k.strip().lower().rstrip("+").strip()
+                val = v.strip().split("#")[0].strip().lower()
+                if key not in directives:
+                    directives[key] = val
+
+        disabled = directives.get("disable", "no") in ("yes", "true", "1")
+        services.append({
+            "source":      source,
+            "format":      "xinetd",
+            "name":        name,
+            "socket_type": directives.get("socket_type", ""),
+            "protocol":    directives.get("protocol", "tcp"),
+            "user":        directives.get("user", ""),
+            "server":      directives.get("server", ""),
+            "only_from":   directives.get("only_from", ""),
+            "disabled":    disabled,
+        })
+    return services
+
+
+def analyze_inetd(ctx: AnalysisContext):
+    """Detect services registered in inetd.conf and xinetd configuration files."""
+    out_file  = ctx.out_dir / "inetd.txt"
+    json_file = ctx.out_dir / "inetd.json"
+
+    _empty = {
+        "config_files": [],
+        "services":     [],
+        "findings":     [],
+        "summary":      {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    }
+
+    # Collect all inetd / xinetd config paths with their format tag.
+    config_paths: list[tuple[Path, str]] = []
+
+    for rel in ("etc/inetd.conf",):
+        p = ctx.rootfs / rel
+        if p.is_file():
+            config_paths.append((p, "inetd"))
+
+    inetd_d = ctx.rootfs / "etc/inetd.d"
+    if inetd_d.is_dir():
+        for p in sorted(inetd_d.iterdir()):
+            if p.is_file():
+                config_paths.append((p, "inetd"))
+
+    xinetd_conf = ctx.rootfs / "etc/xinetd.conf"
+    if xinetd_conf.is_file():
+        config_paths.append((xinetd_conf, "xinetd"))
+
+    xinetd_d = ctx.rootfs / "etc/xinetd.d"
+    if xinetd_d.is_dir():
+        for p in sorted(xinetd_d.iterdir()):
+            if p.is_file():
+                config_paths.append((p, "xinetd"))
+
+    if not config_paths:
+        out_file.write_text(section("inetd / xinetd Services", "(no inetd or xinetd config found)"))
+        json_file.write_text(json.dumps(_empty, indent=2))
+        print(f"  {'inetd.txt':45s}  no inetd/xinetd config found")
+        return
+
+    all_services: list[dict] = []
+    config_files: list[str] = []
+
+    for path, fmt in config_paths:
+        try:
+            content = path.read_text(errors="replace")
+        except Exception:
+            continue
+        try:
+            rel = str(path.relative_to(ctx.rootfs))
+        except ValueError:
+            rel = str(path)
+        config_files.append(rel)
+
+        if fmt == "inetd":
+            all_services.extend(_parse_inetd_conf(content, rel))
+        else:
+            all_services.extend(_parse_xinetd_blocks(content, rel))
+
+    findings: list[dict] = []
+    for svc in all_services:
+        if svc.get("disabled"):
+            continue
+        name = svc["name"]
+        if name in _INETD_DANGEROUS:
+            severity, note = _INETD_DANGEROUS[name]
+            findings.append({
+                "file":     svc["source"],
+                "service":  name,
+                "server":   svc.get("server", ""),
+                "user":     svc.get("user", ""),
+                "severity": severity,
+                "note":     note,
+            })
+
+    summary: dict[str, int] = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+    for f in findings:
+        summary[f["severity"]] += 1
+
+    finding_lines: list[str] = []
+    for f in findings:
+        finding_lines.extend([
+            f"  {f['file']}",
+            f"    service  : {f['service']}",
+            f"    server   : {f['server']}",
+            f"    user     : {f['user']}",
+            f"    severity : {f['severity']}",
+            f"    note     : {f['note']}",
+            "",
+        ])
+
+    svc_lines: list[str] = []
+    for svc in all_services:
+        status = "DISABLED" if svc.get("disabled") else "active"
+        svc_lines.append(
+            f"  [{status:8s}] {svc['name']:20s}"
+            f" {svc.get('server', ''):40s}  user={svc.get('user', '-')}"
+        )
+
+    out_file.write_text(
+        section(
+            "inetd / xinetd Services  [dangerous service detection]",
+            "\n".join(finding_lines) if finding_lines else "(none — no dangerous services found)",
+        ) +
+        section(
+            "All Registered Services",
+            "\n".join(svc_lines) if svc_lines else "(none)",
+        )
+    )
+
+    json_file.write_text(json.dumps({
+        "config_files": config_files,
+        "services":     all_services,
+        "findings":     findings,
+        "summary":      summary,
+    }, indent=2))
+
+    n = len(findings)
+    total = len(all_services)
+    print(f"  {'inetd.txt':45s}  {len(config_files)} config file(s)  {total} service(s)  {n} finding(s)")
+    if n:
+        parts = "  ".join(f"{v} {k}" for k, v in sorted(summary.items()) if v)
+        print(f"    → {parts}")
+
+
 def analyze_credentials(ctx: AnalysisContext):
     json_file = ctx.out_dir / "credentials.json"
     captured = multi_section_file([

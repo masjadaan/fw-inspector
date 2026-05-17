@@ -21,12 +21,17 @@ from parsers import (
     parse_dangerous_functions,
     parse_debug,
     parse_hardening,
+    parse_inetd,
     parse_init_services,
     parse_ipc,
     parse_nvram,
     parse_protocols,
+    parse_rpath,
+    parse_sensitive_permissions,
     parse_setuid,
     parse_shellcheck,
+    parse_sshd_config,
+    parse_sysctl,
     parse_tls_config_issues,
     parse_users,
     parse_weak_crypto,
@@ -59,6 +64,11 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
     dangerous_functions  = parse_dangerous_functions(raw_dir)
     certificate_issues   = parse_certificate_issues(raw_dir)
     tls_config_issues    = parse_tls_config_issues(raw_dir)
+    inetd                = parse_inetd(raw_dir)
+    sysctl               = parse_sysctl(raw_dir)
+    sshd_config          = parse_sshd_config(raw_dir)
+    sensitive_permissions = parse_sensitive_permissions(raw_dir)
+    rpath                = parse_rpath(raw_dir)
 
     privesc = {
         "setuid_binaries": setuid,
@@ -73,6 +83,11 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         dangerous_functions=dangerous_functions,
         certificate_issues=certificate_issues,
         tls_config_issues=tls_config_issues,
+        inetd=inetd,
+        sysctl=sysctl,
+        sshd_config=sshd_config,
+        sensitive_permissions=sensitive_permissions,
+        rpath=rpath,
     )
 
     return {
@@ -111,6 +126,11 @@ def build_model(analysis_dir: Path, firmware_id: str, raw_dir: Path | None = Non
         "dangerous_functions":    dangerous_functions,
         "certificate_issues":     certificate_issues,
         "tls_config_issues":      tls_config_issues,
+        "inetd":                  inetd,
+        "sysctl":                 sysctl,
+        "sshd_config":            sshd_config,
+        "sensitive_permissions":  sensitive_permissions,
+        "rpath":                  rpath,
         "attack_paths":           attack_paths,
     }
 

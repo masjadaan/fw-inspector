@@ -613,6 +613,193 @@ def _ap_tls_config(tls_config_issues: list, **_) -> AttackPath | None:
     }
 
 
+def _ap_inetd(inetd: dict, **_) -> AttackPath | None:
+    findings = inetd.get("findings", [])
+    if not findings:
+        return None
+    critical = [f for f in findings if f["severity"] == "critical"]
+    high     = [f for f in findings if f["severity"] == "high"]
+    if not (critical or high):
+        return None
+    severity = "critical" if critical else "high"
+    worst    = critical if critical else high
+    services = sorted({f["service"] for f in findings})
+    evidence = [
+        f"inetd.txt: {len(findings)} dangerous service(s) in inetd/xinetd config",
+    ] + [
+        f"  {f['file']}: {f['service']} ({f['severity']}) — {f['note']}"
+        for f in findings[:_MAX_EVIDENCE]
+    ]
+    return {
+        "id":          "ap-inetd",
+        "title":       f"Dangerous Network Service via inetd/xinetd ({', '.join(services[:3])})",
+        "severity":    severity,
+        "description": (
+            f"inetd/xinetd registers {len(findings)} dangerous network service(s) "
+            f"({', '.join(services)}). "
+            "These legacy services are unencrypted, have no rate limiting, "
+            "and often grant direct shell access."
+        ),
+        "entry_point": f"network — inetd ({worst[0]['service']})",
+        "steps": [
+            "Identify active inetd/xinetd service ports (telnet:23, ftp:21, rsh:514, etc.)",
+            "Connect to the service port on the LAN interface",
+            "Attempt login with default or hardcoded credentials",
+            "Gain direct shell or file access (legacy services typically run as root on embedded devices)",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_sshd_config(sshd_config: dict, **_) -> AttackPath | None:
+    findings = sshd_config.get("findings", [])
+    if not findings:
+        return None
+    critical = [f for f in findings if f["severity"] == "critical"]
+    high     = [f for f in findings if f["severity"] == "high"]
+    if not (critical or high):
+        return None
+    severity = "critical" if critical else "high"
+    worst    = critical if critical else high
+    directives = [f"{f['directive']} = {f['value']}" for f in worst[:3]]
+    evidence = [
+        f"sshd_config.txt: {len(findings)} dangerous SSH directive(s)",
+    ] + [
+        f"  {f['file']}:{f['line']} — {f['directive']} = {f['value']} ({f['note']})"
+        for f in findings[:_MAX_EVIDENCE]
+    ]
+    return {
+        "id":          "ap-sshd-config",
+        "title":       "Weak SSH Server Configuration",
+        "severity":    severity,
+        "description": (
+            f"SSH server has {len(findings)} dangerous configuration directive(s): "
+            f"{', '.join(directives[:3])}. "
+            "Insecure settings enable brute-force attacks, direct root login, "
+            "or credential interception."
+        ),
+        "entry_point": "ssh:22",
+        "steps": [
+            "Connect to SSH service on port 22",
+            "Exploit dangerous directive (e.g., PermitRootLogin yes → brute-force root password)",
+            "If PasswordAuthentication yes, perform credential stuffing or dictionary attack",
+            "Gain SSH shell access, typically as root",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_sensitive_permissions(sensitive_permissions: dict, **_) -> AttackPath | None:
+    findings = sensitive_permissions.get("findings", [])
+    if not findings:
+        return None
+    critical = [f for f in findings if f["severity"] == "critical"]
+    high     = [f for f in findings if f["severity"] == "high"]
+    if not (critical or high):
+        return None
+    severity = "critical" if critical else "high"
+    worst    = critical if critical else high
+    files    = [f["file"] for f in worst[:2]]
+    evidence = [
+        f"sensitive_permissions.txt: {len(findings)} permission issue(s) on sensitive files",
+    ] + [
+        f"  {f['file']} ({f.get('mode', '?')}) — {f['note']}"
+        for f in findings[:_MAX_EVIDENCE]
+    ]
+    return {
+        "id":          "ap-sensitive-permissions",
+        "title":       "Sensitive File Readable by Unprivileged User",
+        "severity":    severity,
+        "description": (
+            f"{len(worst)} sensitive file(s) have overly permissive modes "
+            f"({', '.join(files)}). "
+            "World-readable credential or key files allow any local process to "
+            "extract secrets without privilege escalation."
+        ),
+        "entry_point": "local — requires initial code execution",
+        "steps": [
+            "Gain low-privilege code execution (e.g., command injection via CGI)",
+            f"Read sensitive file directly: {worst[0]['file']}",
+            "Extract password hashes, SSH private keys, or API credentials",
+            "Use extracted material for lateral movement or authentication bypass",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_rpath(rpath: dict, **_) -> AttackPath | None:
+    unsafe = rpath.get("unsafe", [])
+    if not unsafe:
+        return None
+    example  = unsafe[0]
+    bin_name = example.get("binary", "").split("/")[-1]
+    evidence = [
+        f"rpath.json: {len(unsafe)} binary(s) with unsafe RPATH/RUNPATH",
+    ] + [
+        f"  {e['binary']}: unsafe paths — {', '.join(e.get('unsafe_paths', []))}"
+        for e in unsafe[:_MAX_EVIDENCE]
+    ]
+    return {
+        "id":          "ap-rpath",
+        "title":       "Library Hijacking via Unsafe RPATH/RUNPATH",
+        "severity":    "medium",
+        "description": (
+            f"{len(unsafe)} binary(s) have relative or world-writable RPATH/RUNPATH entries. "
+            "A low-privilege attacker can plant a malicious shared library in the search path "
+            "to hijack execution when the binary runs."
+        ),
+        "entry_point": "local — requires write access to RPATH directory",
+        "steps": [
+            f"Identify binary with unsafe RPATH: {bin_name}",
+            "Plant a malicious shared library in the relative or world-writable RPATH directory",
+            "Wait for the binary to be invoked (daemon restart, scheduled task, or user action)",
+            "Library is loaded and executes attacker code with the binary's privileges",
+        ],
+        "evidence": evidence,
+    }
+
+
+def _ap_sysctl(sysctl: dict, **_) -> AttackPath | None:
+    findings = sysctl.get("findings", [])
+    if not findings:
+        return None
+    critical = [f for f in findings if f["severity"] == "critical"]
+    high     = [f for f in findings if f["severity"] == "high"]
+    if not (critical or high):
+        return None
+    severity = "high" if critical else "medium"
+    worst    = critical if critical else high
+    params   = [f["parameter"] for f in worst[:3]]
+    absent   = [f for f in findings if f.get("type") == "absent"]
+    explicit = [f for f in findings if f.get("type") == "explicit"]
+    evidence = [
+        f"sysctl.txt: {len(findings)} hardening issue(s) "
+        f"({len(explicit)} explicit insecure, {len(absent)} absent)",
+    ] + [
+        f"  {f.get('file', '[not configured]')}: {f['parameter']} — {f['note']}"
+        for f in findings[:_MAX_EVIDENCE]
+    ]
+    return {
+        "id":          "ap-sysctl",
+        "title":       "Missing Kernel Hardening Reduces Exploit Mitigation",
+        "severity":    severity,
+        "description": (
+            f"Kernel hardening parameters are missing or set to insecure values "
+            f"({', '.join(params[:3])}). "
+            "Absent mitigations (ASLR, stack protection, etc.) simplify reliable "
+            "exploitation of memory corruption vulnerabilities."
+        ),
+        "entry_point": "local — amplifies memory corruption attack paths",
+        "steps": [
+            "Exploit a memory corruption vulnerability in a network-facing or privileged binary",
+            f"Absence of {params[0]} removes a mitigation that would otherwise require bypassing",
+            "Develop a reliable exploit without needing ASLR bypass, ROP chains, or heap hardening",
+            "Achieve arbitrary code execution or privilege escalation",
+        ],
+        "evidence": evidence,
+    }
+
+
 _ATTACK_PATH_INFERRERS = [
     _ap_telnet,
     _ap_http_admin,
@@ -632,6 +819,11 @@ _ATTACK_PATH_INFERRERS = [
     _ap_update_mitm,
     _ap_vendor_backdoor,
     _ap_memory_unsafe_binaries,
+    _ap_inetd,
+    _ap_sshd_config,
+    _ap_sensitive_permissions,
+    _ap_rpath,
+    _ap_sysctl,
 ]
 
 
@@ -649,6 +841,11 @@ def infer_attack_paths(
     dangerous_functions: list | None = None,
     certificate_issues: list | None = None,
     tls_config_issues: list | None = None,
+    inetd: dict | None = None,
+    sysctl: dict | None = None,
+    sshd_config: dict | None = None,
+    sensitive_permissions: dict | None = None,
+    rpath: dict | None = None,
 ) -> list[AttackPath]:
     ctx = dict(
         entry_points=entry_points, init=init, web=web, users=users,
@@ -657,5 +854,10 @@ def infer_attack_paths(
         dangerous_functions=dangerous_functions or [],
         certificate_issues=certificate_issues or [],
         tls_config_issues=tls_config_issues or [],
+        inetd=inetd or {"config_files": [], "services": [], "findings": [], "summary": {}},
+        sysctl=sysctl or {"config_files": [], "findings": [], "summary": {}},
+        sshd_config=sshd_config or {"config_files": [], "findings": [], "summary": {}},
+        sensitive_permissions=sensitive_permissions or {"findings": [], "summary": {}},
+        rpath=rpath or {"total_with_rpath": 0, "unsafe_count": 0, "unsafe": [], "all": []},
     )
     return [p for fn in _ATTACK_PATH_INFERRERS if (p := fn(**ctx)) is not None]

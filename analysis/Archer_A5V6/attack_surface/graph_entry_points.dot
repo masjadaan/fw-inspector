@@ -4,60 +4,60 @@ digraph AttackSurface {
   node [style=filled fontname="Helvetica" fontsize=10 fontcolor=white shape=box];
   edge [fontname="Helvetica" fontsize=8 fontcolor="#aaaaaa" color="#666666"];
 
-  "94be37a1-24bd-53a2-a498-72047276d1e6" [label="Credential\ndefault_credential_reference
+  "d4f9643d-72e4-5943-9ed1-9c707bf974a9" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
   "c37d8892-79ee-5640-b28d-69d7a0d7cfff" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "35f1e079-f04b-56e1-a050-0d4300b50691" [label="Credential\ndefault_credential_reference
-/etc/RT2860AP5G.dat
-CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "d8fd0554-f2d8-520a-bd9c-bdcb76f35719" [label="TrustZone\nWAN\n[E:1.0]" fillcolor="#212121"];
-  "aa217d6d-7ff6-51f3-809c-0520f198881f" [label="Credential\ndefault_credential_reference
-/etc/RT2860AP5G.dat
-CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "9638fa9f-98ec-571f-b97a-9ae27fe69d1c" [label="Service\nssh
-(dropbear)\n[E:0.85]" fillcolor="#2e7d32"];
-  "47b0d35c-455f-596c-88f1-4f4329e287bb" [label="Credential\ndefault_credential_reference
-/etc/RT2860AP5G.dat
-CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "9e6b0d2c-e2a2-5c00-a1ee-f7af6bf5b687" [label="Credential\ndefault_credential_reference
-/etc/cloud/cloud_https.cfg
-CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "bd1394e0-d23a-57cf-b200-72576e83c7cd" [label="Port\n:22/tcp
-ssh\n[E:0.85]" fillcolor="#e65100"];
+  "dcc26132-9ab7-58e3-b3c5-b963b9aaa986" [label="Port\n:80/tcp
+http\n[E:0.85]" fillcolor="#e65100"];
   "3b293f21-0eb4-5f43-a812-6003abf47fe0" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "7dbc338d-87cb-5b26-b6a8-842c9860515c" [label="Credential\ndefault_credential_reference
+  "8543e8e7-c056-5fd8-82a0-f2237989eb9b" [label="Firmware\nArcher_A5V6
+MIPS 32-bit
+little-endian\n[E:0.77]" fillcolor="#1565c0"];
+  "35f1e079-f04b-56e1-a050-0d4300b50691" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "3b2fed17-bbd8-5f69-9aa7-bca9923efaaf" [label="TrustZone\nLOCAL\n[E:1.0]" fillcolor="#212121"];
-  "d4f9643d-72e4-5943-9ed1-9c707bf974a9" [label="Credential\ndefault_credential_reference
-/etc/RT2860AP.dat
-CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "17bdd733-84c8-5295-ba1b-932eec13c7c2" [label="TrustZone\nLAN\n[E:1.0]" fillcolor="#212121"];
   "9c400bb1-4475-54d2-ad07-f1ec96145934" [label="Credential\ndefault_credential_reference
+/etc/RT2860AP5G.dat
+CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "aa217d6d-7ff6-51f3-809c-0520f198881f" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
   "60001d05-2222-592a-b425-11df33d38dcd" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "8543e8e7-c056-5fd8-82a0-f2237989eb9b" [label="Firmware\nArcher_A5V6
-MIPS 32-bit
-little-endian\n[E:0.77]" fillcolor="#1565c0"];
+  "47b0d35c-455f-596c-88f1-4f4329e287bb" [label="Credential\ndefault_credential_reference
+/etc/RT2860AP5G.dat
+CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "94be37a1-24bd-53a2-a498-72047276d1e6" [label="Credential\ndefault_credential_reference
+/etc/RT2860AP.dat
+CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "d8fd0554-f2d8-520a-bd9c-bdcb76f35719" [label="TrustZone\nWAN\n[E:1.0]" fillcolor="#212121"];
+  "bd1394e0-d23a-57cf-b200-72576e83c7cd" [label="Port\n:22/tcp
+ssh\n[E:0.85]" fillcolor="#e65100"];
   "79daf2e1-ce91-5c18-a063-9cd8c139f838" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
-  "c6c3a11d-aca5-59f5-8293-85aa4624d9cf" [label="Credential\nadmin (MD5-crypt ($1$))
-WEAK CWE-916\n[E:0.9]" fillcolor="#c62828"];
-  "0fad8007-fb86-55cd-b1dd-775249b69a07" [label="Service\nhttp
-(httpd)\n[E:0.85]" fillcolor="#2e7d32"];
-  "dcc26132-9ab7-58e3-b3c5-b963b9aaa986" [label="Port\n:80/tcp
-http\n[E:0.85]" fillcolor="#e65100"];
+  "17bdd733-84c8-5295-ba1b-932eec13c7c2" [label="TrustZone\nLAN\n[E:1.0]" fillcolor="#212121"];
   "5d3ae3cb-923a-56b3-bd71-e0194f1e5c6c" [label="Credential\ndefault_credential_reference
 /etc/RT2860AP.dat
+CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "3b2fed17-bbd8-5f69-9aa7-bca9923efaaf" [label="TrustZone\nLOCAL\n[E:1.0]" fillcolor="#212121"];
+  "9638fa9f-98ec-571f-b97a-9ae27fe69d1c" [label="Service\nssh
+(dropbear)\n[E:0.85]" fillcolor="#2e7d32"];
+  "0fad8007-fb86-55cd-b1dd-775249b69a07" [label="Service\nhttp
+(httpd)\n[E:0.85]" fillcolor="#2e7d32"];
+  "c6c3a11d-aca5-59f5-8293-85aa4624d9cf" [label="Credential\nadmin (MD5-crypt ($1$))
+WEAK CWE-916\n[E:0.9]" fillcolor="#c62828"];
+  "9e6b0d2c-e2a2-5c00-a1ee-f7af6bf5b687" [label="Credential\ndefault_credential_reference
+/etc/cloud/cloud_https.cfg
+CWE-1392\n[E:0.75]" fillcolor="#c62828"];
+  "7dbc338d-87cb-5b26-b6a8-842c9860515c" [label="Credential\ndefault_credential_reference
+/etc/RT2860AP5G.dat
 CWE-1392\n[E:0.75]" fillcolor="#c62828"];
 
   "9638fa9f-98ec-571f-b97a-9ae27fe69d1c" -> "bd1394e0-d23a-57cf-b200-72576e83c7cd" [label="EXPOSES\n[0.85]" style=solid];

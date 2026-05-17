@@ -1271,6 +1271,52 @@
     }
   ],
   "tls_config_issues": [],
+  "inetd": {
+    "config_files": [],
+    "services": [],
+    "findings": [],
+    "summary": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "sysctl": {
+    "config_files": [],
+    "findings": [],
+    "summary": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "sshd_config": {
+    "config_files": [],
+    "findings": [],
+    "summary": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "sensitive_permissions": {
+    "findings": [],
+    "summary": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  "rpath": {
+    "total_with_rpath": 0,
+    "unsafe_count": 0,
+    "unsafe": [],
+    "all": []
+  },
   "attack_paths": [
     {
       "id": "ap-http-admin",

@@ -4061,62 +4061,6 @@
       "recommendation": ""
     },
     {
-      "cve": "CVE-2012-1165",
-      "component": "libcrypto",
-      "version": "1.0.0",
-      "base_severity": "medium",
-      "adjusted_severity": "critical",
-      "cvss_score": 5,
-      "escalated": true,
-      "escalation_reasons": [
-        "network-reachable entry point"
-      ],
-      "network_reachable": true,
-      "hardening": {},
-      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
-      "recommendation": ""
-    },
-    {
-      "cve": "CVE-2012-1165",
-      "component": "libssl",
-      "version": "1.0.0",
-      "base_severity": "medium",
-      "adjusted_severity": "critical",
-      "cvss_score": 5,
-      "escalated": true,
-      "escalation_reasons": [
-        "network-reachable entry point"
-      ],
-      "network_reachable": true,
-      "hardening": {},
-      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
-      "recommendation": ""
-    },
-    {
-      "cve": "CVE-2012-1165",
-      "component": "openssl",
-      "version": "1.0",
-      "base_severity": "medium",
-      "adjusted_severity": "critical",
-      "cvss_score": 5,
-      "escalated": true,
-      "escalation_reasons": [
-        "NX disabled",
-        "no PIE",
-        "no RELRO",
-        "no stack canary"
-      ],
-      "network_reachable": false,
-      "hardening": {
-        "nx": "False",
-        "pie": "no",
-        "relro": "none",
-        "canary": "False"
-      },
-      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
-      "recommendation": ""
-    },
-    {
       "cve": "CVE-2011-4619",
       "component": "libcrypto",
       "version": "1.0.0",
@@ -4170,6 +4114,62 @@
         "canary": "False"
       },
       "description": "The Server Gated Cryptography (SGC) implementation in OpenSSL before 0.9.8s and 1.x before 1.0.0f does not properly handle handshake restarts, which allows remote attackers to cause a denial of service (CPU consumption) via unspecified vectors.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2012-1165",
+      "component": "libcrypto",
+      "version": "1.0.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5,
+      "escalated": true,
+      "escalation_reasons": [
+        "network-reachable entry point"
+      ],
+      "network_reachable": true,
+      "hardening": {},
+      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2012-1165",
+      "component": "libssl",
+      "version": "1.0.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5,
+      "escalated": true,
+      "escalation_reasons": [
+        "network-reachable entry point"
+      ],
+      "network_reachable": true,
+      "hardening": {},
+      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
+      "recommendation": ""
+    },
+    {
+      "cve": "CVE-2012-1165",
+      "component": "openssl",
+      "version": "1.0",
+      "base_severity": "medium",
+      "adjusted_severity": "critical",
+      "cvss_score": 5,
+      "escalated": true,
+      "escalation_reasons": [
+        "NX disabled",
+        "no PIE",
+        "no RELRO",
+        "no stack canary"
+      ],
+      "network_reachable": false,
+      "hardening": {
+        "nx": "False",
+        "pie": "no",
+        "relro": "none",
+        "canary": "False"
+      },
+      "description": "The mime_param_cmp function in crypto/asn1/asn_mime.c in OpenSSL before 0.9.8u and 1.x before 1.0.0h allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a crafted S/MIME message, a different vulnerability than CVE-2006-7250.",
       "recommendation": ""
     },
     {

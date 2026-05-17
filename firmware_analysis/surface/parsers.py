@@ -197,3 +197,37 @@ def parse_certificate_issues(analysis_dir: Path) -> list:
 
 def parse_tls_config_issues(analysis_dir: Path) -> list:
     return _load(analysis_dir / "tls_config_issues.json", [])
+
+
+def parse_inetd(analysis_dir: Path) -> dict:
+    return _load(analysis_dir / "inetd.json", {
+        "config_files": [], "services": [], "findings": [],
+        "summary": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    })
+
+
+def parse_sysctl(analysis_dir: Path) -> dict:
+    return _load(analysis_dir / "sysctl.json", {
+        "config_files": [], "findings": [],
+        "summary": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    })
+
+
+def parse_sshd_config(analysis_dir: Path) -> dict:
+    return _load(analysis_dir / "sshd_config.json", {
+        "config_files": [], "findings": [],
+        "summary": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    })
+
+
+def parse_sensitive_permissions(analysis_dir: Path) -> dict:
+    return _load(analysis_dir / "sensitive_permissions.json", {
+        "findings": [],
+        "summary": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+    })
+
+
+def parse_rpath(analysis_dir: Path) -> dict:
+    return _load(analysis_dir / "rpath.json", {
+        "total_with_rpath": 0, "unsafe_count": 0, "unsafe": [], "all": [],
+    })

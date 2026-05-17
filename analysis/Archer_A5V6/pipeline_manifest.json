@@ -1,11 +1,11 @@
 {
   "firmware_id": "Archer_A5V6",
-  "run_at": "2026-05-16T07:22:00.686493+00:00",
+  "run_at": "2026-05-17T16:41:05.950097+00:00",
   "stages": {
     "1_extract": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 5.3,
+      "duration_s": 1.9,
       "notes": []
     },
     "2_surface": {
@@ -17,13 +17,13 @@
     "3_graph": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 0.0,
+      "duration_s": 0.1,
       "notes": []
     },
     "4_svg": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 0.1,
+      "duration_s": 0.2,
       "notes": []
     },
     "4_svg_entry_points": {
@@ -59,7 +59,7 @@
     "5_cve": {
       "status": "success",
       "exit_code": 0,
-      "duration_s": 1.1,
+      "duration_s": 55.7,
       "notes": []
     },
     "6_heatmap": {

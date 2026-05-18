@@ -10,7 +10,9 @@ Component mapping:
 Version resolution order:
   1. soname suffix in filename  (libssl.so.1.0.0 → 1.0.0)
   2. version string in binary's strings output
-  3. omitted (unknown)
+  3. library_versions.txt (for the 5 hardcoded libs)
+  4. opkg/ipkg package database in the rootfs
+  5. omitted (unknown)
 
 Hardening flags (NX/PIE/RELRO/canary) are attached as CycloneDX
 properties on every executable so downstream tools can filter on them.
@@ -83,6 +85,14 @@ _CPE_MAP: list[tuple[re.Pattern, str, str]] = [
 ]
 
 
+# opkg/ipkg status file locations relative to rootfs
+_PKG_STATUS_PATHS = [
+    "usr/lib/opkg/status",
+    "var/lib/opkg/status",
+    "usr/lib/ipkg/status",
+]
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _sha256(path: Path) -> str:
@@ -94,6 +104,57 @@ def _sha256(path: Path) -> str:
         return h.hexdigest()
     except Exception:
         return ""
+
+
+def _pkg_version_map(rootfs: Path) -> dict[str, str]:
+    """Parse opkg/ipkg package status files → {package_name: version}.
+
+    Strips epoch prefixes (1:2.0 → 2.0) and packaging suffixes (-r1, _1)
+    so the version can be compared against CPE entries.
+    """
+    result: dict[str, str] = {}
+    for rel in _PKG_STATUS_PATHS:
+        p = rootfs / rel
+        if not p.exists():
+            continue
+        pkg = ""
+        for line in p.read_text(errors="replace").splitlines():
+            if line.startswith("Package:"):
+                pkg = line.split(":", 1)[1].strip()
+            elif line.startswith("Version:") and pkg:
+                ver = line.split(":", 1)[1].strip()
+                ver = re.sub(r'^\d+:', '', ver)          # strip epoch
+                ver = re.sub(r'[-_]\w+$', '', ver)       # strip packaging suffix
+                result[pkg] = ver
+                pkg = ""
+    return result
+
+
+def _parse_lib_versions(path: Path) -> dict[str, str]:
+    """Parse library_versions.txt → {canonical_lib_name: first_version_found}.
+
+    The file uses section() formatting: a 60-char === separator, then a
+    2-space-indented title, another separator, then 2-space-indented paths
+    and 4-space-indented raw strings lines.
+    """
+    if not path.exists():
+        return {}
+    result: dict[str, str] = {}
+    current = ""
+    SEP = "=" * 60
+    for line in path.read_text().splitlines():
+        stripped = line.strip()
+        if not stripped or stripped == SEP:
+            continue
+        # Title: 2-space indent, no slash (path lines always contain a slash)
+        if line.startswith("  ") and not line.startswith("   ") and "/" not in line:
+            current = stripped
+            continue
+        if current and current not in result and line.startswith("    "):
+            m = _VER_PAT.search(line)
+            if m and int(m.group(1).split(".")[0]) < 100:
+                result[current] = m.group(1)
+    return result
 
 
 def _ver_from_soname(filename: str) -> str:
@@ -177,7 +238,7 @@ def _component(
 
 # ── Section builders ──────────────────────────────────────────────────────────
 
-def _collect_libraries(ctx: AnalysisContext) -> list[dict]:
+def _collect_libraries(ctx: AnalysisContext, ver_fallback: dict[str, str]) -> list[dict]:
     """One CycloneDX library component per unique (canonical-name, version) pair."""
     components: list[dict] = []
     seen: set[tuple[str, str]] = set()
@@ -198,6 +259,8 @@ def _collect_libraries(ctx: AnalysisContext) -> list[dict]:
         strings = rec.strings_lines if rec else []
         if not version:
             version = _ver_from_strings(strings, canon)
+        if not version:
+            version = ver_fallback.get(canon, "")
 
         key = (canon, version)
         if key in seen:
@@ -224,7 +287,7 @@ def _collect_libraries(ctx: AnalysisContext) -> list[dict]:
     return components
 
 
-def _collect_executables(ctx: AnalysisContext) -> list[dict]:
+def _collect_executables(ctx: AnalysisContext, ver_fallback: dict[str, str]) -> list[dict]:
     """One CycloneDX application component per ELF executable (not shared objects, not busybox)."""
     components: list[dict] = []
 
@@ -239,6 +302,8 @@ def _collect_executables(ctx: AnalysisContext) -> list[dict]:
 
         rel = str(path.relative_to(ctx.rootfs))
         version = _ver_from_strings(rec.strings_lines, path.name)
+        if not version:
+            version = ver_fallback.get(path.name, "") or ver_fallback.get(path.stem, "")
 
         props = [{"name": "firmware:path", "value": rel}]
         h = rec.hardening
@@ -353,9 +418,14 @@ def generate_sbom(ctx: AnalysisContext) -> None:
     """Build a CycloneDX 1.5 SBOM and write sbom.cdx.json to ctx.out_dir."""
     firmware_id = ctx.out_dir.parent.name
 
+    ver_fallback = {
+        **_parse_lib_versions(ctx.out_dir / "library_versions.txt"),
+        **_pkg_version_map(ctx.rootfs),   # pkg DB wins over lib_versions on conflict
+    }
+
     components = (
-        _collect_libraries(ctx)
-        + _collect_executables(ctx)
+        _collect_libraries(ctx, ver_fallback)
+        + _collect_executables(ctx, ver_fallback)
         + _collect_busybox(ctx)
         + _collect_kernel_modules(ctx)
     )

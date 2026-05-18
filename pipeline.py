@@ -246,7 +246,7 @@ def main() -> None:
     # ── Stage 6: Heatmap ──────────────────────────────────────────────────────
     _run_stage(
         "6_heatmap", "Stage 6 — CVE Severity Heatmap",
-        [py, str(here / "firmware_analysis/reporting/heatmap.py"), str(analysis_dir)],
+        [py, str(here / "firmware_analysis/reporting/heatmap.py"), str(analysis_dir), "--csv"],
         stages, blocked_by="5_cve",
     )
     flush()

@@ -234,6 +234,8 @@ def _collect_executables(ctx: AnalysisContext) -> list[dict]:
             continue
         if path.name == "busybox":
             continue
+        if path.suffix == ".ko":
+            continue
 
         rel = str(path.relative_to(ctx.rootfs))
         version = _ver_from_strings(rec.strings_lines, path.name)

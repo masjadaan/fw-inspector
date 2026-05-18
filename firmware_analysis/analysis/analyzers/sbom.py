@@ -128,7 +128,7 @@ def _ver_from_strings(strings_lines: list[str], hint: str) -> str:
         line_l = line.lower()
         if hint_l in line_l or "version" in line_l or " v" in line_l or "release" in line_l:
             m = _VER_PAT.search(line)
-            if m:
+            if m and int(m.group(1).split(".")[0]) < 100:
                 return m.group(1)
     return ""
 

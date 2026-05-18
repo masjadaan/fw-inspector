@@ -349,7 +349,7 @@ def _collect_kernel_modules(ctx: AnalysisContext) -> list[dict]:
 
 def generate_sbom(ctx: AnalysisContext) -> None:
     """Build a CycloneDX 1.5 SBOM and write sbom.cdx.json to ctx.out_dir."""
-    firmware_id = ctx.out_dir.name
+    firmware_id = ctx.out_dir.parent.name
 
     components = (
         _collect_libraries(ctx)

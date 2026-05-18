@@ -90,10 +90,11 @@ def _parse_sbom(sbom: dict) -> tuple[dict, dict]:
             "type":    comp.get("type", ""),
             "version": comp.get("version", ""),
             "hardening": {
-                "nx":     props.get("firmware:nx"),
-                "pie":    props.get("firmware:pie"),
-                "relro":  props.get("firmware:relro"),
-                "canary": props.get("firmware:canary"),
+                "nx":      props.get("firmware:nx"),
+                "pie":     props.get("firmware:pie"),
+                "relro":   props.get("firmware:relro"),
+                "canary":  props.get("firmware:canary"),
+                "fortify": props.get("firmware:fortify"),
             },
             "needed_libs": needed_libs,
         }
